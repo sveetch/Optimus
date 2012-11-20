@@ -43,6 +43,6 @@ def display_settings(settings, names):
     """
     Helper to display some settings if they are setted
     """
-    logger = logging.getLogger('optimus.display_settings')
+    logger = logging.getLogger('optimus')
     for item in names:
         logger.debug(" - Settings.%s = %s", item, getattr(settings, item, 'NOT SET'))

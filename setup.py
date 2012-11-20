@@ -18,7 +18,7 @@ setup(
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: Site Management',
         'Topic :: Text Processing :: Markup',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],

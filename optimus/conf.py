@@ -11,7 +11,7 @@ def import_settings(name):
     """
     project_directory = os.getcwd()
     
-    logger = logging.getLogger('optimus.utils')
+    logger = logging.getLogger('optimus')
     logger.info('Loading settings module: %s', name)
     logger.info('Settings module searched in: %s', project_directory)
     
@@ -20,7 +20,7 @@ def import_settings(name):
         settings_mod = imp.load_module(name, fp, pathname, description)
     except:
         logger.critical('Unable to load settings file')
-        return False
+        raise
     finally:
         # Close fp explicitly.
         if fp:

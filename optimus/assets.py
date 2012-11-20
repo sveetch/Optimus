@@ -9,7 +9,7 @@ def build_assets(settings):
     """
     Initialize webassets environment and build assets
     """
-    logger = logging.getLogger('optimus.build_pages')
+    logger = logging.getLogger('optimus')
     if not settings.PAGES:
         logger.info("Asset management skipped as there are no enabled bundles")
         return None

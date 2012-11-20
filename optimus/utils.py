@@ -5,7 +5,7 @@ Various helpers
 import logging, os, shutil
 
 def init_directory(directory):
-    logger = logging.getLogger('static_builder.utils')
+    logger = logging.getLogger('optimus')
     if not os.path.exists(directory):
         logger.debug('Creating directory: %s', directory)
         os.makedirs(directory)
@@ -23,7 +23,7 @@ def synchronize_assets_sources(settings, src, dest):
     * ``dst`` is a file path that will be in 
     ``settings.STATIC_DIR``.
     """
-    logger = logging.getLogger('static_builder.utils')
+    logger = logging.getLogger('optimus')
     source = os.path.join(settings.SOURCES_DIR, src)
     if not os.path.exists(source):
         logger.warning('The given source does not exist and so can not be synchronized : %s', source)
@@ -45,7 +45,7 @@ def patch_webassets_bug(settings):
     previously generated will be deleted)
     """
     if settings.DEBUG == True:
-        logger = logging.getLogger('static_builder.utils')
+        logger = logging.getLogger('optimus')
         logger.warning('Old webassets patch is running')
         if os.path.exists(settings.STATIC_DIR):
             shutil.rmtree(settings.STATIC_DIR)
