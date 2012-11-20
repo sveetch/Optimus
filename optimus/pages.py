@@ -48,6 +48,7 @@ class PageViewBase(object):
     context = {}
     
     def __init__(self, **kwargs):
+        self.logger = logging.getLogger('optimus')
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
     
@@ -58,6 +59,7 @@ class PageViewBase(object):
             'page_lang': self.get_lang(),
             'page_template_name': self.get_template_name(),
         })
+        self.logger.debug(" - Initial context: %s", self.context)
         return self.context
     
     def get_lang(self):
@@ -76,9 +78,10 @@ class PageViewBase(object):
         """
         self.env = env
         self.settings = settings
+        context = self.get_context()
         
         template = self.env.get_template(self.get_template_name())
-        return template.render(lang=self.get_lang(), **self.get_context())
+        return template.render(lang=self.get_lang(), **context)
 
 class RstPageView(PageViewBase):
     """
@@ -176,12 +179,6 @@ class PageBuilder(object):
         self.logger.info(' Building page: %s', page_item.destination)
         content = page_item.render(self.jinja_env, self.settings)
         
-        #if context:
-            #self.logger.debug(' - Context keys: %s', context)
-
-        # Compile template render
-        #self.logger.debug(' - Langage: %s', (lang or self.lang))
-
         # Write it
         destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.destination)
         self.logger.debug(' - Writing to: %s', destination_path)
