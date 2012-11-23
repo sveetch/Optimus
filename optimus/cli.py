@@ -8,7 +8,7 @@ from argh import arg
 
 from optimus.assets import build_assets
 from optimus.pages import build_pages
-from optimus.conf import import_settings
+from optimus.conf import import_project_module
 from optimus.init import init_logging, initialize, display_settings
 
 @arg('--settings', default='settings', help='Python path to the settings module')
@@ -22,8 +22,13 @@ def build(args):
     starttime = datetime.datetime.now()
     # Init, load and builds
     root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
-    settings = import_settings(args.settings)
+    settings = import_project_module(args.settings)
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL'))
+    
+    if hasattr(settings, 'PAGES_MAP'):
+        root_logger.info('Loading external pages map')
+        pages_map = import_project_module(settings.PAGES_MAP)
+        setattr(settings, 'PAGES', pages_map.PAGES)
 
     initialize(settings)
     assets_env = build_assets(settings)
@@ -31,3 +36,4 @@ def build(args):
     
     endtime = datetime.datetime.now()
     root_logger.info('Done in %s', str(endtime-starttime))
+

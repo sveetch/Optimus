@@ -200,7 +200,6 @@ def build_pages(settings, assets_env=None):
     logger.info("Starting page management")
     pages_env = PageBuilder(settings, assets_env=assets_env)
     for item in settings.PAGES:
-        #('index_usa.html', 'index.html', {'lang': LangUsa(), 'context':{}}),
         pages_env.build(item)
         
     return pages_env

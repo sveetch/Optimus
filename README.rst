@@ -16,4 +16,29 @@ The environment should bring all needed stuff and a script to build static websi
 
 It try to cohabit with a Compass or Less environment, but this part is actually not ready.
 
-Better documentation to come when this will be ready. Currently the project is failing to really help to cohabits with Compass in development environment.
+Better documentation to come when this will be ready. 
+
+.. WARNING: Currently the project is failing to really help to cohabits with Compass in development environment.
+
+Requires
+========
+
+* `webassets`_
+* `Jinja2`_
+* argh
+* argparse
+* compressinja
+* rstview (this is a django app but the Django parts are not used, this is only needed for his HTML5 parser for docutils)
+
+And for webassets, you will need some compressor for your assets, the better and easiest is to install ``yuicompressor`` with pip, this is a dummy Python module to automatically install the real `yui-compressor`_ that is a great choice to compress CSS and Javascript assets.
+
+Usage
+=====
+
+This work a little bit like `Django`_ as you create a project with a settings file containing all useful global settings for building your pages and manage your assets.
+
+Then you have to define some pages to build, you can do it directly in the ``settings.PAGES``, or in an other module targeted in ``settings.PAGES_MAP``. Actually, the application always import the ``settings`` module and the module targeted by ``PAGES_MAP`` from the projet directory, so you can't store them out of your project.
+
+Pages are allways an object ``optimus.pages import PageViewBase`` or an object that implement his method. You can inherit them to modify their behaviour.
+
+Generally the build system has less constraint than a Framework like `Django`_.
