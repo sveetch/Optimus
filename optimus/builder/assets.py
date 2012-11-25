@@ -3,7 +3,7 @@ import copy, logging
 
 from webassets import Environment as AssetsEnvironment
 
-from optimus.bundles import COMMON_BUNDLES
+from optimus.builder.bundles import COMMON_BUNDLES
 
 def build_assets(settings):
     """

@@ -6,14 +6,15 @@ import datetime, logging, os, time
 
 from argh import arg
 
-from optimus.assets import build_assets
-from optimus.pages import build_pages
+from optimus.builder.assets import build_assets
+from optimus.builder.pages import PageBuilder
 from optimus.conf import import_project_module
 from optimus.init import init_logging, initialize, display_settings
 
-@arg('--settings', default='settings', help='Python path to the settings module')
-@arg('--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
-@arg('--logfile', default=None, help='A filepath that if setted, will be used to save logs output')
+@arg('--settings', default='settings', help="Python path to the settings module")
+@arg('--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
+@arg('--logfile', default=None, help="A filepath that if setted, will be used to save logs output")
+#@arg('--dryrun', default=False, help="Parse page templates, scan them to search their dependancies but don't build them")
 def build(args):
     """
     The build action for the commandline, this is currently not working
@@ -30,8 +31,14 @@ def build(args):
         setattr(settings, 'PAGES', pages_map.PAGES)
 
     initialize(settings)
+    # Assets
     assets_env = build_assets(settings)
-    pages_env = build_pages(settings, assets_env)
+    # Pages
+    pages_env = PageBuilder(settings, assets_env=assets_env)
+    #if not args.dryrun:
+    pages_env.build_bulk(settings.PAGES)
+    #else:
+        #pages_env.scan_bulk(settings.PAGES)
     
     endtime = datetime.datetime.now()
     root_logger.info('Done in %s', str(endtime-starttime))

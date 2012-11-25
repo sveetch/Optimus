@@ -5,6 +5,7 @@ Page building with Jinja2
 import copy, logging, os
 
 from jinja2 import Environment as Jinja2Environment
+from jinja2 import meta as Jinja2Meta
 from jinja2 import FileSystemLoader
 from webassets.ext.jinja2 import AssetsExtension
 
@@ -48,9 +49,14 @@ class PageViewBase(object):
     context = {}
     
     def __init__(self, **kwargs):
-        self.logger = logging.getLogger('optimus')
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
+            
+        self.logger = logging.getLogger('optimus')
+        self._used_templates = None
+    
+    def __repr__(self):
+        return "<Page dest:{destination}>".format(destination=self.destination)
     
     def get_context(self):
         self.context.update({
@@ -81,7 +87,33 @@ class PageViewBase(object):
         context = self.get_context()
         
         template = self.env.get_template(self.get_template_name())
+        
         return template.render(lang=self.get_lang(), **context)
+    
+    def introspect(self, env, settings, force=False):
+        """
+        Take the Jinja2 environment and the settings module as required argument to find all templates dependancies.
+        
+        Should return a list of all template dependancies.
+        """
+        if self._used_templates is None:
+            self.env = env
+            self.settings = settings
+            
+            self._used_templates = [self.get_template_name()] + self._recursing_template_search(self.get_template_name())
+            self.logger.debug(" - Used templates: %s", self._used_templates)
+        return self._used_templates
+    
+    def _recursing_template_search(self, template_name):
+        template_source = self.env.loader.get_source(self.env, template_name)[0]
+        parsed_content = self.env.parse(template_source)
+        
+        deps = []
+        for item in Jinja2Meta.find_referenced_templates(parsed_content):
+            deps.append(item)
+            deps += self._recursing_template_search(item)
+        
+        return deps
 
 class RstPageView(PageViewBase):
     """
@@ -120,34 +152,69 @@ class RstPageView(PageViewBase):
         })
         return context
 
+class PageRegistry(object):
+    """
+    Index all knowed template and memorize the pages that use them
+    """
+    def __init__(self, elements={}):
+        self.elements = {}
+        self.map_dest_to_page = {}
+        self.logger = logging.getLogger('optimus')
+    
+    def add_page(self, page, items):
+        self.map_dest_to_page[page.destination] = page
+        
+        for k in items:
+            if k in self.elements:
+                self.elements[k].add(page.destination)
+            else:
+                self.elements[k] = set([page.destination])
+    
+    def get_pages_from_dependency(self, template_name):
+        """
+        Return the pages object list that are dependent of the given template name
+        
+        This method is not safe out of the context of scanned pages, because it use 
+        an internal map builded from the scan use by the add_page method. In short, it 
+        will raise a KeyError exception for every destination that is doesn't known from 
+        the internal map.
+        """
+        if template_name not in self.elements:
+            self.logger.warning("Given template name is not in the page registry: %s", template_name)
+            return []
+        dependancies = self.elements[template_name]
+        return [self.map_dest_to_page[item] for item in dependancies]
+
 class PageBuilder(object):
     """
     Builder class to init Jinja2 environment and build the given pages
     """
-    def __init__(self, settings, jinja_env=None, assets_env=None, lang=None):
+    def __init__(self, settings, jinja_env=None, assets_env=None, lang=None): #, autoscan=True):
         self.logger = logging.getLogger('optimus')
         self.settings = settings
-        self.lang = lang
         self.assets_env = assets_env
+        self.lang = lang
         self.jinja_env = jinja_env or self.get_environnement(assets_env)
         self.set_globals()
         self.logger.debug("PageBuilder initialized")
+        self.registry = PageRegistry()
     
     def get_environnement(self, assets_env=None):
         """
         Init the Jinja environment
-        
-        Register the webassets environment if any
         """
         exts = []
         self.logger.debug("No Jinja2 environment given, initializing a default environment")
         
+        # It the assets environment is given, active the Jinja extension to use webassets
         if self.assets_env is not None:
             exts.append(AssetsExtension)
         
+        # Enabled Jinja extensions
         for ext in self.settings.JINJA_EXTENSIONS:
             exts.append(ext)
         
+        # Boot Jinja environment
         env = Jinja2Environment(loader=FileSystemLoader(self.settings.TEMPLATES_DIR), extensions=exts)
         if assets_env:
             env.assets_environment = assets_env
@@ -170,9 +237,69 @@ class PageBuilder(object):
             'STATIC_URL': self.settings.STATIC_URL,
         })
     
-    def build(self, page_item):
+    def scan_bulk(self, page_list):
+        """
+        Scan all the given pages to set them their dependancies
+        
+        Return all used templates from pages and their template dependancies
+        """
+        self.logger.info("Starting page builds")
+        
+        if not page_list:
+            self.logger.warning("Page scanning skipped as there are no registered pages")
+            return None
+        
+        knowed = set([])
+        for page in page_list:
+            finded = self.scan_item(page)
+            self.registry.add_page(page, finded)
+            knowed.update(finded)
+            
+        #import pprint
+        #pp = pprint.PrettyPrinter(indent=4)
+        #pp.pprint(self.registry.elements)
+        #print "="*60
+        #pp.pprint(self.registry.map_dest_to_page)
+        #print
+        return knowed
+    
+    def scan_item(self, page_item):
+        """
+        Scan the given page
+        
+        Return a list of all used templates by the page
+        """
+        # Insert global context variables
+        # Select the template to use
+        self.logger.info(' Scanning page: %s', page_item.destination)
+        
+        return page_item.introspect(self.jinja_env, self.settings)
+    
+    def build_bulk(self, page_list):
+        """
+        Build all given pages
+        
+        Return all the effective builded pages
+        """
+        # Insert global context variables
+        # Select the template to use
+        self.logger.info("Starting page builds")
+        
+        if not page_list:
+            self.logger.warning("Page management skipped as there are no registered pages")
+            return None
+        
+        builded = []
+        for page in page_list:
+            builded.append( self.build_item(page) )
+            
+        return builded
+    
+    def build_item(self, page_item):
         """
         Build the given page
+        
+        Return the destination path of the builded page
         """
         # Insert global context variables
         # Select the template to use
@@ -187,19 +314,3 @@ class PageBuilder(object):
         fp.close()
         
         return destination_path
-
-def build_pages(settings, assets_env=None):
-    """
-    Init the page builder and build them
-    """
-    logger = logging.getLogger('optimus')
-    if not settings.PAGES:
-        logger.info("Page management skipped as there are no registered pages")
-        return None
-    
-    logger.info("Starting page management")
-    pages_env = PageBuilder(settings, assets_env=assets_env)
-    for item in settings.PAGES:
-        pages_env.build(item)
-        
-    return pages_env
