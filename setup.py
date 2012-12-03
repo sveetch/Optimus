@@ -30,6 +30,9 @@ setup(
         'argh==0.16.0',
         'compressinja==0.0.1',
     ],
+    setup(
+        scripts=['bin/optimus-cli'],
+    )
     include_package_data=True,
     zip_safe=False
 )
