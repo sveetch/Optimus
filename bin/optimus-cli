@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from argh import ArghParser
+from optimus.cli.build import build
+from optimus.cli.watch import watch
+    
+if __name__=='__main__':
+    parser = ArghParser()
+    parser.add_commands([build, watch])
+    parser.dispatch()
