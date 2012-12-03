@@ -28,6 +28,7 @@ setup(
         'webassets==0.8',
         'argparse==1.2.1',
         'argh==0.16.0',
+        'pathtools==0.1.2',
         'compressinja==0.0.1',
     ],
     scripts=['bin/optimus-cli'],
