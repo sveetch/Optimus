@@ -16,7 +16,7 @@ COMMON_BUNDLES = {
         output='css/ie.min.css'
     ),
     'js_ie_common': Bundle(
-        'js/modernizr.js',
+        'js/modernizr.custom.js',
         'js/respond.src.js',
         filters='yui_js',
         output='js/ie.min.js'

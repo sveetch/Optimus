@@ -6,6 +6,7 @@
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _webassets: https://github.com/miracle2k/webassets
 .. _Jinja2: http://jinja.pocoo.org/
+.. _watchdog: https://github.com/gorakhargosh/watchdog
 
 Introduction
 ============
@@ -28,7 +29,8 @@ Requires
 * argh
 * argparse
 * compressinja
-* rstview (this is a django app but the Django parts are not used, this is only needed for his HTML5 parser for docutils)
+* rstview (this is a django app but the Django parts are not used, this module is only needed for his HTML5 parser for docutils)
+* `watchdog`_
 
 And for webassets, you will need some compressor for your assets, the better and easiest is to install ``yuicompressor`` with pip, this is a dummy Python module to automatically install the real `yui-compressor`_ that is a great choice to compress CSS and Javascript assets.
 
