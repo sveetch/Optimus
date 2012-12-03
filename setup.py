@@ -32,7 +32,7 @@ setup(
     ],
     setup(
         scripts=['bin/optimus-cli'],
-    )
+    ),
     include_package_data=True,
     zip_safe=False
 )
