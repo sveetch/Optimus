@@ -17,7 +17,7 @@ from optimus.init import init_logging, initialize, display_settings
 #@arg('--dryrun', default=False, help="Parse page templates, scan them to search their dependancies but don't build them")
 def build(args):
     """
-    The build action for the commandline, this is currently not working
+    The build action for the commandline
     """
     starttime = datetime.datetime.now()
     # Init, load and builds

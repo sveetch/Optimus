@@ -3,8 +3,10 @@
 from argh import ArghParser
 from optimus.cli.build import build
 from optimus.cli.watch import watch
+from optimus.cli.init import init
     
 if __name__=='__main__':
     parser = ArghParser()
+    #parser.add_commands([init, build, watch])
     parser.add_commands([build, watch])
     parser.dispatch()
