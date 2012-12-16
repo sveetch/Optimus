@@ -5,12 +5,49 @@ Various helpers
 import logging, os, shutil
 
 def init_directory(directory):
+    """
+    Create a new directory if it does not allready exists
+    """
     logger = logging.getLogger('optimus')
     if not os.path.exists(directory):
         logger.debug('Creating directory: %s', directory)
         os.makedirs(directory)
         return True
     return False
+
+def recursive_directories_create(project_directory, structure, dry_run=False):
+    """
+    Recursive directory create from a "tree list"
+    
+    Sample tree list : ::
+    
+        structure = [
+            [
+                'sources',
+                [
+                    ['js'],
+                    ['css'],
+                ]
+            ]
+        ]
+    """
+    logger = logging.getLogger('optimus')
+    
+    for item in structure:
+        if len(item)>0:
+            new_dir = item[0]
+            path_dir = os.path.join(project_directory, new_dir)
+            if not os.path.exists(path_dir):
+                logger.info('* Creating new directory : %s', path_dir)
+                if not dry_run:
+                    os.makedirs(path_dir)
+            else:
+                logger.warning('* Following path allready exist : %s', path_dir)
+        # Follow children directories to create them
+        if len(item)>1:
+            recursive_directories_create(path_dir, item[1], dry_run=dry_run)
+        
+    return
 
 def synchronize_assets_sources(settings, src, dest):
     """
@@ -43,6 +80,8 @@ def patch_webassets_bug(settings):
     
     This will not work with multiple page that not share all the same assets (the 
     previously generated will be deleted)
+    
+    DEPRECATED: Since the 0.8 release this is not needed
     """
     if settings.DEBUG == True:
         logger = logging.getLogger('optimus')

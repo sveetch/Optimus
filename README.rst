@@ -5,6 +5,7 @@
 .. _rvm: http://rvm.io/
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _webassets: https://github.com/miracle2k/webassets
+.. _virtualenv: http://www.virtualenv.org/
 .. _Jinja2: http://jinja.pocoo.org/
 .. _watchdog: https://github.com/gorakhargosh/watchdog
 
