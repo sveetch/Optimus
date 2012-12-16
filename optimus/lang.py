@@ -25,8 +25,8 @@ This trick should be replaced by Jinja+i18n
 class LangBase(object):
     label = None # Label to display
     code = None # Internal code
-    alt_code = None # Alternative code, will be equal "code" if not setted
-    external_code = None # External code for some external apps, will be equal "alt_code" if not setted
+    alt_code = None # Alternative code, will be equal to "code" if not setted
+    external_code = None # External code for some external apps, will be equal to "alt_code" if not setted
     
     def __init__(self):
         if self.alt_code is None:
