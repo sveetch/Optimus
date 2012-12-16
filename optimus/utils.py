@@ -73,20 +73,21 @@ def synchronize_assets_sources(settings, src, dest):
     logger.debug('Synchronizing asset from "%s" to "%s"', source, destination)
     shutil.copytree(source, destination)
 
-def patch_webassets_bug(settings):
+def initialize(settings):
     """
-    Clean some dirs to bypass a bug in the webassets dev version
-    in debug mode
-    
-    This will not work with multiple page that not share all the same assets (the 
-    previously generated will be deleted)
-    
-    DEPRECATED: Since the 0.8 release this is not needed
+    Init the needed directory structure
     """
-    if settings.DEBUG == True:
-        logger = logging.getLogger('optimus')
-        logger.warning('Old webassets patch is running')
-        if os.path.exists(settings.STATIC_DIR):
-            shutil.rmtree(settings.STATIC_DIR)
-        if os.path.exists(settings.WEBASSETS_CACHE):
-            shutil.rmtree(settings.WEBASSETS_CACHE)
+    init_directory(settings.STATIC_DIR)
+    init_directory(settings.WEBASSETS_CACHE)
+
+    if settings.FILES_TO_SYNC is not None:
+        for item in settings.FILES_TO_SYNC:
+            synchronize_assets_sources(settings, *item)
+
+def display_settings(settings, names):
+    """
+    Helper to display some settings if they are setted
+    """
+    logger = logging.getLogger('optimus')
+    for item in names:
+        logger.debug(" - Settings.%s = %s", item, getattr(settings, item, 'NOT SET'))

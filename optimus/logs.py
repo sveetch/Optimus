@@ -130,6 +130,28 @@ class ColorizingStreamHandler(logging.StreamHandler):
             message = '\n'.join(parts)
         return message
 
+
+def init_logging(loglevel, printout=True, logfile=None):
+    """
+    Initialize the app's logger
+    """
+    rootlogger = logging.getLogger('optimus')
+    rootlogger.setLevel(getattr(logging, loglevel))
+    
+    if not printout and not logfile:
+        from StringIO import StringIO
+        dummystream = StringIO()
+        rootlogger.addHandler(logging.StreamHandler(dummystream))
+    else:
+        if printout:
+            rootlogger.addHandler(ColorizingStreamHandler())
+        if logfile:
+            rootlogger.addHandler(logging.FileHandler(logfile))
+    
+    rootlogger.debug("Set logger level to: %s", loglevel)
+    return rootlogger
+
+
 def main():
     root = logging.getLogger()
     root.setLevel(logging.DEBUG)

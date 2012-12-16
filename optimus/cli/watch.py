@@ -14,7 +14,8 @@ from argh import arg
 from optimus.builder.assets import build_assets
 from optimus.builder.pages import PageBuilder
 from optimus.conf import import_project_module
-from optimus.init import init_logging, initialize, display_settings
+from optimus.logs import init_logging
+from optimus.utils import initialize, display_settings
 
 class TemplatesWatchEventHandler(PatternMatchingEventHandler):
     """

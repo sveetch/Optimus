@@ -1,8 +1,5 @@
 """
-Default project content to use when initializing a new project
-
-* directories.py : list of directories structure to create
-* settings_file.py : this will be the default generated settings file
+Default template project to use to create a new project
 """
 # Directory structure to create
 DIRECTORY_STRUCTURE = [
@@ -24,7 +21,7 @@ DIRECTORY_STRUCTURE = [
 #       all your '{' and '}', else they will be interpreted as format variable, and 
 #       probably raise a Key error
 SCRIPT_FILES = [
-    ['requirements.txt', 'foo/bar/requirements.txt'],
+    ['requirements.txt', 'requirements.txt'],
     ['README.rst', 'README.rst'],
     # Default scripts
     ['scripts/init.py', '__init__.py'],
