@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Command line actions
+Command line action to start a new project
 """
 import datetime, logging, os, time
 
@@ -18,7 +18,7 @@ from optimus.start_project import ProjectStarter
 @arg('--dry-run', default=False, help="Dry run mode will perform all processus but will not create or modify anything")
 def init(args):
     """
-    The init action for the commandline
+    Create a new project from a project template
     """
     starttime = datetime.datetime.now()
     # Init, load and builds

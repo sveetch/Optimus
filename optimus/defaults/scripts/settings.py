@@ -71,3 +71,23 @@ JINJA_EXTENSIONS = (
 
 # This will search for a ``pages`` module that contains page objects
 PAGES_MAP = "pages"
+
+# These are the default watcher settings, you can customize them if you want, uncomment 
+# part you want to change, usually you'll change only the "pattern" values
+# You don't need to uncomment this if you want to use the watcher with these default 
+# parameters
+
+# Templates watcher settings
+#WATCHER_TEMPLATES_PATTERNS = {
+    #'patterns': ['*.html'],
+    #'ignore_patterns': None,
+    #'ignore_directories': False,
+    #'case_sensitive': False,
+#}
+# Assets watcher settings
+#WATCHER_ASSETS_PATTERNS = {
+    #'patterns': ['*.css', '*.js'],
+    #'ignore_patterns': None,
+    #'ignore_directories': False,
+    #'case_sensitive': False,
+#}
