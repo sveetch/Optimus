@@ -24,9 +24,9 @@ SCRIPT_FILES = [
     ['requirements.txt', 'requirements.txt'],
     ['README.rst', 'README.rst'],
     # Default scripts
-    ['scripts/init.py', '__init__.py'],
-    ['scripts/settings.py', 'settings.py'],
-    ['scripts/pages.py', 'pages.py'],
+    ['scripts/__init__.py.tpl', '__init__.py'],
+    ['scripts/settings.py.tpl', 'settings.py'],
+    ['scripts/pages.py.tpl', 'pages.py'],
     # Default sources
     ['sources/templates/base.html', 'sources/templates/base.html'],
     ['sources/templates/index.html', 'sources/templates/index.html'],

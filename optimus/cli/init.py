@@ -30,11 +30,12 @@ def init(args):
     if args.dry_run:
         root_logger.warning("'Dry run' mode enabled")
     
-    # TODO: optionnal command option
+    # TODO: optionnal command option to specify another path where the project will 
+    #       be created
     project_directory = os.path.abspath(os.getcwd())
 
     loader = ProjectStarter(project_directory, args.name, dry_run=args.dry_run)
-    loader.install("optimus.defaults")
+    loader.install(args.template)
     
     endtime = datetime.datetime.now()
     root_logger.info('Done in %s', str(endtime-starttime))

@@ -2,6 +2,8 @@
 New project starter
 """
 import logging, os
+from string import Template
+
 from optimus.utils import recursive_directories_create
 from optimus.importlib import import_module
 
@@ -67,10 +69,10 @@ class ProjectStarter(object):
         """
         # reading template file
         template_fileobject = open(template_filepath, 'r')
-        content = template_fileobject.read()
+        content = Template(template_fileobject.read())
         template_fileobject.close()
         # render content
-        content = content.format(**context)
+        content = content.substitute(**context)
         self.logger.debug("  Writing")
         
         if not self.dry_run:
