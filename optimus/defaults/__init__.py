@@ -16,6 +16,20 @@ DIRECTORY_STRUCTURE = [
     ]
 ]
 
+# The directory name that contains 'sources' (assets, templates, images, etc..) in the 
+# template project
+SOURCES_FROM = 'sources'
+# The directory name that will contains 'sources' in the new created projects
+SOURCES_TO = SOURCES_FROM
+
+# Default sources files or directory to synchronize within the new project directory
+# The sync task is performed before the scripts writing task
+FILES_TO_SYNC = (
+    #(SOURCE, DESTINATION)
+    ('css', 'css'),
+    ('templates', 'templates'),
+)
+
 # Script template files
 # NOTE: Files are rendered with the ``String.format()`` method, so remember to double 
 #       all your '{' and '}', else they will be interpreted as format variable, and 
@@ -27,9 +41,4 @@ SCRIPT_FILES = [
     ['scripts/__init__.py.tpl', '__init__.py'],
     ['scripts/settings.py.tpl', 'settings.py'],
     ['scripts/pages.py.tpl', 'pages.py'],
-    # Default sources
-    ['sources/templates/base.html', 'sources/templates/base.html'],
-    ['sources/templates/index.html', 'sources/templates/index.html'],
-    ['sources/templates/readme.html', 'sources/templates/readme.html'],
-    ['sources/css/screen.css', 'sources/css/screen.css'],
 ]

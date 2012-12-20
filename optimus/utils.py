@@ -49,29 +49,35 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
         
     return
 
-def synchronize_assets_sources(settings, src, dest):
+def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     """
     For now, this is just a rmtree/copytree of the given path
     
     TODO: In future, this should be a clean synchronize, like with rsync
     
     * ``src`` arg is allways a file path assumed to be located in the 
-    ``settings.SOURCES_DIR``
+       path specified with the ``from_path`` argument;
+    * ``dst`` is a file path that will be created in the 
+       path specified with the ``to_path`` argument;
+    * ``src`` arg is allways a file path assumed to be located in the 
+    ````
     * ``dst`` is a file path that will be in 
-    ``settings.STATIC_DIR``.
+    ``settings.``.
     """
     logger = logging.getLogger('optimus')
-    source = os.path.join(settings.SOURCES_DIR, src)
+    source = os.path.join(from_path, src)
     if not os.path.exists(source):
         logger.warning('The given source does not exist and so can not be synchronized : %s', source)
         return
     
-    destination = os.path.join(settings.STATIC_DIR, src)
+    destination = os.path.join(to_path, src)
     if os.path.exists(destination):
         logger.debug('Removing old asset destination: %s', destination)
-        shutil.rmtree(destination)
+        if not dry_run:
+            shutil.rmtree(destination)
     logger.debug('Synchronizing asset from "%s" to "%s"', source, destination)
-    shutil.copytree(source, destination)
+    if not dry_run:
+        shutil.copytree(source, destination)
 
 def initialize(settings):
     """
@@ -82,7 +88,7 @@ def initialize(settings):
 
     if settings.FILES_TO_SYNC is not None:
         for item in settings.FILES_TO_SYNC:
-            synchronize_assets_sources(settings, *item)
+            synchronize_assets_sources(settings.SOURCES_DIR, settings.STATIC_DIR, *item)
 
 def display_settings(settings, names):
     """

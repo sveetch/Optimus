@@ -4,7 +4,7 @@ New project starter
 import logging, os
 from string import Template
 
-from optimus.utils import recursive_directories_create
+from optimus.utils import recursive_directories_create, synchronize_assets_sources
 from optimus.importlib import import_module
 
 class ProjectStarter(object):
@@ -22,20 +22,22 @@ class ProjectStarter(object):
         self.dry_run = dry_run
         self.logger = logging.getLogger('optimus')
     
-    def install(self, projecttemplate_path):
+    def install(self, projecttemplate_modulepath):
         """
         Install the new project structure and content defined by the specified "project template"
         
-        * projecttemplate_path: a python path (aka ``foo.bar``) to the module containing 
+        * projecttemplate_modulepath: a python path (aka ``foo.bar``) to the module containing 
           all the "project template" stuff.
         """
+        
         project_dir = os.path.join(self.root_path, self.name)
         if os.path.exists(project_dir):
             self.logger.error("Project path allready exists : %s", project_dir)
             return
         
-        self.logger.info("Loading the project template from : %s", projecttemplate_path)
-        self.projecttemplate = import_module(projecttemplate_path)
+        self.logger.info("Loading the project template from : %s", projecttemplate_modulepath)
+        self.projecttemplate = import_module(projecttemplate_modulepath)
+        projecttemplate_path = os.path.abspath(os.path.dirname(self.projecttemplate.__file__))
         
         self.logger.info("Creating new Optimus project '%s' in : %s", self.name, self.root_path)
         if not self.dry_run:
@@ -44,9 +46,14 @@ class ProjectStarter(object):
         self.logger.info("Installing directories structure on : %s", project_dir)
         recursive_directories_create(project_dir, self.projecttemplate.DIRECTORY_STRUCTURE, dry_run=self.dry_run)
         
+        self.logger.info("Synchronizing sources on : %s", project_dir)
+        for item in self.projecttemplate.FILES_TO_SYNC:
+            synchronize_assets_sources(os.path.join(projecttemplate_path, self.projecttemplate.SOURCES_FROM), os.path.join(project_dir, self.projecttemplate.SOURCES_TO), *item, dry_run=self.dry_run)
+        
         self.logger.info("Installing default project's files")
         context = {
             'PROJECT_NAME': self.name,
+            'SOURCES_FROM': self.projecttemplate.SOURCES_FROM,
         }
         self.install_scripts(project_dir, context)
     

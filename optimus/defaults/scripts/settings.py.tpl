@@ -16,9 +16,9 @@ SITE_NAME = '$PROJECT_NAME'
 SITE_DOMAIN = 'localhost'
 
 # Sources directory where the assets will be searched
-SOURCES_DIR = os.path.join(PROJECT_DIR, 'sources')
+SOURCES_DIR = os.path.join(PROJECT_DIR, '$SOURCES_FROM')
 # Templates directory
-TEMPLATES_DIR = os.path.join(PROJECT_DIR, 'sources/templates')
+TEMPLATES_DIR = os.path.join(SOURCES_DIR, 'templates')
 # Directory where all stuff will be builded
 PUBLISH_DIR = os.path.join(PROJECT_DIR, '_build')
 # Path where will be moved all the static files, usually this is a directory in 
