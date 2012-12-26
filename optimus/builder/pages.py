@@ -189,7 +189,7 @@ class PageBuilder(object):
     """
     Builder class to init Jinja2 environment and build the given pages
     """
-    def __init__(self, settings, jinja_env=None, assets_env=None, lang=None): #, autoscan=True):
+    def __init__(self, settings, jinja_env=None, assets_env=None, lang=None, dry_run=False):
         self.logger = logging.getLogger('optimus')
         self.settings = settings
         self.assets_env = assets_env
@@ -198,6 +198,7 @@ class PageBuilder(object):
         self.set_globals()
         self.logger.debug("PageBuilder initialized")
         self.registry = PageRegistry()
+        self.dry_run = dry_run # Not really used yet
     
     def get_environnement(self, assets_env=None):
         """
@@ -306,11 +307,18 @@ class PageBuilder(object):
         self.logger.info(' Building page: %s', page_item.destination)
         content = page_item.render(self.jinja_env, self.settings)
         
-        # Write it
         destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.destination)
+        # Creating destination path if needed
+        destination_dir, destination_file = os.path.split(destination_path)
+        if not os.path.exists(destination_dir):
+            self.logger.info('* Creating new directory : %s', destination_dir)
+            if not self.dry_run:
+                os.makedirs(destination_dir)
+        # Write it
         self.logger.debug(' - Writing to: %s', destination_path)
-        fp = open(destination_path, 'w')
-        fp.write(content.encode('utf-8'))
-        fp.close()
+        if not self.dry_run:
+            fp = open(destination_path, 'w')
+            fp.write(content.encode('utf-8'))
+            fp.close()
         
         return destination_path
