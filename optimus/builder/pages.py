@@ -311,7 +311,7 @@ class PageBuilder(object):
         # Creating destination path if needed
         destination_dir, destination_file = os.path.split(destination_path)
         if not os.path.exists(destination_dir):
-            self.logger.info('* Creating new directory : %s', destination_dir)
+            self.logger.debug(' - Creating new directory : %s', destination_dir)
             if not self.dry_run:
                 os.makedirs(destination_dir)
         # Write it
