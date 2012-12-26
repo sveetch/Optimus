@@ -60,13 +60,16 @@ class PageViewBase(object):
     
     def get_context(self):
         self.context.update({
-            'page_title': self.title,
+            'page_title': self.get_title(),
             'page_destination': self.get_destination(),
             'page_lang': self.get_lang(),
             'page_template_name': self.get_template_name(),
         })
         self.logger.debug(" - Initial context: %s", self.context)
         return self.context
+    
+    def get_title(self):
+        return self.title
     
     def get_lang(self):
         return self.lang
