@@ -8,6 +8,7 @@
 .. _virtualenv: http://www.virtualenv.org/
 .. _Jinja2: http://jinja.pocoo.org/
 .. _watchdog: https://github.com/gorakhargosh/watchdog
+.. _Optimus-foundation: https://github.com/sveetch/Optimus-foundation
 
 Introduction
 ============
@@ -45,3 +46,11 @@ Then you have to define some pages to build, you can do it directly in the ``set
 Pages are allways an object ``optimus.pages import PageViewBase`` or an object that implement his method. You can inherit them to modify their behaviour.
 
 Generally the build system has less constraint than a Framework like `Django`_.
+
+Project
+*******
+
+You can create a new project with the ``init`` command, there actually only two available template project :
+
+* The default one, included in Optimus, you don't have to specify anything to use it;
+* `Optimus-foundation`_ that create a new project embedding all Foundation stuff, his version follow the Foundation version embedded;
