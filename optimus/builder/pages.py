@@ -165,13 +165,13 @@ class PageRegistry(object):
         self.logger = logging.getLogger('optimus')
     
     def add_page(self, page, items):
-        self.map_dest_to_page[page.destination] = page
+        self.map_dest_to_page[page.get_destination()] = page
         
         for k in items:
             if k in self.elements:
-                self.elements[k].add(page.destination)
+                self.elements[k].add(page.get_destination())
             else:
-                self.elements[k] = set([page.destination])
+                self.elements[k] = set([page.get_destination()])
     
     def get_pages_from_dependency(self, template_name):
         """
@@ -275,7 +275,7 @@ class PageBuilder(object):
         """
         # Insert global context variables
         # Select the template to use
-        self.logger.info(' Scanning page: %s', page_item.destination)
+        self.logger.info(' Scanning page: %s', page_item.get_destination())
         
         return page_item.introspect(self.jinja_env, self.settings)
     
@@ -307,10 +307,10 @@ class PageBuilder(object):
         """
         # Insert global context variables
         # Select the template to use
-        self.logger.info(' Building page: %s', page_item.destination)
+        self.logger.info(' Building page: %s', page_item.get_destination())
         content = page_item.render(self.jinja_env, self.settings)
         
-        destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.destination)
+        destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.get_destination())
         # Creating destination path if needed
         destination_dir, destination_file = os.path.split(destination_path)
         if not os.path.exists(destination_dir):
