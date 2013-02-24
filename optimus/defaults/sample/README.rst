@@ -151,5 +151,8 @@ Configure your settings if needed, then your Pages to build and finally launch o
 
     optimus-cli build
 
-After the first build, you can use the ``watch`` command action to automatically rebuild files at each change in your sources.
+After the first build, you can use the ``watch`` command action to automatically rebuild files at each change in your sources : ::
 
+    optimus-cli watch
+
+This useful in development, but note that the watcher is limited to watch only for templates and assets changes. It will not detect if you change some things in your Page view, your settings or your RST files.
