@@ -36,10 +36,7 @@ def build(args):
     assets_env = register_assets(settings)
     # Pages
     pages_env = PageBuilder(settings, assets_env=assets_env)
-    #if not args.dry_run:
     pages_env.build_bulk(settings.PAGES)
-    #else:
-        #pages_env.scan_bulk(settings.PAGES)
     
     endtime = datetime.datetime.now()
     root_logger.info('Done in %s', str(endtime-starttime))
