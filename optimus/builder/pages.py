@@ -23,7 +23,8 @@ try:
 except ImportError:
     support = None
 
-from optimus.lang import LangDefault
+from optimus.lang import LangBase, LangDefault
+from optimus.conf import settings
 
 class PageViewBase(object):
     """
@@ -57,11 +58,12 @@ class PageViewBase(object):
     context = {}
     
     def __init__(self, **kwargs):
+        self._used_templates = None
+        
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
             
         self.logger = logging.getLogger('optimus')
-        self._used_templates = None
     
     def __repr__(self):
         return "<Page dest:{destination}>".format(destination=self.destination)
@@ -80,36 +82,36 @@ class PageViewBase(object):
         return self.title
     
     def get_lang(self):
+        if getattr(self, "lang", None) is None:
+            self.lang = LangBase(code=settings.LANGUAGE_CODE)
         return self.lang
     
-    def get_destination(self):
-        return self.destination
-    
     def get_template_name(self):
-        return self.template_name
+        return self.template_name.format(lang_code=self.get_lang().code)
     
-    def render(self, env, settings):
+    def get_destination(self):
+        return self.destination.format(lang_code=self.get_lang().code)
+    
+    def render(self, env):
         """
-        Take the Jinja2 environment and the settings module as required argument. Return 
+        Take the Jinja2 environment as required argument. Return 
         the HTML compiled from the template with his context.
         """
         self.env = env
-        self.settings = settings
         context = self.get_context()
         
         template = self.env.get_template(self.get_template_name())
         
         return template.render(lang=self.get_lang(), **context)
     
-    def introspect(self, env, settings, force=False):
+    def introspect(self, env, force=False):
         """
-        Take the Jinja2 environment and the settings module as required argument to find all templates dependancies.
+        Take the Jinja2 environment as required argument to find all templates dependancies.
         
         Should return a list of all template dependancies.
         """
         if self._used_templates is None:
             self.env = env
-            self.settings = settings
             
             self._used_templates = [self.get_template_name()] + self._recursing_template_search(self.get_template_name())
             self.logger.debug(" - Used templates: %s", self._used_templates)
@@ -149,7 +151,7 @@ class RstPageView(PageViewBase):
     def get_context(self):
         context = super(RstPageView, self).get_context()
         
-        rst_parser_settings = copy.deepcopy(getattr(self.settings, 'RST_PARSER_SETTINGS', {}))
+        rst_parser_settings = copy.deepcopy(getattr(settings, 'RST_PARSER_SETTINGS', {}))
         rst_parser_settings.update(self.parser_settings)
         
         f = open(self.get_source_filepath(), 'r')
@@ -200,14 +202,12 @@ class PageBuilder(object):
     """
     Builder class to init Jinja2 environment and build the given pages
     """
-    def __init__(self, settings, jinja_env=None, assets_env=None, lang=LangDefault(), dry_run=False):
+    def __init__(self, jinja_env=None, assets_env=None, dry_run=False):
         self.logger = logging.getLogger('optimus')
-        self.settings = settings
         
         self.assets_env = assets_env
         
         self.internationalized = False
-        self.lang = lang
         self.translations = {}
         
         self.jinja_env = jinja_env or self.get_environnement(assets_env)
@@ -229,7 +229,7 @@ class PageBuilder(object):
             exts.append(AssetsExtension)
         
         # Enabled Jinja extensions
-        for ext in self.settings.JINJA_EXTENSIONS:
+        for ext in settings.JINJA_EXTENSIONS:
             exts.append(ext)
         
         # Active i18n behaviors if i18n extension is loaded and Babel has been imported
@@ -238,7 +238,7 @@ class PageBuilder(object):
             self.logger.debug("'i18n' enabled")
         
         # Boot Jinja environment
-        env = Jinja2Environment(loader=FileSystemLoader(self.settings.TEMPLATES_DIR), extensions=exts)
+        env = Jinja2Environment(loader=FileSystemLoader(settings.TEMPLATES_DIR), extensions=exts)
         
         if assets_env:
             env.assets_environment = assets_env
@@ -252,13 +252,13 @@ class PageBuilder(object):
         Register the webassets environment if any
         """
         self.jinja_env.globals.update({
-            'debug': self.settings.DEBUG,
+            'debug': settings.DEBUG,
             'SITE': {
-                'name': self.settings.SITE_NAME,
-                'domain': self.settings.SITE_DOMAIN,
-                'web_url': 'http://%s' % self.settings.SITE_DOMAIN,
+                'name': settings.SITE_NAME,
+                'domain': settings.SITE_DOMAIN,
+                'web_url': 'http://%s' % settings.SITE_DOMAIN,
             },
-            'STATIC_URL': self.settings.STATIC_URL,
+            'STATIC_URL': settings.STATIC_URL,
         })
     
     def scan_bulk(self, page_list):
@@ -295,7 +295,7 @@ class PageBuilder(object):
         """
         self.logger.info(' Scanning page: %s', page_item.get_destination())
         
-        return page_item.introspect(self.jinja_env, self.settings)
+        return page_item.introspect(self.jinja_env)
     
     def build_bulk(self, page_list):
         """
@@ -320,15 +320,13 @@ class PageBuilder(object):
         Try to load the translations for the page language if any, then install it in Jinja2
         
         It does not reload a language translations if a previous page has allready loaded it
-        
-        TODO: Accept a string for the page.lang attribute, and load a language object with the given string
         """
         # Get the page language object if any, else the default one
-        lang = getattr(page_item, 'lang') or self.lang
+        lang = page_item.get_lang()
         # Load language translations only if it have not been yet
         if lang.code not in self.translations:
             self.logger.debug(' - Loading translations for locale: %s - %s', lang.code, lang)
-            self.translations[lang.code] = support.Translations.load(self.settings.LOCALES_DIR, lang.code, 'messages')
+            self.translations[lang.code] = support.Translations.load(settings.LOCALES_DIR, lang.code, 'messages')
         
         # Install it in the Jinja env
         self.jinja_env.install_gettext_translations(self.translations[lang.code], newstyle=False)
@@ -338,9 +336,6 @@ class PageBuilder(object):
         Build the given page
         
         Return the destination path of the builded page
-        
-        TODO: Default lang should be pushed in the page instance if it don't have one, 
-              this more consistant that only simulate it in "get_translation_for_item"
         """
         self.logger.info(' Building page: %s', page_item.get_destination())
         
@@ -349,9 +344,9 @@ class PageBuilder(object):
             self.get_translation_for_item(page_item)
         
         # Template render
-        content = page_item.render(self.jinja_env, self.settings)
+        content = page_item.render(self.jinja_env)
         
-        destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.get_destination())
+        destination_path = os.path.join(settings.PUBLISH_DIR, page_item.get_destination())
         # Creating destination path if needed
         destination_dir, destination_file = os.path.split(destination_path)
         if not os.path.exists(destination_dir):

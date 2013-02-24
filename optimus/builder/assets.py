@@ -4,6 +4,7 @@ import copy, logging
 from webassets import Environment as AssetsEnvironment
 
 from optimus.builder.bundles import COMMON_BUNDLES
+from optimus.conf import settings
 
 class AssetRegistry(object):
     """
@@ -35,7 +36,7 @@ class AssetRegistry(object):
         dependancies = self.elements[asset_name]
         return [self.map_dest_to_bundle[item] for item in dependancies]
 
-def register_assets(settings):
+def register_assets():
     """
     Initialize webassets environment and its bundles
     

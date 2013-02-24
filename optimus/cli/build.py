@@ -2,15 +2,11 @@
 """
 Command line action to build a project
 """
-import datetime, logging, os, time
+import datetime, os
 
 from argh import arg
 
-from optimus.builder.assets import register_assets
-from optimus.builder.pages import PageBuilder
-from optimus.conf import import_project_module
 from optimus.logs import init_logging
-from optimus.utils import initialize, display_settings
 
 @arg('--settings', default='settings', help="Python path to the settings module")
 @arg('--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
@@ -23,7 +19,14 @@ def build(args):
     starttime = datetime.datetime.now()
     # Init, load and builds
     root_logger = init_logging(args.loglevel.upper(), logfile=args.logfile)
-    settings = import_project_module(args.settings)
+    
+    # Only load optimus stuff after the settings module name has been retrieved
+    os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
+    from optimus.conf import settings, import_project_module
+    from optimus.builder.assets import register_assets
+    from optimus.builder.pages import PageBuilder
+    from optimus.utils import initialize, display_settings
+    
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL'))
     
     if hasattr(settings, 'PAGES_MAP'):
@@ -33,9 +36,9 @@ def build(args):
 
     initialize(settings)
     # Assets
-    assets_env = register_assets(settings)
+    assets_env = register_assets()
     # Pages
-    pages_env = PageBuilder(settings, assets_env=assets_env)
+    pages_env = PageBuilder(assets_env=assets_env)
     pages_env.build_bulk(settings.PAGES)
     
     endtime = datetime.datetime.now()

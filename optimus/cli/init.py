@@ -2,13 +2,11 @@
 """
 Command line action to start a new project
 """
-import datetime, logging, os, time
+import datetime, os
 
 from argh import arg, CommandError
 
-from optimus.conf import import_project_module
 from optimus.logs import init_logging
-from optimus.utils import initialize, display_settings
 from optimus.start_project import ProjectStarter
 
 @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
