@@ -1,0 +1,27 @@
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
+#floater {
+    position:relative;
+    float:left;
+    height:50%;
+    padding-top: 15%;
+    margin-bottom:-25px;
+    width:100%;
+}
+
+#centered {
+    position:relative;
+    clear:left;
+    height:50px;
+    width:80%;
+    max-width:800px;
+    min-width:400px;
+    margin:0 auto;
+    background:#fff;
+    text-align:center;
+    text-shadow:#a0a0a0 2px 2px 3px;
+}

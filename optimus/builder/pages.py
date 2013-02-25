@@ -82,15 +82,19 @@ class PageViewBase(object):
         return self.title
     
     def get_lang(self):
+        # Defaut lang if not defined
         if getattr(self, "lang", None) is None:
             self.lang = LangBase(code=settings.LANGUAGE_CODE)
+        # If the lang attribute contains a string, assume this is the language code
+        elif isinstance(getattr(self, "lang"), basestring):
+            self.lang = LangBase(code=getattr(self, "lang"))
         return self.lang
     
     def get_template_name(self):
-        return self.template_name.format(lang_code=self.get_lang().code)
+        return self.template_name.format(language_code=self.get_lang().code)
     
     def get_destination(self):
-        return self.destination.format(lang_code=self.get_lang().code)
+        return self.destination.format(language_code=self.get_lang().code)
     
     def render(self, env):
         """

@@ -1,0 +1,7 @@
+# Remove/comment these two lines if you don't use `RstPageView`
+docutils==0.9.1
+rstview==0.1
+# The default compressor used in a default project
+yuicompressor==2.4.7
+# Install Optimus if not allready installed
+Optimus

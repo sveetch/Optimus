@@ -2,7 +2,7 @@
 """
 New project starter
 """
-import logging, os
+import logging, os, shutil
 from string import Template
 
 from optimus.utils import recursive_directories_create, synchronize_assets_sources
@@ -50,6 +50,15 @@ class ProjectStarter(object):
         self.logger.info("Synchronizing sources on : %s", project_dir)
         for item in self.projecttemplate.FILES_TO_SYNC:
             synchronize_assets_sources(os.path.join(projecttemplate_path, self.projecttemplate.SOURCES_FROM), os.path.join(project_dir, self.projecttemplate.SOURCES_TO), *item, dry_run=self.dry_run)
+        
+        if hasattr(self.projecttemplate, "LOCALE_DIR"):
+            locale_src = os.path.join(projecttemplate_path, self.projecttemplate.LOCALE_DIR)
+            locale_dst = os.path.join(project_dir, self.projecttemplate.LOCALE_DIR)
+            self.logger.info("Installing messages catalogs")
+            if not os.path.exists(locale_src):
+                logger.error('Message catalog directory does not exists: %s', locale_src)
+            if not self.dry_run:
+                shutil.copytree(locale_src, locale_dst)
         
         self.logger.info("Installing default project's files")
         context = {
