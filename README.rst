@@ -16,13 +16,7 @@ Introduction
 
 A simple building environment to produce static HTML from `Jinja2`_ templates and with assets compress managing with `webassets`_.
 
-The environment should bring all needed stuff and a script to build static website with benefit of templating with `Jinja2`_ and compressed assets (for production) with `webassets`_.
-
-It try to cohabit with a Compass or Less environment, but this part is actually not ready.
-
-Better documentation to come when this will be ready. 
-
-.. WARNING: Currently the project is failing to really help to cohabits with Compass in development environment.
+The environment should bring all needed stuff and command lines to build static websites with benefit of templating with `Jinja2`_, compressed assets (for production) with `webassets`_ and cohabits with Compass or Less.
 
 Requires
 ========
