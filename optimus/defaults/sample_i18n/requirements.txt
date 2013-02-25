@@ -3,5 +3,7 @@ docutils==0.9.1
 rstview==0.1
 # The default compressor used in a default project
 yuicompressor==2.4.7
+# Install Babel for i18n support
+Babel==0.9.6
 # Install Optimus if not allready installed
 Optimus

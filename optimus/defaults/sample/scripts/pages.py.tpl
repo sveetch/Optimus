@@ -3,7 +3,7 @@
 The project pages map
 """
 from optimus.builder.pages import PageViewBase, RstPageView
-
+from optimus.conf import settings
 """
 Page objects
 """
@@ -27,5 +27,6 @@ class Index(PageViewBase):
 # Available pages to build
 PAGES = [
     Index(),
-    Readme(),
 ]
+if settings.DEBUG:
+    PAGES.append(Readme())

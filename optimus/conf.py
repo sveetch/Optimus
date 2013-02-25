@@ -27,6 +27,8 @@ def import_settings(name=None):
     # Fill default required settings
     if not hasattr(_settings, "LANGUAGE_CODE"):
         setattr(_settings, "LANGUAGE_CODE", "en_US")
+    if not hasattr(_settings, "LOCALES_DIR"):
+        setattr(_settings, "LOCALES_DIR", os.path.join(_settings.PROJECT_DIR, 'locale'))
     
     return _settings
     

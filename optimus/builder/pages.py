@@ -72,11 +72,21 @@ class PageViewBase(object):
         self.context.update({
             'page_title': self.get_title(),
             'page_destination': self.get_destination(),
+            'page_relative_position': self.get_relative_position(),
             'page_lang': self.get_lang(),
             'page_template_name': self.get_template_name(),
         })
         self.logger.debug(" - Initial context: %s", self.context)
         return self.context
+    
+    def get_relative_position(self):
+        """
+        Return the relative path position from the destination file to the root
+        
+        This is either something like "../../" if the destination is in subdirectories 
+        or "./" if at the root
+        """
+        return ((len(self.get_destination().split("/"))-1)*"../" or "./")
     
     def get_title(self):
         return self.title
@@ -94,7 +104,7 @@ class PageViewBase(object):
         return self.template_name.format(language_code=self.get_lang().code)
     
     def get_destination(self):
-        return self.destination.format(language_code=self.get_lang().code)
+        return os.path.normpath(self.destination.format(language_code=self.get_lang().code))
     
     def render(self, env):
         """

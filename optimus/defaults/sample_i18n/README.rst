@@ -97,6 +97,7 @@ Default ``PageViewBase`` instance add some variable to his template context :
 
 * **page_title** that contains the value of ``PageViewBase.title`` attribute;
 * **page_destination** that contains the value of ``PageViewBase.destination`` attribute;
+* **page_relative_position** that contains the relative path position from the destination file to the root;
 * **page_lang** that contains the value of ``PageViewBase.page_lang`` attribute;
 * **page_template_name** that contains the value of ``PageViewBase.template_name`` attribute;
 

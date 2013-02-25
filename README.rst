@@ -50,12 +50,13 @@ Pages are allways an object ``optimus.pages import PageViewBase`` or an object t
 
 Generally the build system has less constraint than a Framework like `Django`_.
 
-You can see more usage details in the `default project Readme <optimus/defaults/README.rst>`_.
+You can see more usage details in the `default project Readme <optimus/defaults/sample/README.rst>`_.
 
 Project
 *******
 
 You can create a new project with the ``init`` command, there actually only two available template project :
 
-* The default one, included in Optimus, you don't have to specify anything to use it;
-* `Optimus-foundation`_ that create a new project embedding all Foundation stuff, his version follow the Foundation version embedded;
+* ``optimus.defaults.sample`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
+* ``optimus.defaults.sample_i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed. Note that you must install `Babel`_ before using this project template;
+* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project embedding all `Foundation`_ stuff, you will have to install it before;
