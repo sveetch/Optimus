@@ -1,33 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-A naive trick to manage multiple language types
+Language object used to encapsulate some details on a language
 
 Usage : ::
 
     class LangFr(LangBase):
         code = 'fr'
-        alt_code = 'fr'
         label = 'France'
 
-    class LangUsa(LangBase):
-        code = 'usa'
-        alt_code = 'en'
-        label = 'Usa'
+Or : ::
 
-    class LangUk(LangBase):
-        code = 'uk'
-        alt_code = 'en'
-        external_code = 'en'
-        label = 'United Kingdom'
-
-This trick should be replaced by Jinja+i18n
+    lang = LangBase(lang="zh_CN", label="Chinese")
 """
 class LangBase(object):
     """
-    Language base object to encapsulate the language label and code
+    Language base object to encapsulate the language label, code and other details
     
-    Alternative and External code are not really used internally in optimus, these 
-    are only for some template usage
+    Alternative and External code are not really used internally in optimus, there 
+    are only for some template usage.
+    
+    The instance will also supply a "language_name" and "region_name" class attributes, 
+    which are the result of splitting the code on two parts. "region_name" is ``None`` 
+    by default, as the region name is optional in language identifier.
+    
+    See http://www.i18nguy.com/unicode/language-identifiers.html for more details on 
+    language identifiers.
     """
     label = None # Label to display
     code = None # Internal code
@@ -37,24 +34,28 @@ class LangBase(object):
     def __init__(self, code=None, label=None):
         self.code = code or self.code
         
+        if self.code is None:
+            raise ValueError("Invalid language identifier : You must supply it by the way of 'code' argument or as the 'code' class attribute.")
+        if len(self.code.split('-'))>1:
+            raise ValueError("Invalid language identifier : Language name and region name must be joined by a '_' not a '-'")
+        
+        self.language_name, self.region_name = self.split_code(self.code)
+        
         self.label = label or self.label or self.code
         
-        if self.label is None:
-            self.label = self.code
-        if self.alt_code is None:
-            self.alt_code = self.code
-        if self.external_code is None:
-            self.external_code = self.code
+        self.alt_code = self.alt_code or self.code
+        self.external_code = self.external_code or self.code
+    
+    def split_code(self, code):
+        items = code.split('_')
+        language_name = items[0]
+        region_name = None
+        if len(items)>1:
+            region_name = items[1]
+        return language_name, region_name
     
     def __str__(self):
         return self.label.encode('utf-8')
     
     def __unicode__(self):
         return self.label
-
-class LangDefault(LangBase):
-    """
-    Default lang used in internationalized views
-    """
-    label = 'US English'
-    code = 'en_US'
