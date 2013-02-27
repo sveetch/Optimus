@@ -23,7 +23,7 @@ try:
 except ImportError:
     support = None
 
-from optimus.lang import LangBase, LangDefault
+from optimus.lang import LangBase
 from optimus.conf import settings
 
 class PageViewBase(object):
