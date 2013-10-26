@@ -124,10 +124,11 @@ To correctly extract all your strings to translate, `Babel`_ will need some rule
 
 At less you will need of the Jinja2 integration rule : ::
 
-    [jinja2: **/templates/**.html]
+    [jinja2: sources/templates/**.html]
     encoding = utf-8
+    extensions = webassets.ext.jinja2.AssetsExtension
 
-See the `Jinja2 integration documentation <http://jinja.pocoo.org/docs/integration/#babel-integration>`_ for more details.
+The last line is needed if you use webassets tags ``{% assets %}..{% endassets %}`` in your templates, else the extraction will fail. See the `Jinja2 integration documentation <http://jinja.pocoo.org/docs/integration/#babel-integration>`_ for more details.
 
 Extracting first the reference POT file :
 
