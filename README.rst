@@ -18,6 +18,8 @@ A simple building environment to produce static HTML from `Jinja2`_ templates an
 
 The environment should bring all needed stuff and command lines to build static websites with benefit of templating with `Jinja2`_, compressed assets (for production) with `webassets`_ and cohabits with Compass or Less.
 
+Read the Optimus documentation on `<https://optimus.readthedocs.org/>`_
+
 Requires
 ========
 

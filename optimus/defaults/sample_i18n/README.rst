@@ -3,6 +3,8 @@
 
 This is the default Readme file for your `Optimus`_ project.
 
+Read the Optimus documentation on `<https://optimus.readthedocs.org/>`_
+
 Install
 =======
 
