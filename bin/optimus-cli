@@ -7,5 +7,14 @@ from optimus.cli.init import init
 
 if __name__=='__main__':
     parser = ArghParser()
-    parser.add_commands([init, build, watch])
+    enabled_commands = [init, build, watch]
+
+    try:
+        import cherrypy
+    except ImportError:
+        pass
+    else:
+        from optimus.cli.runserver import runserver
+        enabled_commands.append(runserver)
+    parser.add_commands(enabled_commands)
     parser.dispatch()

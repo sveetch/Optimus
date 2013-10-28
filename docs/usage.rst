@@ -66,3 +66,22 @@ Watch mode will not detect if :
 * You make some changes in your translation files (``*.pot`` and ``*.po``);
 
 For theses cases you will have to stop the watcher, manually rebuild with ``build`` command or `Babel`_ tool (for translations only) then relaunch the watcher.
+
+Server
+======
+
+You can launch a simple web server to publish your builded content, **it's not intended to be used in production**, only for debugging your work. This command action is only available if you allready have installed **cherrypy**, see the *Install* document about this.
+
+The hostname argument is required and it should at least contain the port and the address will be "127.0.0.1" by default.
+
+To launch the webserver binded on your local IP on port 8001 to publish your project from the default settings, do this : ::
+
+    optimus-cli runserver 0.0.0.0:8001
+
+Also you can bind it on localhost on port 8080 with the production settings : ::
+
+    optimus-cli runserver localhost:8080 --settings=prod_settings
+
+The settings are used to know the publish directory to expose.
+
+Note that the server does not build anything, it only expose the publish directory to publish the builded page and static files it contains. You should launch the `Watch mode`_ in parallel.

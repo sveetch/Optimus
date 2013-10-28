@@ -31,6 +31,7 @@ setup(
         'pathtools==0.1.2',
         'watchdog==0.6.0',
         'compressinja==0.0.1',
+        'rstview==0.1.2',
     ],
     scripts=['bin/optimus-cli'],
     include_package_data=True,

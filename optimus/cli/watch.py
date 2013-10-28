@@ -41,6 +41,7 @@ def watch(args):
     # Init environments
     assets_env = register_assets()
     pages_env = PageBuilder(assets_env=assets_env)
+    # TODO: add a first build to avoid error on unbuilded project ?
     pages_env.scan_bulk(settings.PAGES)
     
     observer = Observer()
@@ -55,7 +56,7 @@ def watch(args):
     watcher_templates_patterns.update(getattr(settings, 'WATCHER_TEMPLATES_PATTERNS', {}))
     # Assets watcher settings
     watcher_assets_patterns = {
-        'patterns': ['*.css', '*.js'],
+        'patterns': ['*.css', '*.js', '*.json'],
         'ignore_patterns': None,
         'ignore_directories': False,
         'case_sensitive': False,

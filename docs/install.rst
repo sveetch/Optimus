@@ -4,6 +4,7 @@
 .. _Optimus: https://github.com/sveetch/Optimus
 .. _Compass: http://compass-style.org/
 .. _rvm: http://rvm.io/
+.. _cherrypy: http://cherrypy.org/
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _webassets: https://github.com/miracle2k/webassets
 
@@ -30,7 +31,6 @@ Optimus does not come with an embedded asset compressor to use with `webassets`_
 But the better and easiest is to install ``yuicompressor`` with ``pip``, this is a dummy Python module to automatically install the real `yui-compressor`_ that is a great choice to compress CSS and Javascript assets. Beware that it require a Java install, the OpenJDK is supported. To install `yui-compressor`_ just do : ::
 
     pip install yuicompressor
-
 
 Enable i18n support
 ===================
@@ -67,3 +67,12 @@ Then you should install the plugin to have a project template to create new proj
 Note that this plugin does not support *Foundation 4.x* yet.
 
 See *Create a project* in the usage documentation for details on its usage.
+
+Web server for development
+==========================
+
+If you don't allready have a web server installed on your machine, you can use the one configured in Optimus, you will have to install `CherryPy`_ before : ::
+
+    pip install cherrypy
+
+Then you can run it from the command action ``runserver``, see the *Usage* document about this.
