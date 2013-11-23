@@ -24,7 +24,7 @@ setup(
     ],
     install_requires=[
         'docutils==0.9.1',
-        'Jinja2=>2.6',
+        'Jinja2>=2.6',
         'webassets==0.8',
         'argparse==1.2.1',
         'argh==0.16.0',

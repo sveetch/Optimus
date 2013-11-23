@@ -16,5 +16,6 @@ if __name__=='__main__':
     else:
         from optimus.cli.runserver import runserver
         enabled_commands.append(runserver)
+    
     parser.add_commands(enabled_commands)
     parser.dispatch()

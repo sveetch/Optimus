@@ -65,10 +65,12 @@ def watch(args):
     
     # Init templates and assets event watchers
     templates_event_handler = TemplatesWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_templates_patterns)
-    assets_event_handler = AssetsWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_assets_patterns)
+    if assets_env is not None:
+        assets_event_handler = AssetsWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_assets_patterns)
     # Registering event watchers and start to watch
     observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
-    observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
+    if assets_env is not None:
+        observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
     observer.start()
     try:
         while True:
