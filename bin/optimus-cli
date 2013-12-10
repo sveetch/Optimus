@@ -8,7 +8,17 @@ from optimus.cli.init import init
 if __name__=='__main__':
     parser = ArghParser()
     enabled_commands = [init, build, watch]
-
+    
+    # Enabling PO commands if babel is installed
+    try:
+        import babel
+    except ImportError:
+        pass
+    else:
+        from optimus.cli.po import poinit
+        enabled_commands.append(poinit)
+    
+    # Enabling runserver command if cherrypy is installed
     try:
         import cherrypy
     except ImportError:

@@ -25,11 +25,28 @@ def import_settings(name=None):
     _settings = import_project_module(name)
     
     # Fill default required settings
-    if not hasattr(_settings, "LANGUAGE_CODE"):
-        setattr(_settings, "LANGUAGE_CODE", "en_US")
+    # Default directory for translation catalog
     if not hasattr(_settings, "LOCALES_DIR"):
         setattr(_settings, "LOCALES_DIR", os.path.join(_settings.PROJECT_DIR, 'locale'))
-    
+    # Default used language
+    if not hasattr(_settings, "LANGUAGE_CODE"):
+        setattr(_settings, "LANGUAGE_CODE", "en_US")
+    # Default available languages to manage
+    if not hasattr(_settings, "LANGUAGES"):
+        setattr(_settings, "LANGUAGES", (_settings.LANGUAGE_CODE,))
+    # Default map for translaction extract with babel
+    if not hasattr(_settings, "I18N_EXTRACT_MAP"):
+        setattr(_settings, "I18N_EXTRACT_MAP", (
+            ('**/templates/**.html', 'jinja2'),
+        ))
+    if not hasattr(_settings, "I18N_EXTRACT_OPTIONS"):
+        setattr(_settings, "I18N_EXTRACT_OPTIONS", {
+            '**/templates/**.html': {
+                'extensions': 'webassets.ext.jinja2.AssetsExtension',
+                'encoding': 'utf-8'
+            },
+        })
+
     return _settings
     
 

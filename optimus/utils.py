@@ -54,13 +54,14 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     For now, this is just a rmtree/copytree of the given path
     
     TODO: In future, this should be a clean synchronize, like with rsync
+          or with making an internal registry of asset files that will be used 
+          to make a diff of changes then apply it ?
     
     * ``src`` arg is allways a file path assumed to be located in the 
        path specified with the ``from_path`` argument;
     * ``dst`` is a file path that will be created in the 
        path specified with the ``to_path`` argument;
     * ``src`` arg is allways a file path assumed to be located in the 
-    ````
     * ``dst`` is a file path that will be in 
     ``settings.``.
     """
