@@ -41,7 +41,12 @@ def watch(args):
     # Init environments
     assets_env = register_assets()
     pages_env = PageBuilder(assets_env=assets_env)
-    # TODO: add a first build to avoid error on unbuilded project ?
+    
+    # add a first build to avoid error on unbuilded project
+    if not os.path.exists(settings.PUBLISH_DIR):
+        root_logger.info('Seems you never do a first build so do it now')
+        pages_env.build_bulk(settings.PAGES)
+    
     pages_env.scan_bulk(settings.PAGES)
     
     observer = Observer()
