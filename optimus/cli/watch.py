@@ -76,6 +76,8 @@ def watch(args):
     observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
     if assets_env is not None:
         observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
+        
+    root_logger.warning('Launching the watcher, use CTRL+C to stop it')
     observer.start()
     try:
         while True:
