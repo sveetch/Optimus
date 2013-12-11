@@ -65,7 +65,11 @@ def import_project_module(name):
     project_name = os.path.basename( os.path.abspath( project_directory ) )
     sys.path.append( os.path.normpath( os.path.join(project_directory, '..') ) )
     # Sys.path is ok, we can import the project
-    project_module = __import__(project_name, '', '', [''])
+    try:
+        project_module = __import__(project_name, '', '', [''])
+    except ImportError:
+        logger.critical("Unable to load the project named '{0}'".format(project_name))
+        raise
     # Cleanup the sys.path of the project path
     sys.path.pop()
     

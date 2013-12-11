@@ -6,20 +6,12 @@ from optimus import __version__
 from optimus.cli.build import build
 from optimus.cli.watch import watch
 from optimus.cli.init import init
+from optimus.cli.po import po
 
 if __name__=='__main__':
     parser = ArghParser()
     parser.add_argument('-v', '--version', action='version', version=__version__)
-    enabled_commands = [init, build, watch]
-    
-    # Enabling PO commands if babel is installed
-    try:
-        import babel
-    except ImportError:
-        pass
-    else:
-        from optimus.cli.po import po
-        enabled_commands.append(po)
+    enabled_commands = [init, build, watch, po]
     
     # Enabling runserver command if cherrypy is installed
     try:

@@ -14,7 +14,7 @@ setup(
         'Programming Language :: Python',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'Topic :: Internet :: WWW/HTTP',
@@ -32,8 +32,9 @@ setup(
         'watchdog==0.6.0',
         'rstview==0.1.2',
         'Babel==1.3.0',
+        'cherrypy==3.2.4',
     ],
-    scripts=['bin/optimus-cli'],
+    scripts=['bin/optimus'],
     include_package_data=True,
     zip_safe=False
 )
