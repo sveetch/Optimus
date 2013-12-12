@@ -14,20 +14,22 @@
 Usage
 *****
 
-You can use Optimus from the command line tool ``optimus-cli``. A global help is available with : ::
+You can use Optimus from the command line tool ``optimus``. A global help is available with : ::
 
-    optimus-cli help
+    optimus help
 
 Or specific command action help with : ::
 
-    optimus-cli help action_name
+    optimus help action_name
+
+.. _usage-project-label:
 
 Create a project
 ================
 
 At least you will a name for the new project, take care that it must a valid Python module name, so only with alphanumeric characters and ``_``. No spaces, no dots, etc.. : ::
 
-    optimus-cli init --name my_project
+    optimus init --name my_project
 
 It will create project directory and fill it with basic content. But Optimus can use project templates to create project more usefull :
 
@@ -37,21 +39,71 @@ It will create project directory and fill it with basic content. But Optimus can
 
 So to create a new Foundation project, you will have to do something like : ::
 
-    optimus-cli init --name my_project --template=optimus.defaults.sample_i18n
+    optimus init --name my_project --template=optimus.defaults.sample_i18n
+
+.. _usage-building-label:
 
 Building
 ========
 
 Configure your settings if needed, then your Pages to build and finally launch optimus to build them : ::
 
-    optimus-cli build
+    optimus build
+
+.. _usage-translations-label:
+
+Managing translations
+=====================
+
+Optimus can manage your translations for the knowed languages of your project, this is done in the setting ``LANGUAGES`` where you define a list of locale names, each of them will have a translation catalogs after you initialize them. By default, this settings is only filled with the default locale defined in the settings ``LANGUAGE_CODE``. This is your responsability to fill the setting ``LANGUAGES`` with valid locale names.
+
+Then you will need to add some translation strings in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
+
+    <html>
+    <body>
+        <h1>{% trans %}Hello world{% endtrans %}</h1>
+    </body>
+    </html>
+
+Initialize
+----------
+
+The first thing to do on a new project is to initialize the catalog template (the source used to create or update translation catalogs, represented by a ``*.POT`` file in your locales directory) : ::
+
+    optimus po --init
+
+This command will extract translation strings from your templates (and other files in your sources directory if needed) and put them in catalog templates, then after translation catalogs will be created from the template for each knowed languages.
+
+Now open your catalog files (``*.PO``) edit them to fill the translations for your languages, then compile them (see `Compilation`_). 
+
+Update
+------
+
+If you do some changes on translations in your templates, like add new translation strings, modify or remove somes, you have to update your catalogs to adapt on this changes : ::
+
+    optimus po --update
+
+This will extract again your translation strings, update the catalog template then update your translation catalogs. After that you will have to re-compile them (see `Compilation`_).
+
+Compilation
+-----------
+
+Catalog files (``*.PO``) are not usable for page building, you will have to compile them first, this is done with the command line : ::
+
+    optimus po --compile
+
+It will compile the catalog file to ``*.MO`` files, this way Optimus can use your translations. Remember that when you do updates on catalog files you will have to re-compile them each time, this is not automatic.
+
+Note that also when you edit your translation catalogs to change some translations, you will have to re-compile them.
+
+.. _usage-watcher-label:
 
 Watch mode
 ==========
 
-**After the first build**, you can use the ``watch`` command action to automatically rebuild files at each change in your sources : ::
+Use the ``watch`` command action to automatically rebuild files at each change in your sources : ::
 
-    optimus-cli watch
+    optimus watch
 
 This will launch a process that will watch for changes and rebuild pages if needed. For changes on templates, the watch mode will only rebuild pages that uses the changed templates.
 
@@ -67,8 +119,10 @@ Watch mode will not detect if :
 
 For theses cases you will have to stop the watcher, manually rebuild with ``build`` command or `Babel`_ tool (for translations only) then relaunch the watcher.
 
-Server
-======
+.. _usage-webserver-label:
+
+Web server
+==========
 
 You can launch a simple web server to publish your builded content, **it's not intended to be used in production**, only for debugging your work. This command action is only available if you allready have installed **cherrypy**, see the *Install* document about this.
 
@@ -76,11 +130,11 @@ The hostname argument is required and it should at least contain the port and th
 
 To launch the webserver binded on your local IP on port 8001 to publish your project from the default settings, do this : ::
 
-    optimus-cli runserver 0.0.0.0:8001
+    optimus runserver 0.0.0.0:8001
 
 Also you can bind it on localhost on port 8080 with the production settings : ::
 
-    optimus-cli runserver localhost:8080 --settings=prod_settings
+    optimus runserver localhost:8080 --settings=prod_settings
 
 The settings are used to know the publish directory to expose.
 

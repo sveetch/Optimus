@@ -1,4 +1,5 @@
 .. _intro_install:
+.. _pip: http://www.pip-installer.org/
 .. _virtualenv: http://www.virtualenv.org/
 .. _Babel: https://pypi.python.org/pypi/Babel
 .. _Optimus: https://github.com/sveetch/Optimus
@@ -12,16 +13,22 @@
 Install
 *******
 
-It is recommanded to install it in a `virtualenv`_ environment then install the project dependancies.
+You will have to install `pip`_ and `virtualenv`_ on your system, you should first install `pip`_ package then it will be more easy to install `virtualenv`_ with it, like this : ::
 
-Project dependancies are in a ``requirements.txt`` file to use with ``pip`` (that have allready been installed within your virtual environment).
+    sudo pip install virtualenv
 
-Example : ::
+It is recommanded to install it in a `virtualenv`_ environment like this : ::
 
     virtualenv --no-site-packages my_optimus_projects
     cd my_optimus_projects
     source bin/activate
     pip install optimus
+
+This way you can work safely on your projects within this environment without any change to your system.
+
+Also you can install it directly on your system without `virtualenv`_, just use `pip`_ : ::
+
+    sudo pip install optimus
 
 Asset compressor
 ================
@@ -34,10 +41,6 @@ But the better and easiest is to install ``yuicompressor`` with ``pip``, this is
 
 Enable i18n support
 ===================
-
-Optionally if you want **i18n** support, you will have to install `Babel`_ : ::
-
-    pip install Babel
 
 Then you will have to enable it by adding the Jinja2 i18n extension in your settings : ::
 
@@ -67,12 +70,3 @@ Then you should install the plugin to have a project template to create new proj
 Note that this plugin does not support *Foundation 4.x* yet.
 
 See *Create a project* in the usage documentation for details on its usage.
-
-Web server for development
-==========================
-
-If you don't allready have a web server installed on your machine, you can use the one configured in Optimus, you will have to install `CherryPy`_ before : ::
-
-    pip install cherrypy
-
-Then you can run it from the command action ``runserver``, see the *Usage* document about this.
