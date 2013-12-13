@@ -58,7 +58,7 @@ def watch(args):
         'ignore_directories': False,
         'case_sensitive': False,
     }
-    watcher_templates_patterns.update(getattr(settings, 'WATCHER_TEMPLATES_PATTERNS', {}))
+    watcher_templates_patterns.update(settings.WATCHER_TEMPLATES_PATTERNS)
     # Assets watcher settings
     watcher_assets_patterns = {
         'patterns': ['*.css', '*.js', '*.json'],
@@ -66,7 +66,7 @@ def watch(args):
         'ignore_directories': False,
         'case_sensitive': False,
     }
-    watcher_assets_patterns.update(getattr(settings, 'WATCHER_ASSETS_PATTERNS', {}))
+    watcher_assets_patterns.update(settings.WATCHER_ASSETS_PATTERNS)
     
     # Init templates and assets event watchers
     templates_event_handler = TemplatesWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_templates_patterns)

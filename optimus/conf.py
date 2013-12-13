@@ -24,7 +24,37 @@ def import_settings(name=None):
     
     _settings = import_project_module(name)
     
+    # Raise exception if these required settings are not defined
+    required_settings = ('SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR',)
+    missing_settings = []
+    for setting_name in required_settings:
+        if not hasattr(_settings, setting_name):
+            missing_settings.append(setting_name)
+    if len(missing_settings)>0:
+        raise NameError("The following settings are required but not defined in the used settings file: {0}".format(", ".join(missing_settings)))
+    
     # Fill default required settings
+    
+    # The directory where webassets will store his cache
+    if not hasattr(_settings, "WEBASSETS_CACHE"):
+        setattr(_settings, "WEBASSETS_CACHE", os.path.join(_settings.PROJECT_DIR, '.webassets-cache'))
+    
+    # Bundles
+    if not hasattr(_settings, "EXTRA_BUNDLES"):
+        setattr(_settings, "EXTRA_BUNDLES", {})
+    if not hasattr(_settings, "ENABLED_BUNDLES"):
+        setattr(_settings, "ENABLED_BUNDLES", _settings.EXTRA_BUNDLES.keys())
+    
+    # ReSTructuredText parser settings to use when building a RST document
+    if not hasattr(_settings, "RST_PARSER_SETTINGS"):
+        setattr(_settings, "RST_PARSER_SETTINGS", {
+            'initial_header_level': 3,
+            'file_insertion_enabled': True,
+            'raw_enabled': False,
+            'footnote_references': 'superscript',
+            'doctitle_xform': False,
+        })
+    
     # Default directory for translation catalog
     if not hasattr(_settings, "LOCALES_DIR"):
         setattr(_settings, "LOCALES_DIR", os.path.join(_settings.PROJECT_DIR, 'locale'))
@@ -46,6 +76,32 @@ def import_settings(name=None):
                 'encoding': 'utf-8'
             },
         })
+    
+    # Python paths for each extensions to use with Jinja2
+    if not hasattr(_settings, "JINJA_EXTENSIONS"):
+        setattr(_settings, "JINJA_EXTENSIONS", (
+            'jinja2.ext.i18n',
+        ))
+    
+    # Python path to the file that contains pages map, this is relative to your project
+    if not hasattr(_settings, "PAGES_MAP"):
+        setattr(_settings, "PAGES_MAP", "pages")
+    
+    # Sources files or directory to synchronize within the static directory
+    if not hasattr(_settings, "FILES_TO_SYNC"):
+        setattr(_settings, "FILES_TO_SYNC", ())
+    
+    # These are the default watcher settings, you can customize them if you want, uncomment 
+    # parts you want to change, usually you'll change only the "pattern" values
+    # You don't need to uncomment this if you want to use the watcher with these default 
+    # parameters
+
+    # Templates watcher settings
+    if not hasattr(_settings, "WATCHER_TEMPLATES_PATTERNS"):
+        setattr(_settings, "WATCHER_TEMPLATES_PATTERNS", {})
+    # Assets watcher settings
+    if not hasattr(_settings, "WATCHER_ASSETS_PATTERNS"):
+        setattr(_settings, "WATCHER_ASSETS_PATTERNS", {})
 
     return _settings
     

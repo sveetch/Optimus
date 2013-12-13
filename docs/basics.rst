@@ -28,49 +28,67 @@ This is where your environment configuration resides, generally the ``settings.p
 
     optimus [ACTION] --settings=prod_settings
 
-If you only want to use the default settings, it's not needed to specify it with ``settings`` option.
+If you just want to use the default settings, you don't need to specify it with ``settings`` option.
+
+Below is a list of all available settings, but not all are created in the settings file when you create a new project with Optimus, only the usefull ones other will be set with a default value. When the default value is not defined in the list, you can assume than they are empty.
 
 **DEBUG**
-    Description to do
+    Lorsqu'il est activé (``True``) le mode *debug* enclenche un processus de build sans compilation des assets, ce qui accélère les builds et permet d'accéder aux sources des assets CSS et JS. Lorsqu'il n'est pas activé, les assets sont tous compilés et minifiés selon les règles des *bundles*. Le fichier de *settings* par défaut ne l'active pas et le fichier de settings de production l'active toujours. L'état de cette variable est transmis au context des pages de sorte que vous puissiez l'utiliser dans vos templates si besoin.
 **PROJECT_DIR**
-    Description to do
+    Le répertoire absolu contenant le projet à gérer avec Optimus, là où se trouve vos fichiers de settings et de pages (``pages.py`` en règle générale). Les fichiers de settings fournis par défaut initialisent automatiquement son contenu, en général vous n'avez pas à l'éditer manuellement.
 **SITE_NAME**
-    Site name to use available in templates
+    Le nom de site tel qu'il sera transmis au contexte de vos pages.
 **SITE_DOMAIN**
-    Site domain to use available in templates
+    Le nom d'hôte du site tel qu'il sera transmis au contexte de vos pages.
 **SOURCES_DIR**
-    Sources directory where the assets will be searched
+    Le chemin absolu vers le répertoire contenant les sources à utiliser pour builder vos pages (avec les templates) et les assets (CSS, images, JS, etc..).
 **TEMPLATES_DIR**
-    Templates directory
+    Le chemin absolu vers le répertoire contenant les templates à utiliser pour builder vos pages. Il se trouve en générale dans votre répertoire des sources.
 **PUBLISH_DIR**
-    Directory where all stuff will be builded
+    Le chemin absolu vers le répertoire qui contiendra les différents builds (selon le fichier de settings utilisé).
 **STATIC_DIR**
-    Path where will be moved all the static files, usually this is a directory in the ``PUBLISH_DIR``
+    Absolute path where will be moved all the static files (from the sources), usually this is a directory in the ``PUBLISH_DIR``
 **LOCALES_DIR**
-    Path to the i18n messages catalog directory
+    Absolute path to the i18n translation catalogs directories.
 **WEBASSETS_CACHE**
-    The directory where webassets will store his cache, also you can set this to False to not use the cache, or set it to True to use the default directory from webassets
+    The directory where webassets will store his cache, also you can set this to False to not use the cache, or set it to True to use the default directory from webassets.
 **LANGUAGE_CODE**
     Language locale name to use as the default for Pages that don't define it, see http://www.i18nguy.com/unicode/language-identifiers.html
 **LANGUAGES**
-    Available language to manage for PO files
+    A list of locale name for all available languages to manage with PO files.
 **STATIC_URL**
     The static url to use in templates and with webassets. This can be a full URL like http://, a relative path or an absolute path.
 **RST_PARSER_SETTINGS**
     ReSTructuredText parser settings to use when building a RST document.
 **EXTRA_BUNDLES**
-    Extra or custom bundles
+    Custom bundles to use for managing assets.
+    
+    Sample : ::
+    
+        EXTRA_BUNDLES = {
+            'my_css_bundle': Bundle(
+                'css/app.css',
+                filters='yui_css',
+                output='css/app.min.css'
+            ),
+            'my_js_bundle': Bundle(
+                'js/app.js',
+                filters='yui_js',
+                output='js/app.min.js'
+            ),
+        }
+    
 **ENABLED_BUNDLES**
-    Enabled bundles to use
+    Key names of enabled bundles to use, by default all knowed bundles (from setting ``EXTRA_BUNDLES``) are enabled.
 **FILES_TO_SYNC**
     Sources files or directory to synchronize within the static directory. This is usually used to put on some assets in the static directory, like images.
     NOTE: You should be carefull to not conflict with files targeted by webassets bundles
 **JINJA_EXTENSIONS**
     Comment, uncomment or add new extension path to use with Jinja here.
 **PAGES_MAP**
-    This will search for a ``pages`` module that contains page objects.
+    Python path to the file that contains pages map, this is relative to your project, default value is ``pages``, meaning this will search for ``pages.py`` file in your project directory.
 **I18N_EXTRACT_MAP**
-    Description to do
+    Default map for translation rules extractaction with babel
 **I18N_EXTRACT_OPTIONS**
     Description to do
 
