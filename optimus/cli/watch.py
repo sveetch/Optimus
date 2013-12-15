@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Command line action to launch the project watcher
-
-TODO: Watcher could bug in case of an unbuilded project in some 
-      cases (like in DEBUG=False), this has to be verified
 """
 import os, time
 

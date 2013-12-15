@@ -46,7 +46,7 @@ def register_assets():
     """
     logger = logging.getLogger('optimus')
     if not settings.ENABLED_BUNDLES:
-        logger.info("Asset registering skipped as there are no enabled bundles")
+        logger.warning("Asset registering skipped as there are no enabled bundles")
         return None
     logger.info("Starting asset registering")
     
