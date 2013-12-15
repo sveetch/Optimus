@@ -16,17 +16,20 @@ DIRECTORY_STRUCTURE = [
     ]
 ]
 
-# The directory name that contains 'sources' (assets, templates, images, etc..) in the 
-# template project
+# The directory name that contains 'sources' (assets, templates, images, etc..)
+# in the template project
 SOURCES_FROM = 'sources'
 # The directory name that will contains 'sources' in the new created projects
 SOURCES_TO = SOURCES_FROM
 
-# Default sources files or directory to synchronize within the new project directory
-# The sync task is performed before the scripts writing task
+# Default sources files or directory to synchronize within the new project 
+# sources directory
+# The sync task is performed before the writing task
 FILES_TO_SYNC = (
     #(SOURCE, DESTINATION)
+    ('js', 'js'),
     ('css', 'css'),
+    ('scss', 'scss'),
     ('templates', 'templates'),
 )
 
@@ -35,10 +38,10 @@ FILES_TO_SYNC = (
 #       all your '{' and '}', else they will be interpreted as format variable, and 
 #       probably raise a Key error
 SCRIPT_FILES = [
-    ['requirements.txt', 'requirements.txt'],
     ['README.rst', 'README.rst'],
     # Default scripts
     ['scripts/gitignore.tpl', '.gitignore'],
+    ['scripts/config.rb.tpl', 'config.rb'],
     ['scripts/__init__.py.tpl', '__init__.py'],
     ['scripts/settings.py.tpl', 'settings.py'],
     ['scripts/prod_settings.py.tpl', 'prod_settings.py'],

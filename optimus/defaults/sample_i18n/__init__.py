@@ -29,6 +29,7 @@ FILES_TO_SYNC = (
     #(SOURCE, DESTINATION)
     ('js', 'js'),
     ('css', 'css'),
+    ('scss', 'scss'),
     ('templates', 'templates'),
 )
 
