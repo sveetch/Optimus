@@ -37,7 +37,11 @@ class ProjectStarter(object):
             return
         
         self.logger.info("Loading the project template from : %s", projecttemplate_modulepath)
-        self.projecttemplate = import_module(projecttemplate_modulepath)
+        try:
+            self.projecttemplate = import_module(projecttemplate_modulepath)
+        except ImportError:
+            self.logger.error("There is no project template module named '%s'", projecttemplate_modulepath)
+            return False
         projecttemplate_path = os.path.abspath(os.path.dirname(self.projecttemplate.__file__))
         
         self.logger.info("Creating new Optimus project '%s' in : %s", self.name, self.root_path)
@@ -66,6 +70,8 @@ class ProjectStarter(object):
             'SOURCES_FROM': self.projecttemplate.SOURCES_FROM,
         }
         self.install_scripts(project_dir, context)
+        
+        return True
     
     def install_scripts(self, project_dir, context):
         """
