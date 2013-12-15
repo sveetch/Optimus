@@ -7,6 +7,7 @@ from string import Template
 
 from optimus.utils import recursive_directories_create, synchronize_assets_sources
 from optimus.importlib import import_module
+from optimus.samples import TEMPLATE_ALIAS
 
 class ProjectStarter(object):
     """
@@ -36,6 +37,10 @@ class ProjectStarter(object):
             self.logger.error("Project path allready exists : %s", project_dir)
             return
         
+        if projecttemplate_modulepath in TEMPLATE_ALIAS:
+            self.logger.debug("Resolved project template alias : %s", projecttemplate_modulepath)
+            projecttemplate_modulepath = TEMPLATE_ALIAS[projecttemplate_modulepath]
+            
         self.logger.info("Loading the project template from : %s", projecttemplate_modulepath)
         try:
             self.projecttemplate = import_module(projecttemplate_modulepath)
