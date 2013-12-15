@@ -1,13 +1,14 @@
-{% extends "base.html" %}
+{% extends "skeleton.html" %}
 
 {% block base_content %}
-    <div id="floater">
-        <h1 id="centered">&lt;{{ SITE.name }}/&gt;</h1>
-        
-        <ul>
-            <li><a href="sample_default.html">Default language</a></li>
-            <li><a href="sample_fr_FR.html">In French</a></li>
-            <li><a href="sample_zh_ZH.html">Localized to Chinese but fallback on default lang</a></li>
-        </ul>
+<div class="base-container">
+    <div class="center-container">
+        <div class="cell">
+            <div class="center-block">
+                <h1>{{ SITE.name }}</h1>
+                <p>{% trans %}Hello World!{% endtrans %}</p>
+                {% if page_lang.code not in ['fr_FR'] %}<p>There is also a <a href="index_fr_FR.html">French version</a></p>{% endif %}
+            </div>
+        </div>
     </div>
-{% endblock %}
+</div>{% endblock %}
