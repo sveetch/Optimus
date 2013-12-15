@@ -23,7 +23,8 @@ def init(args):
     root_logger = init_logging(args.loglevel.upper(), logfile=args.logfile)
     
     if not args.name:
-        raise CommandError("'name' argument is required")
+        root_logger.error("'--name' argument is required")
+        return
     
     if args.dry_run:
         root_logger.warning("'Dry run' mode enabled")
