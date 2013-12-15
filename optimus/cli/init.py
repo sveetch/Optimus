@@ -9,8 +9,8 @@ from argh import arg, CommandError
 from optimus.logs import init_logging
 from optimus.start_project import ProjectStarter
 
+@arg('name', help="Project's name to use, must be a valid python module name")
 @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
-@arg('-n', '--name', default=None, help="Project's name to use, must be a valid python module name") # TODO: required
 @arg('--logfile', default=None, help="A filepath that if setted, will be used to save logs output")
 @arg('-t', '--template', default="optimus.defaults.sample", help="A python path to a 'project template' module to use instead of the default one 'optimus.defaults.sample', there is also a sample with i18n at 'optimus.defaults.sample_i18n'.")
 @arg('--dry-run', default=False, help="Dry run mode will perform all processus but will not create or modify anything")
@@ -22,9 +22,11 @@ def init(args):
     # Init, load and builds
     root_logger = init_logging(args.loglevel.upper(), logfile=args.logfile)
     
-    if not args.name:
-        root_logger.error("'--name' argument is required")
-        return
+    # DEPRECATED
+    #if not args.name:
+        #root_logger.error("'--name' argument is required")
+        #return
+    # TODO: Check that the given project name is a valid python module name
     
     if args.dry_run:
         root_logger.warning("'Dry run' mode enabled")
