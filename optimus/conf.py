@@ -11,6 +11,8 @@ def import_settings(name=None):
     Load the settings, use "os.environ" to find the settings module name if "name" 
     argument is not given
     """
+    logger = logging.getLogger('optimus')
+    
     if name is None:
         # Stealed from "django.conf"
         try:
@@ -25,13 +27,14 @@ def import_settings(name=None):
     _settings = import_project_module(name)
     
     # Raise exception if these required settings are not defined
-    required_settings = ('SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR',)
+    required_settings = ('DEBUG','SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL',)
     missing_settings = []
     for setting_name in required_settings:
         if not hasattr(_settings, setting_name):
             missing_settings.append(setting_name)
     if len(missing_settings)>0:
-        raise NameError("The following settings are required but not defined in the used settings file: {0}".format(", ".join(missing_settings)))
+        logger.error("The following settings are required but not defined in the used settings file: {0}".format(", ".join(missing_settings)))
+        raise NameError
     
     # Fill default required settings
     
