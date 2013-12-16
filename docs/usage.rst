@@ -22,22 +22,22 @@ Or specific command action help with : ::
 
     optimus help action_name
 
-Also there is a common command argument ``--settings`` (apart for ``init`` command) that is usefull to define the settings files to use. It attempt a Python path to the settings file, for common usage you just have to give the filename without the ``.py`` extension, else you will have an error message.
+There is also a common command argument ``--settings`` (apart from the ``init`` command) that is useful to define the settings files to use. It appends a Python path to the settings file. For common usage you just have to give the filename without the ``.py`` extension, otherwise you will get an error message.
 
 .. _usage-project-label:
 
 Create a project
 ================
 
-At least you will give a name for the new project, take care that it must a valid Python module name, so only with alphanumeric characters and ``_``. No spaces, no dots, etc.. : ::
+At least you will give a name for the new project. Be aware that it must a valid Python module name, so only with alphanumeric characters and ``_``. No spaces, no dots, etc.. : ::
 
     optimus init my_project
 
-It will create project directory and fill it with basic content. But Optimus can use project templates to create project more usefull :
+It will create project directory and fill it with basic content. But Optimus can use project templates to create project more useful :
 
 * ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
 * ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
-* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project embedding all `Foundation`_ stuff, you will have to install it before;
+* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project inlcuding all `Foundation`_ stuff, you will have to install it before;
 
 To create a new project with the I18n sample, you will have to do something like : ::
 
@@ -61,16 +61,16 @@ Configure your settings if needed, then your Pages to build and finally launch o
 Managing translations
 =====================
 
-Optimus can manage your translations for the knowed languages of your project, this is done in the setting ``LANGUAGES`` where you define a list of locale names, each of them will have a translation catalogs after you initialize them. By default, this settings is only filled with the default locale defined in the settings ``LANGUAGE_CODE``. This is your responsability to fill the setting ``LANGUAGES`` with valid locale names.
+Optimus can manage your translations for the known languages of your project. This is done in the setting ``LANGUAGES`` where you define a list of locale names, each of which will have a translation catalogs after you initialize them. By default, this settings is only filled with the default locale defined in the settings ``LANGUAGE_CODE``. This is your responsability to fill the setting ``LANGUAGES`` with valid locale names.
 
 Assuming you want to add French translations, you will have to add this setting : ::
 
     # A list of locale name for all available languages to manage with PO files
     LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
     
-Note the first item that also add the locale name from the default language from the setting ``LANGUAGE_CODE``.
+Note the first item that also adds the locale name from the default language from the setting ``LANGUAGE_CODE``.
 
-Then you will need to mark some strings to translate in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
+Then you will need to flag the strings to translate in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
 
     <html>
     <body>
@@ -94,7 +94,7 @@ Now open your catalog files (``*.PO``) edit them to fill the translations for yo
 Update
 ------
 
-If you do some changes on translations in your templates, like add new translation strings, modify or remove somes, you have to update your catalogs to adapt on this changes : ::
+If you do some changes on translations in your templates, like add new translation strings, modify or remove some, you have to update your catalogs to adapt to this changes : ::
 
     optimus po --update
 
@@ -139,7 +139,7 @@ For theses cases you will have to stop the watcher, manually rebuild with ``buil
 Web server
 ==========
 
-You can launch a simple web server to publish your builded content, **it's not intended to be used in production**, only for debugging your work. This command action is only available if you allready have installed **cherrypy**, see the *Install* document about this.
+You can launch a simple web server to publish your builded content, **it's not intended to be used in production**, only for debugging your work. This command action is only available if you already have installed **cherrypy**, see the *Install* document about this.
 
 The hostname argument is required and it should at least contain the port and the address will be "127.0.0.1" by default.
 

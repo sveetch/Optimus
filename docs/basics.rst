@@ -13,29 +13,29 @@
 Basics
 ******
 
-Optimus is usable with a command line tool to build pages, create new projects or enter in a watch mode that automatically rebuild pages when their templates has been changed.
+Optimus is usable with a command line tool to build pages, create new projects or enter in a watch mode that automatically rebuilds pages when their templates has been changed.
 
-It works a little bit like `Django`_ as you create a project with a **settings** file containing all useful global settings for building your pages and managing your assets.
+It works a little bit like `Django`_ as you create a project with a **settings** file containing all useful global settings to build your pages and manage your assets.
 
 .. _basics-settings-label:
 
 Settings
 ========
 
-This is where your environment configuration resides, generally the ``settings.py`` is the default settings used in development, and the ``prod_settings.py`` file is used for a production environment that it inherit from the default settings and only set a ``DEBUG = False`` to avoid the debug mode and minify the assets.
+This is where your environment configuration resides, generally the ``settings.py`` is the default settings used in development, and the ``prod_settings.py`` file is used for a production environment that it inherits from the default settings and only sets a ``DEBUG = False`` to avoid the debug mode and minify the assets.
 
-`Optimus`_ command line actions allways accept a ``settings`` option to specify a settings file, by default this is the ``settings.py`` that is used but if you want to use another settings file like ``prod_settings.py`` you have to specify it in command line like a Python path : ::
+`Optimus`_ command line actions always accept a ``settings`` option to specify a settings file, by default this is the ``settings.py`` that is used but if you want to use another settings file like ``prod_settings.py`` you have to specify it in command line like a Python path : ::
 
     optimus [ACTION] --settings=prod_settings
 
 If you just want to use the default settings, you don't need to specify it with ``settings`` option.
 
-Below is a list of all available settings, but not all are created in the settings file when you create a new project with Optimus, only the usefull ones. Optionnal settings that undefined will be set with a default value. When the default value is not defined in the list, you can assume than they are empty.
+Below is a list of all available settings, but not all are created in the settings file when you create a new project with Optimus, only the useful ones. Optionnal settings that are undefined will be set with a default value. When the default value is not defined in the list, you can assume than they are empty.
 
 **DEBUG**
-    When actived (``True``) Optimus will not try to compress asset bundles, usefull to avoid to re-compress them for any changes, this is the preferred method when developping your templates and CSS, this is why it is the default behavior in the default settings file. Disable it for production settings (this is allready done in the production settings file provided in project templates. Also you can access to this variable from your templates if needed.
+    When actived (``True``) Optimus will not try to compress asset bundles. It is useful to avoid to re-compress them after any changes, this is the preferred method when developping your templates and CSS, this is why it is the default behavior in the default settings file. Disable it for production settings (this is already done in the production settings file provided in project templates. You can also access this variable from your templates if needed.
 **PROJECT_DIR**
-    Absolute path to the project directory. The settings files provided in project templates allready fill them automatically, you should not need to edit it.
+    Absolute path to the project directory. The settings files provided in project templates already fills them automatically, you should not need to edit it.
 **SITE_NAME**
     The project name to use in your templates.
 **SITE_DOMAIN**
@@ -51,7 +51,7 @@ Below is a list of all available settings, but not all are created in the settin
 **LOCALES_DIR**
     Absolute path to the i18n translation catalogs directories.
 **WEBASSETS_CACHE**
-    The directory where webassets will store his cache, also you can set this to ``False`` to not use the cache, or set it to True to use the default directory from webassets.
+    The directory where webassets will store his cache. You can set this to ``False`` to not use the cache, or set it to True to use the default directory from webassets.
 **LANGUAGE_CODE**
     Language locale name to use as the default for Pages that don't define it, see http://www.i18nguy.com/unicode/language-identifiers.html
 **LANGUAGES**
@@ -61,11 +61,11 @@ Below is a list of all available settings, but not all are created in the settin
     
         LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
     
-    This will add the default language and French to the knowed languages to manage.
+    This will add the default language and French to the known languages to manage.
 **STATIC_URL**
     The static url to use in templates and with webassets. This can be a full URL like ``http://``, a relative path or an absolute path.
 **RST_PARSER_SETTINGS**
-    ReSTructuredText parser settings to use when building a RST document. This is only usefull if you use RST documents in your pages.
+    ReSTructuredText parser settings to use when building a RST document. This is only useful if you use RST documents in your pages.
     
     Default value is : ::
     
@@ -95,7 +95,7 @@ Below is a list of all available settings, but not all are created in the settin
         }
     
 **ENABLED_BUNDLES**
-    Key names of enabled bundles to use, by default all knowed bundles (from setting ``EXTRA_BUNDLES``) are enabled. If you don't want to enable all of them, just define it with a list of bundle names to enable.
+    Key names of enabled bundles to use, by default all known bundles (from setting ``EXTRA_BUNDLES``) are enabled. If you don't want to enable them all, just define it with a list of bundle names to enable.
 **FILES_TO_SYNC**
     Sources files or directories to synchronize within the published static directory. This is usually used to put on some assets in the static directory like images that don't need to be compressed with assets bundles.
     
@@ -159,11 +159,11 @@ Assets
 
 You can simply put your assets where you want in the ``sources`` directory and add your assets directories in ``settings.FILES_TO_SYNC``, they will be copied to your build directory.
 
-But with Optimus this is only required for *real* static assets like images. For CSS and Javascript you should manage them with `webassets`_ that is allready installed with Optimus.
+But with Optimus this is only required for *real* static assets like images. For CSS and Javascript you should manage them with `webassets`_ that is already installed with Optimus.
 
-With `webassets`_ you manage your assets as **packs** named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.EXTRA_BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
+With `webassets`_ you manage your assets as **packages** named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.EXTRA_BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
 
-The benefit of `webassets`_ is that it can pre and post process all your assets, this is usually used to *minify* and pack multiple files in one final file. Read the `webassets documentation`_ for more details to use this and to manage bundle assets in your templates.
+The benefit of `webassets`_ is that it can pre and post process all your assets. This is usually used to *minify* and pack multiple files in one final file. Read the `webassets documentation`_ for more details how to use this and to manage bundle assets in your templates.
 
 .. _basics-pages-label:
 
@@ -172,9 +172,9 @@ Pages
 
 The pages to build are registred as ``Page`` objects usually in a ``pages.py`` file in your project. It must contains a ``PAGES`` variable that is a list containing ``Page`` instances.
 
-A default project is allready shipped with a ``pages.py`` containing some samples pages, you can change them, inherit them or add another to build various pages.
+A default project is already shipped with a ``pages.py`` containing some samples pages, you can change them, inherit them or add another to build various pages.
 
-Default ``PageViewBase`` instance add some variable to his template context :
+Default ``PageViewBase`` instance adds some variables to its template context :
 
 * **page_title** that contains the value of ``PageViewBase.title`` attribute;
 * **page_destination** that contains the value of ``PageViewBase.destination`` attribute;
@@ -182,7 +182,7 @@ Default ``PageViewBase`` instance add some variable to his template context :
 * **page_lang** that contains the value of ``PageViewBase.page_lang`` attribute;
 * **page_template_name** that contains the value of ``PageViewBase.template_name`` attribute;
 
-All these attribute are finded using a ``PageViewBase.get_***`` method that you can override in your ``PageViewBase`` object.
+All these attribute are found using a ``PageViewBase.get_***`` method that you can override in your ``PageViewBase`` object.
 
 See ``optimus.builder.pages`` to see more detail on how it works.
 
@@ -191,7 +191,7 @@ See ``optimus.builder.pages`` to see more detail on how it works.
 Translations
 ============
 
-Marked strings with the ``{% trans %}`` template tag in your templates (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_) will be translated from the page locale name and its associated translation catalog. They will be extracted and stored in catalog files where you will have to fill the translations. Then compile your catalog files and after the page building will replace strings with the translation accordly to the page language.
+Marked strings with the ``{% trans %}`` template tag in your templates (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_) will be translated from the page locale name and its associated translation catalog. They will be extracted and stored in catalog files where you will have to fill the translations. Then compile your catalog files and then, the page building will replace strings with the translation accordingly to the page language.
 
 The recommended way is to use the Optimus command ``po`` see this in :ref:`usage-translations-label`.
 
@@ -200,7 +200,7 @@ The recommended way is to use the Optimus command ``po`` see this in :ref:`usage
 Pages language
 **************
 
-By default, Pages use a default locale language that is *en_US*, for each language you will need to make a Page view with the wanted language, you can specify it in the **lang** Page attribute, or in a ``lang`` argument when you instancing your Page.
+By default, Pages use a default locale language that is *en_US*, for each language you will need to make a Page view with the wanted language. You can specify it in the **lang** Page attribute, or in a ``lang`` argument when you instanciate your Page.
 
 Managing translation catalog with the raw way
 *********************************************
@@ -211,13 +211,13 @@ Before building your internationalized Pages, you will have to create a messages
 
 To correctly extract all your strings to translate, `Babel`_ will need some rules to know what and where it should search. This is done in a `Babel mapping file <http://babel.pocoo.org/wiki/Documentation/0.9/messages.html#extraction-method-mapping-and-configuration>`_, generally as a ``babel.cfg`` in the root directory of your project.
 
-At less you will need of the Jinja2 integration rule : ::
+At least, you will need the Jinja2 integration rule : ::
 
     [jinja2: sources/templates/**.html]
     encoding = utf-8
     extensions = webassets.ext.jinja2.AssetsExtension
 
-The last line is needed if you use webassets tags ``{% assets %}..{% endassets %}`` in your templates, else the extraction will fail. See the `Jinja2 integration documentation <http://jinja.pocoo.org/docs/integration/#babel-integration>`_ for more details.
+The last line is needed if you use webassets tags ``{% assets %}...{% endassets %}`` in your templates, otherwise the extraction will fail. See the `Jinja2 integration documentation <http://jinja.pocoo.org/docs/integration/#babel-integration>`_ for more details.
 
 Extracting first the reference POT file : ::
 

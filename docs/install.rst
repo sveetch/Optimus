@@ -13,11 +13,11 @@
 Install
 *******
 
-You will have to install `pip`_ and `virtualenv`_ on your system, you should first install `pip`_ package then it will be more easy to install `virtualenv`_ with it, like this : ::
+You will have to install `pip`_ and `virtualenv`_ on your system. You should first install `pip`_ package then it will be easier to install `virtualenv`_ with it, like this : ::
 
     sudo pip install virtualenv
 
-It is recommanded to install it in a `virtualenv`_ environment like this : ::
+It is recommeded to install it in a `virtualenv`_ environment like this : ::
 
     virtualenv --no-site-packages my_optimus_projects
     cd my_optimus_projects
@@ -38,7 +38,7 @@ Optimus has been developed for Linux systems, it works also on Windows and MacOS
 Asset compressor
 ================
 
-Default install comes with `yui-compressor`_ as a dependancy to use with `webassets`_ because it is a great choice to compress CSS and Javascript assets. But beware that it requires you have a Java Runtime Environment installed on your system, the OpenJDK is perfectly supported.
+Default install comes with `yui-compressor`_ as a dependancy to use with `webassets`_ because it is a great choice to compress CSS and Javascript assets. But beware that it requires you to have a Java Runtime Environment installed on your system, the OpenJDK is perfectly supported.
 
 Enable i18n support
 ===================
@@ -51,14 +51,14 @@ Then you will have to enable it by adding the Jinja2 i18n extension in your sett
         ...
     )
 
-This is only for a new project manually created, ``i18n`` project template allready install this for you.
+This is only for a new project manually created, ``i18n`` project template already installs this for you.
 
 Use Foundation
 ==============
 
-Before to start, you have to choose if you want to use Foundation 3.x serie or the last Foundation version.
+Before starting, you have to choose whether you want to use Foundation 3.x serie or the last Foundation version.
 
-No matter what you choose, this will require a recent `Compass`_ install and so a recent Ruby install too, if you have problem with this you can see to `rvm`_ to install a more recent Ruby version without to touch at your system packages.
+No matter what you choose, this will require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
 
 Just target the correct version when you install the Foundation gem : ::
 

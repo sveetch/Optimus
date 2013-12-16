@@ -7,7 +7,7 @@
 Optimus
 =======
 
-Optimus is a building environment to produce static HTML from templates, with assets compress managing and with i18n support for translations.
+Optimus is a build environment to produce static HTML from templates, with management of compressed assets and with i18n support for translations.
 
 Contents
 --------
@@ -26,7 +26,7 @@ Changelog
 Version 0.6
 ...........
 
-This is a major release that will probably breaks some of your projects made with previous Optimus versions.
+This is a major release that will probably break some of your projects made with previous Optimus versions.
 
 * Add new command ``po`` to automatically manage translations files;
 * Add better error messages for some command line options;
