@@ -22,24 +22,30 @@ Or specific command action help with : ::
 
     optimus help action_name
 
+Also there is a common command argument ``--settings`` (apart for ``init`` command) that is usefull to define the settings files to use. It attempt a Python path to the settings file, for common usage you just have to give the filename without the ``.py`` extension, else you will have an error message.
+
 .. _usage-project-label:
 
 Create a project
 ================
 
-At least you will a name for the new project, take care that it must a valid Python module name, so only with alphanumeric characters and ``_``. No spaces, no dots, etc.. : ::
+At least you will give a name for the new project, take care that it must a valid Python module name, so only with alphanumeric characters and ``_``. No spaces, no dots, etc.. : ::
 
-    optimus init --name my_project
+    optimus init my_project
 
 It will create project directory and fill it with basic content. But Optimus can use project templates to create project more usefull :
 
-* ``optimus.defaults.sample`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
-* ``optimus.defaults.sample_i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed. Note that you must install `Babel`_ before using this project template;
+* ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
+* ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
 * ``optimus_foundation`` : `Optimus-foundation`_ that create a new project embedding all `Foundation`_ stuff, you will have to install it before;
 
-So to create a new Foundation project, you will have to do something like : ::
+To create a new project with the I18n sample, you will have to do something like : ::
 
-    optimus init --name my_project --template=optimus.defaults.sample_i18n
+    optimus init my_project -t i18n
+
+To create a new Foundation project with `Optimus-foundation`_ plugin : ::
+
+    optimus init my_project -t optimus_foundation
 
 .. _usage-building-label:
 
@@ -57,7 +63,14 @@ Managing translations
 
 Optimus can manage your translations for the knowed languages of your project, this is done in the setting ``LANGUAGES`` where you define a list of locale names, each of them will have a translation catalogs after you initialize them. By default, this settings is only filled with the default locale defined in the settings ``LANGUAGE_CODE``. This is your responsability to fill the setting ``LANGUAGES`` with valid locale names.
 
-Then you will need to add some translation strings in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
+Assuming you want to add French translations, you will have to add this setting : ::
+
+    # A list of locale name for all available languages to manage with PO files
+    LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
+    
+Note the first item that also add the locale name from the default language from the setting ``LANGUAGE_CODE``.
+
+Then you will need to mark some strings to translate in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
 
     <html>
     <body>
@@ -65,10 +78,12 @@ Then you will need to add some translation strings in your templates with the ``
     </body>
     </html>
 
+And finally manage your translation catalogs, see below.
+
 Initialize
 ----------
 
-The first thing to do on a new project is to initialize the catalog template (the source used to create or update translation catalogs, represented by a ``*.POT`` file in your locales directory) : ::
+On a new project you have to initialize the catalog template (the source used to create or update translation catalogs, represented by a ``*.POT`` file in your locales directory) : ::
 
     optimus po --init
 
@@ -105,7 +120,7 @@ Use the ``watch`` command action to automatically rebuild files at each change i
 
     optimus watch
 
-This will launch a process that will watch for changes and rebuild pages if needed. For changes on templates, the watch mode will only rebuild pages that uses the changed templates.
+This will launch a process that will watch for changes and rebuild pages if needed. For changes on templates, the watch mode will only rebuild pages that uses the changed templates. Also if it detects that the publish directory (from the setting ``PUBLISH_DIR``) does not exists, it will automatically performs a first build.
 
 To stop the watcher process, just use the common keyboard combo ``CTRL+C``.
 

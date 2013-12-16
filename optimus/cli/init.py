@@ -27,6 +27,9 @@ def init(args):
         #root_logger.error("'--name' argument is required")
         #return
     # TODO: Check that the given project name is a valid python module name
+    # identifier ::=  (letter|"_") (letter | digit | "_")*
+    # So valid that all characters from the name are : "_" character, letters, 
+    # digits and does not starts with digits
     
     if args.dry_run:
         root_logger.warning("'Dry run' mode enabled")
