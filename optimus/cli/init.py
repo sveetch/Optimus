@@ -12,7 +12,7 @@ from optimus.start_project import ProjectStarter
 @arg('name', help="Project's name to use, must be a valid python module name")
 @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
 @arg('--logfile', default=None, help="A filepath that if setted, will be used to save logs output")
-@arg('-t', '--template', default="optimus.defaults.sample", help="A python path to a 'project template' module to use instead of the default one 'optimus.defaults.sample', there is also a sample with i18n at 'optimus.defaults.sample_i18n'.")
+@arg('-t', '--template', default="basic", help="A python path to a 'project template' module to use instead of the default one 'optimus.defaults.sample', there is also a sample with i18n at 'optimus.defaults.sample_i18n'.")
 @arg('--dry-run', default=False, help="Dry run mode will perform all processus but will not create or modify anything")
 def init(args):
     """
