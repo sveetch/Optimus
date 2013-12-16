@@ -17,7 +17,7 @@ You will have to install `pip`_ and `virtualenv`_ on your system. You should fir
 
     sudo pip install virtualenv
 
-It is recommeded to install it in a `virtualenv`_ environment like this : ::
+It is recommended to install it in a `virtualenv`_ environment like this : ::
 
     virtualenv --no-site-packages my_optimus_projects
     cd my_optimus_projects
