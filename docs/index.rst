@@ -26,13 +26,10 @@ Changelog
 Version 0.6
 ...........
 
-This is a major release that will probably break some of your projects made with previous Optimus versions.
-
 * Add new command ``po`` to automatically manage translations files;
 * Add better error messages for some command line options;
 * Add a required settings list that is checked when loading settings file to avoid error on missing settings;
 * Add default values to un-required settings so the settings file is more clean and short with only needed settings;
-* Add an automatic
 * Now `Babel`_, `cherrypy`_ and `yui-compressor`_ are required dependancies;
 * The previous commande line tool name ``optimus-cli`` has been chaned to a more shorter name ``optimus``;
 * New settings have been added to manage languages and translations with the new command ``po``;
