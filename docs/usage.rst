@@ -124,7 +124,7 @@ This will launch a process that will watch for changes and rebuild pages if need
 
 To stop the watcher process, just use the common keyboard combo ``CTRL+C``.
 
-This useful in development, but note that the watcher is limited to watch only for templates and assets changes. 
+This is useful in development, but note that the watcher is limited to watch only for templates and assets changes. 
 
 Watch mode will not detect if :
 

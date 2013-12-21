@@ -28,7 +28,7 @@ STATIC_DIR = os.path.join(PROJECT_DIR, PUBLISH_DIR, 'static')
 STATIC_URL = 'static/'
 
 # Extra or custom bundles
-EXTRA_BUNDLES = {
+BUNDLES = {
     'modernizr_js': Bundle(
         "js/modernizr.src.js",
         filters='yui_js',

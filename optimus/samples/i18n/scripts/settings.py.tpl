@@ -36,7 +36,7 @@ LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
 STATIC_URL = 'static/'
 
 # Extra or custom bundles
-EXTRA_BUNDLES = {
+BUNDLES = {
     'modernizr_js': Bundle(
         "js/modernizr.src.js",
         filters='yui_js',

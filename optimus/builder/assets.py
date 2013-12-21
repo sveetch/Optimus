@@ -3,7 +3,6 @@ import copy, logging
 
 from webassets import Environment as AssetsEnvironment
 
-from optimus.builder.bundles import COMMON_BUNDLES
 from optimus.conf import settings
 
 class AssetRegistry(object):
@@ -51,8 +50,7 @@ def register_assets():
     logger.info("Starting asset registering")
     
     # Assets bundles
-    AVAILABLE_BUNDLES = copy.deepcopy(COMMON_BUNDLES)
-    AVAILABLE_BUNDLES.update(getattr(settings, 'EXTRA_BUNDLES', {}))
+    AVAILABLE_BUNDLES = getattr(settings, 'BUNDLES', {})
     
     # Initialize webassets environment
     assets_env = AssetsEnvironment()
