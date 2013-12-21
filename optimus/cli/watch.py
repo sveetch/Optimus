@@ -10,8 +10,8 @@ from argh import arg
 
 from optimus.logs import init_logging
 
-@arg('--settings', default='settings', help='Python path to the settings module')
-@arg('--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
+@arg('-s', '--settings', default='settings', help='Python path to the settings module')
+@arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
 @arg('--logfile', default=None, help='A filepath that if setted, will be used to save logs output')
 @arg('--silent', default=False, help="If setted, logs output won't be printed out")
 def watch(args):
