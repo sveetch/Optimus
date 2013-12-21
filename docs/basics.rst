@@ -77,11 +77,13 @@ Below is a list of all available settings, but not all are created in the settin
             'doctitle_xform': False,
         }
 **EXTRA_BUNDLES**
+    This setting name is deprecated and will be removed in futur release. This was the previous name for ``BUNDLES`` setting.
+**BUNDLES**
     Custom bundles to use for managing assets.
     
     Sample : ::
     
-        EXTRA_BUNDLES = {
+        BUNDLES = {
             'my_css_bundle': Bundle(
                 'css/app.css',
                 filters='yui_css',
@@ -95,7 +97,7 @@ Below is a list of all available settings, but not all are created in the settin
         }
     
 **ENABLED_BUNDLES**
-    Key names of enabled bundles to use, by default all known bundles (from setting ``EXTRA_BUNDLES``) are enabled. If you don't want to enable them all, just define it with a list of bundle names to enable.
+    Key names of enabled bundles to use, by default all known bundles (from setting ``BUNDLES``) are enabled. If you don't want to enable them all, just define it with a list of bundle names to enable.
 **FILES_TO_SYNC**
     Sources files or directories to synchronize within the published static directory. This is usually used to put on some assets in the static directory like images that don't need to be compressed with assets bundles.
     
@@ -161,7 +163,7 @@ You can simply put your assets where you want in the ``sources`` directory and a
 
 But with Optimus this is only required for *real* static assets like images. For CSS and Javascript you should manage them with `webassets`_ that is already installed with Optimus.
 
-With `webassets`_ you manage your assets as **packages** named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.EXTRA_BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
+With `webassets`_ you manage your assets as **packages** named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
 
 The benefit of `webassets`_ is that it can pre and post process all your assets. This is usually used to *minify* and pack multiple files in one final file. Read the `webassets documentation`_ for more details how to use this and to manage bundle assets in your templates.
 
@@ -170,11 +172,15 @@ The benefit of `webassets`_ is that it can pre and post process all your assets.
 Pages
 =====
 
-The pages to build are registred as ``Page`` objects usually in a ``pages.py`` file in your project. It must contains a ``PAGES`` variable that is a list containing ``Page`` instances.
+The pages to build are registred in a ``pages.py`` file in your project, it must contains a ``PAGES`` variable that is a list containing ``optimus.builder.pages.PageViewBase`` instances.
 
-A default project is already shipped with a ``pages.py`` containing some samples pages, you can change them, inherit them or add another to build various pages.
+A default project created from the ``init`` (:ref:`usage-project-label`) command is already shipped with a ``pages.py`` containing some samples pages, you can change them, inherit them or add another to build various pages.
 
-Default ``PageViewBase`` instance adds some variables to its template context :
+
+Page context
+************
+
+Default ``PageViewBase`` instance adds some variables to its template context (:ref:`basics-templates-label`) :
 
 * **page_title** that contains the value of ``PageViewBase.title`` attribute;
 * **page_destination** that contains the value of ``PageViewBase.destination`` attribute;
@@ -182,9 +188,77 @@ Default ``PageViewBase`` instance adds some variables to its template context :
 * **page_lang** that contains the value of ``PageViewBase.page_lang`` attribute;
 * **page_template_name** that contains the value of ``PageViewBase.template_name`` attribute;
 
-All these attribute are found using a ``PageViewBase.get_***`` method that you can override in your ``PageViewBase`` object.
-
 See ``optimus.builder.pages`` to see more detail on how it works.
+
+Defining your pages
+*******************
+
+There are three required arguments for a ``PageViewBase`` object :
+
+**title**
+    The title of your page, can be anything you want, it's just a context variable that you can use in your templates.
+**destination**
+    Destination file path where the page will be builded, the path is relative to the setting ``PUBLISH_DIR``. You can use multiple subdirectory levels if needed, the builder will create them if it does not allready exists.
+**template_name**
+    File path for the template to use, the path is relative to the setting ``TEMPLATES_DIR``.
+
+The short way is like so : ::
+
+    from optimus.builder.pages import PageViewBase
+    # Enabled pages to build
+    PAGES = [
+        PageViewBase(title="My page", template_name="mypage.html", destination="mypage.html"),
+    ]
+
+But it is more likely you need to build more than one pages and generally you want to share some attributes like templates or title. So instead of directly using ``PageViewBase``, you should make your own page object like this : ::
+
+    from optimus.builder.pages import PageViewBase
+
+    class MyBasePage(PageViewBase):
+        title = "My base page"
+        template_name = "mypage.html"
+
+    # Enabled pages to build
+    PAGES = [
+        MyBasePage(title="My index", destination="index.html"),
+        MyBasePage(title="My Foo page", destination="foo.html"),
+        MyBasePage(title="My Bar page", destination="bar.html"),
+    ]
+
+
+Extending PageViewBase
+**********************
+
+You can override some methods to add logic or change some behaviors in your ``PageViewBase`` object.
+
+**PageViewBase.get_title**
+    Set the ``page_title`` context variable.
+**PageViewBase.get_destination**
+    Set the ``page_destination`` context variable.
+**PageViewBase.get_relative_position**
+    Set the ``page_relative_position`` context variable.
+**PageViewBase.get_lang**
+    Set the ``page_lang`` context variable.
+**PageViewBase.get_template_name**
+    Set the ``page_template_name`` context variable.
+**PageViewBase.get_context**
+    Set the context page to add variables to expose in the templates. The method does not attempt any argument and return the context.
+    
+    To add a new variable ``foo`` in your context you may do it like this : ::
+    
+        class MyPage(PageViewBase):
+            title = "My page"
+            template_name = "mypage.html"
+            destination = "mypage.html"
+            
+            def get_context(self):
+                # This line set the default context from PageViewBase
+                super(MyPage, self).get_context()
+                # Add your new variables here
+                self.context.update({
+                    'foo': 'bar',
+                })
+                return self.context
 
 .. _basics-translations-label:
 
@@ -200,7 +274,7 @@ The recommended way is to use the Optimus command ``po`` see this in :ref:`usage
 Pages language
 **************
 
-By default, Pages use a default locale language that is *en_US*, for each language you will need to make a Page view with the wanted language. You can specify it in the **lang** Page attribute, or in a ``lang`` argument when you instanciate your Page.
+By default, Pages use a default locale language that is *en_US*, for each language you will need to make a page view with the wanted language. You can specify it in the **lang** page attribute, or in a ``lang`` argument when you instanciate your ``PageViewBase``.
 
 Managing translation catalog with the raw way
 *********************************************

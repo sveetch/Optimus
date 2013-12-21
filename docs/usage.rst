@@ -141,7 +141,7 @@ Web server
 
 You can launch a simple web server to publish your builded content, **it's not intended to be used in production**, only for debugging your work. This command action is only available if you already have installed **cherrypy**, see the *Install* document about this.
 
-The hostname argument is required and it should at least contain the port and the address will be "127.0.0.1" by default.
+The hostname argument is required and it should at least contain the port (like '80'), the default address will be "127.0.0.1" if you don't give it.
 
 To launch the webserver binded on your local IP on port 8001 to publish your project from the default settings, do this : ::
 
