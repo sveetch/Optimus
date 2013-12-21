@@ -3,3 +3,4 @@ tmp
 _build
 .webassets-cache
 .idea
+*.pyc
