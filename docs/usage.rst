@@ -87,7 +87,9 @@ On a new project you have to initialize the catalog template (the source used to
 
     optimus po --init
 
-This command will extract translation strings from your templates (and other files in your sources directory if needed) and put them in catalog templates, then after translation catalogs will be created from the template for each knowed languages.
+This will extract translation strings from your templates (and other files in your sources directory if needed) and put them in catalog templates, then after translation catalogs will be created from the template for each knowed languages.
+
+This command is safe for existing translations, if a translation catalogs allready exists, it will not be overwrited. Only non existing translation catalogs will be created.
 
 Now open your catalog files (``*.PO``) edit them to fill the translations for your languages, then compile them (see `Compilation`_). 
 

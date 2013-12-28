@@ -62,6 +62,16 @@ Below is a list of all available settings, but not all are created in the settin
         LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
     
     This will add the default language and French to the known languages to manage.
+    
+    Sometime it is also needed to have a label for these languages or some other associated parameters, so your languages entries can be tuples but their first item **must** be the locale name. Here is a sample : ::
+    
+        LANGUAGES = (
+            (LANGUAGE_CODE, "International"),
+            ('fr_FR', "France"),
+        )
+    
+    Note that Optimus didn't care about other items in tuples of languages entries, you can add everything you want. But take care that Optimus will allways assume the first item is the locale name it needs.
+    
 **STATIC_URL**
     The static url to use in templates and with webassets. This can be a full URL like ``http://``, a relative path or an absolute path.
 **RST_PARSER_SETTINGS**

@@ -58,6 +58,14 @@ class I18NManager(object):
         """Check if a translations catalog exists"""
         return os.path.exists(self.get_catalog_path(locale))
 
+    def parse_languages(self, languages):
+        """
+        Allways return a list of locale name from languages even if items are simple 
+        string or tuples. If tuple, assume its first item is the locale name to use.
+        """
+        _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x
+        return map(_f, languages)
+
     def init_locales_dir(self):
         """Create LOCALES_DIR directory if not allready exists"""
         if not self.check_locales_dir():
@@ -168,7 +176,7 @@ class I18NManager(object):
         For each knowed language, check if his PO file exists, else create it from the POT
         """
         catalog_template = self.clone_template()
-        languages = languages or self.settings.LANGUAGES
+        languages = self.parse_languages(languages or self.settings.LANGUAGES)
         for locale in languages:
             translation_dir = self.get_catalog_dir(locale)
             catalog_path = self.get_catalog_path(locale)
@@ -190,7 +198,7 @@ class I18NManager(object):
         """
         Update all knowed catalogs from the catalog template
         """
-        languages = languages or self.settings.LANGUAGES
+        languages = self.parse_languages(languages or self.settings.LANGUAGES)
         for locale in languages:
             catalog_path = self.get_catalog_path(locale)
             self.logger.info('Updating catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
@@ -208,7 +216,7 @@ class I18NManager(object):
         """
         Compile all knowed catalogs
         """
-        languages = languages or self.settings.LANGUAGES
+        languages = self.parse_languages(languages or self.settings.LANGUAGES)
         for locale in languages:
             catalog_path = self.get_catalog_path(locale)
             self.logger.info('Compiling catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
