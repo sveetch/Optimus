@@ -73,6 +73,8 @@ def import_settings(name=None):
     # Default map for translaction extract with babel
     if not hasattr(_settings, "I18N_EXTRACT_MAP"):
         setattr(_settings, "I18N_EXTRACT_MAP", (
+            ('pages.py', 'python'),
+            ('*settings.py', 'python'),
             ('**/templates/**.html', 'jinja2'),
         ))
     if not hasattr(_settings, "I18N_EXTRACT_OPTIONS"):
@@ -82,6 +84,8 @@ def import_settings(name=None):
                 'encoding': 'utf-8'
             },
         })
+    if not hasattr(_settings, "I18N_EXTRACT_SOURCES"):
+        setattr(_settings, "I18N_EXTRACT_SOURCES", (_settings.PROJECT_DIR,))
     
     # Python paths for each extensions to use with Jinja2
     if not hasattr(_settings, "JINJA_EXTENSIONS"):

@@ -155,15 +155,21 @@ class I18NManager(object):
         Only proceed if the template catalog does not exists yet or if 
         ``force`` argument is ``True`` (this will overwrite previous existing 
         POT file)
+        
+        TODO: actually from the CLI usage this only update POT file when he does not 
+        exist, else it keeps untouched, even if there changes or adds in translations
         """
         if force or not self.check_template_path():
             self.logger.warning('Template catalog (POT) does not exists, extracting it')
             self._catalog_template = Catalog(project=self.settings.SITE_NAME, header_comment=self.header_comment)
-            extracted = extract_from_dir(dirname=self.settings.SOURCES_DIR, method_map=self.settings.I18N_EXTRACT_MAP, options_map=self.settings.I18N_EXTRACT_OPTIONS)
-            
-            for filename, lineno, message, comments, context in extracted:
-                filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
-                self._catalog_template.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
+            # Follow all paths to search for pattern to extract
+            for extract_path in self.settings.I18N_EXTRACT_SOURCES:
+                self.logger.debug('Searching for pattern to extract in : {0}'.format(extract_path))
+                extracted = extract_from_dir(dirname=extract_path, method_map=self.settings.I18N_EXTRACT_MAP, options_map=self.settings.I18N_EXTRACT_OPTIONS)
+                # Proceed to extract from given path
+                for filename, lineno, message, comments, context in extracted:
+                    filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
+                    self._catalog_template.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
             
             outfile = open(self.get_template_path(), 'wb')
             write_po(outfile, self._catalog_template)

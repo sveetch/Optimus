@@ -130,8 +130,22 @@ Below is a list of all available settings, but not all are created in the settin
     Default value is : ::
     
         I18N_EXTRACT_MAP = (
+            ('pages.py', 'python'),
+            ('*settings.py', 'python'),
             ('**/templates/**.html', 'jinja2'),
         )
+    
+    So the default behavior is only to search for translations in template sources, ``pages.py`` and all common settings files.
+**I18N_EXTRACT_SOURCES**
+    List of path to search for translation to extract. In these paths, a scan will be done using the rules from ``I18N_EXTRACT_MAP``.
+    
+    Default value is : ::
+    
+        I18N_EXTRACT_SOURCES = (
+            PROJECT_DIR,
+        )
+        
+    So it will search recursively in the project directory.
 **I18N_EXTRACT_OPTIONS**
     Options for translation rules extraction with `Babel`_.
     
