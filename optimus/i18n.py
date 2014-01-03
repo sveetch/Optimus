@@ -160,7 +160,7 @@ class I18NManager(object):
         exist, else it keeps untouched, even if there changes or adds in translations
         """
         if force or not self.check_template_path():
-            self.logger.warning('Template catalog (POT) does not exists, extracting it')
+            self.logger.info('Proceeding to extraction to update the template catalog (POT)')
             self._catalog_template = Catalog(project=self.settings.SITE_NAME, header_comment=self.header_comment)
             # Follow all paths to search for pattern to extract
             for extract_path in self.settings.I18N_EXTRACT_SOURCES:

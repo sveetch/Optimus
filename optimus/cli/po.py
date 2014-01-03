@@ -44,7 +44,7 @@ def po(args, init=False, update=False, compile=False):
     #       OR should we only do checking before and abort on the first missing file ?
     if args.init or args.update or args.compile:
         i18n.init_locales_dir()
-        i18n.extract()
+        i18n.extract(force=args.update)
         i18n.init_catalogs()
     
     if args.update:
