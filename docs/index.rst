@@ -23,6 +23,11 @@ Contents
 Changelog
 ---------
 
+Version 0.6.8
+.............
+
+Re-use a fixed version for **argh** because the 0.24 version has incompatible backward issues.
+
 Version 0.6.7.1
 ...............
 
