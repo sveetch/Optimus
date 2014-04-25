@@ -40,6 +40,15 @@ Asset compressor
 
 Default install comes with `yui-compressor`_ as a dependancy to use with `webassets`_ because it is a great choice to compress CSS and Javascript assets. But beware that it requires you to have a Java Runtime Environment installed on your system, the OpenJDK is perfectly supported.
 
+Webserver for development
+=========================
+
+You can install `cherrypy`_, a simple Web server, to see your builded pages : ::
+
+    pip install cherrypy==3.2.4
+
+Read :ref:`usage-webserver-label` to see how to use it.
+
 Enable i18n support
 ===================
 

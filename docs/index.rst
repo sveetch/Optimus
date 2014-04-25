@@ -23,6 +23,30 @@ Contents
 Changelog
 ---------
 
+Version 0.6.7
+.............
+
+* Remove CherryPy dependancy from setup.py, add an install note about this;
+* Update documentation;
+
+Version 0.6.6
+.............
+
+Upgrade to yuicompressor 2.4.8
+
+Version 0.6.5
+.............
+
+Updating doc, in setup.py use 'entry_points' instead of 'scripts'
+
+Version 0.6.4
+.............
+
+* Fixing update method in po command to update the POT file;
+* Add I18N_EXTRACT_SOURCES setting and use it in extraction method, bumping version;
+* Add new behavior for settings.LANGUAGES to permit tuples instead of simple locale name;
+
+
 Version 0.6.1
 .............
 
