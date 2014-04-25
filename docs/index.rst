@@ -23,6 +23,11 @@ Contents
 Changelog
 ---------
 
+Version 0.6.7.1
+...............
+
+Fix dependancies syntax in setup.py that was causing issues during installation.
+
 Version 0.6.7
 .............
 
