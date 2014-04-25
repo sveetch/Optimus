@@ -32,7 +32,7 @@ setup(
         'watchdog==0.6.0',
         'rstview==0.1.2',
         'Babel==1.3.0',
-        'yuicompressor==2.4.7',
+        'yuicompressor==2.4.8',
         'cherrypy==3.2.4',
     ],
     #scripts=['bin/optimus'],
