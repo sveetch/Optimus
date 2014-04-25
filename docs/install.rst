@@ -53,19 +53,28 @@ Then you will have to enable it by adding the Jinja2 i18n extension in your sett
 
 This is only for a new project manually created, ``i18n`` project template already installs this for you.
 
-Use Foundation
-==============
+.. _install-use-foundation-3:
 
-Before starting, you have to choose whether you want to use Foundation 3.x serie or the last Foundation version.
+Use Foundation 3
+================
 
-No matter what you choose, this will require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
+This will require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
 
 Just target the correct version when you install the Foundation gem : ::
 
     gem install --version '3.2.5' zurb-foundation
 
-Then you should install the plugin to have a project template to create new projects that allready embeds Foundation : ::
+Then you should install the plugin to have a project template to create new projects that allready embeds Foundation 3 : ::
 
     pip install optimus_foundation
-    
-But note that currently this plugin only support *Foundation 3.x*.
+
+.. _install-use-foundation-5:
+
+Use Foundation 5
+================
+
+This will also require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
+
+Then just install the plugin to have a project template to create new projects that allready embeds Foundation 5 : ::
+
+    pip install optimus_foundation_5

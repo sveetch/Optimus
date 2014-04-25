@@ -8,6 +8,7 @@
 .. _Babel: https://pypi.python.org/pypi/Babel
 .. _Optimus: https://github.com/sveetch/Optimus
 .. _Optimus-foundation: https://github.com/sveetch/Optimus-foundation
+.. _Optimus-foundation-5: https://github.com/sveetch/Optimus-foundation-5
 .. _Foundation: http://github.com/zurb/foundation
 
 *****
@@ -37,15 +38,16 @@ It will create project directory and fill it with basic content. But Optimus can
 
 * ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
 * ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
-* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project including all `Foundation`_ stuff, you will have to install it before;
+* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project including all `Foundation`_ **3** stuff, you will have to install it before (see :ref:`install-use-foundation-3`);
+* ``optimus_foundation-5`` : `Optimus-foundation-5`_ that create a new project including all `Foundation`_ **5** stuff, you will have to install it before (see :ref:`install-use-foundation-5`);
 
 To create a new project with the I18n sample, you will have to do something like : ::
 
     optimus init my_project -t i18n
 
-To create a new Foundation project with `Optimus-foundation`_ plugin : ::
+To create a new Foundation project with `Optimus-foundation-5`_ plugin : ::
 
-    optimus init my_project -t optimus_foundation
+    optimus init my_project -t optimus_foundation_5
 
 .. _usage-building-label:
 

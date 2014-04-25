@@ -35,7 +35,12 @@ setup(
         'yuicompressor==2.4.7',
         'cherrypy==3.2.4',
     ],
-    scripts=['bin/optimus'],
+    #scripts=['bin/optimus'],
+    entry_points={
+        'console_scripts': [
+            'optimus = optimus.cli.console_script:main',
+        ]
+    },
     include_package_data=True,
     zip_safe=False
 )
