@@ -27,7 +27,7 @@ setup(
         'Jinja2 >= 2.6',
         'webassets==0.8',
         'argparse==1.2.1',
-        'argh==0.16.0',
+        'argh >= 0.24.1',
         'pathtools==0.1.2',
         'watchdog==0.6.0',
         'rstview >= 0.1.2',

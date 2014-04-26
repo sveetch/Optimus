@@ -3,6 +3,7 @@
 .. _cherrypy: http://cherrypy.org/
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _Babel: https://pypi.python.org/pypi/Babel
+.. _Argh: http://argh.readthedocs.org
 
 Optimus
 =======
@@ -22,6 +23,11 @@ Contents
 
 Changelog
 ---------
+
+Version 0.6.8.1
+...............
+
+Update `Argh`_ dependancy to `` >= 0.24.1``.
 
 Version 0.6.8
 .............
