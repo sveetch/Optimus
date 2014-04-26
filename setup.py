@@ -34,10 +34,9 @@ setup(
         'Babel==1.3.0',
         'yuicompressor >= 2.4.8',
     ],
-    #scripts=['bin/optimus'],
     entry_points={
         'console_scripts': [
-            'optimus = optimus.cli.console_script:main',
+            'optimus-cli = optimus.cli.console_script:main',
         ]
     },
     include_package_data=True,

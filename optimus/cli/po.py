@@ -12,11 +12,10 @@ from optimus.i18n import I18NManager
 @arg('-i', '--init', default=False, help="Initialize structure, create template catalog (POT) and initialize catalogs (PO)")
 @arg('-u', '--update', default=False, help="Extract translations, update the template catalog (POT) and update the catalogs (PO)")
 @arg('-c', '--compile', default=False, help="Process to compilation of catalogs")
-@arg('-b', '--backup', default=False, help="Make a backup of the locale directory before doing anything")
 @arg('-s', '--settings', default='settings', help="Python path to the settings module")
 @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
 @arg('--logfile', default=None, help="A filepath that if setted, will be used to save logs output")
-def po(args, init=False, update=False, compile=False):
+def po(args):
     """
     Manage catalog for all knowed languages
     """
@@ -33,13 +32,6 @@ def po(args, init=False, update=False, compile=False):
     
     i18n = I18NManager(root_logger, settings)
     
-    # TODO: * Copy the actual locale directory to a temporary directory
-    #       * If process is success, remove previous backup dir if exists then promote the temp backup dir as the current backup
-    #       * If process goes wrong, just remove the temp backup dir
-    #       -> Always keeping only one backup dir and allways for a successful process
-    if args.backup:
-        pass
-        
     # NOTE: Should we do this automatically to prevent error on missing files
     #       OR should we only do checking before and abort on the first missing file ?
     if args.init or args.update or args.compile:

@@ -24,10 +24,16 @@ Contents
 Changelog
 ---------
 
+Version 0.6.9
+.............
+
+* Fix a bug with bad signature for ``po`` command;
+* Moving script name from **optimus** to **optimus-cli** because this was causing issues with ``setup.entry_points`` usage and buildout;
+
 Version 0.6.8.1
 ...............
 
-Update `Argh`_ dependancy to `` >= 0.24.1``.
+Update `Argh`_ dependancy to ``>= 0.24.1``.
 
 Version 0.6.8
 .............
