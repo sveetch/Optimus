@@ -24,7 +24,7 @@ def import_settings(name=None):
             # problems with Python's interactive help.
             raise ImportError("Settings cannot be imported, because environment variable %s is undefined." % ENVIRONMENT_VARIABLE)
     
-    _settings = import_project_module(name)
+    _settings = import_settings_module(name)
     
     # Raise exception if these required settings are not defined
     required_settings = ('DEBUG','SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL',)
@@ -116,7 +116,8 @@ def import_settings(name=None):
     return _settings
     
 
-def import_project_module(name):
+def import_project_module(name, finding_module_err='Unable to find module: {0}', 
+                                import_module_err='Unable to load module: {0}'):
     """
     Load the given module name, only from the current directory (where the CLI has been 
     launched)
@@ -139,17 +140,37 @@ def import_project_module(name):
     # Cleanup the sys.path of the project path
     sys.path.pop()
     
-    fp, pathname, description = imp.find_module(name, [project_directory])
     try:
-        settings = imp.load_module(name, fp, pathname, description)
-    except:
-        logger.critical('Unable to load settings file')
+        fp, pathname, description = imp.find_module(name, [project_directory])
+        try:
+            settings = imp.load_module(name, fp, pathname, description)
+        except:
+            logger.critical(import_module_err.format(name))
+            # TODO: print out the exception without to use "raise" because it bubble up, 
+            # catched by upper try..except and so display 'finding' AND 'import' errors
+            # The exception is so usefull to see when the module contains error (like 
+            # syntax error..)
+            sys.exit()
+        finally:
+            # Close fp explicitly.
+            if fp:
+                fp.close()
+    except ImportError:
+        logger.critical(finding_module_err.format(name))
+        # TODO: print out the exception
         raise
-    finally:
-        # Close fp explicitly.
-        if fp:
-            fp.close()
+        sys.exit()
 
     return settings
+
+def import_settings_module(name):
+    """Helper to use a distinct error label when loading settings module"""
+    return import_project_module(name, finding_module_err='Unable to find settings module: {0}',
+                                       import_module_err='Unable to load settings module: {0}')
+
+def import_pages_module(name):
+    """Helper to use a distinct error label when loading page module"""
+    return import_project_module(name, finding_module_err='Unable to find pages module: {0}',
+                                       import_module_err='Unable to load settings module: {0}')
 
 settings = import_settings()

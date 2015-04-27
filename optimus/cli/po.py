@@ -25,7 +25,7 @@ def po(args):
     
     # Only load optimus stuff after the settings module name has been retrieved
     os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
-    from optimus.conf import settings, import_project_module
+    from optimus.conf import settings
     from optimus.utils import display_settings
     
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))

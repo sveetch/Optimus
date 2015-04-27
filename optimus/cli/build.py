@@ -22,7 +22,7 @@ def build(args):
     
     # Only load optimus stuff after the settings module name has been retrieved
     os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
-    from optimus.conf import settings, import_project_module
+    from optimus.conf import settings, import_pages_module
     from optimus.builder.assets import register_assets
     from optimus.builder.pages import PageBuilder
     from optimus.utils import initialize, display_settings
@@ -31,7 +31,7 @@ def build(args):
     
     if hasattr(settings, 'PAGES_MAP'):
         root_logger.info('Loading external pages map')
-        pages_map = import_project_module(settings.PAGES_MAP)
+        pages_map = import_pages_module(settings.PAGES_MAP)
         setattr(settings, 'PAGES', pages_map.PAGES)
 
     initialize(settings)
