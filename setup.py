@@ -28,7 +28,7 @@ setup(
         'webassets==0.8',
         'argh==0.24.1',
         'pathtools==0.1.2',
-        'watchdog==0.6.0',
+        'watchdog==0.8.3',
         'rstview >= 0.1.2',
         'Babel==1.3.0',
         'yuicompressor >= 2.4.8',
