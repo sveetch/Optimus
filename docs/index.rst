@@ -24,6 +24,14 @@ Contents
 Changelog
 ---------
 
+Version 0.7.0
+.............
+
+* Upgraded dependancy to watchdog==0.8.3 to try to fix a problem with watch mode on OSX;
+* Fixed doc;
+* Changed module imports to have distinct error name for page and settings import errors;
+* Changed message error for module loading to be more helpful;
+
 Version 0.6.9
 .............
 
