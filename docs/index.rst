@@ -24,6 +24,16 @@ Contents
 Changelog
 ---------
 
+Version 0.7.2
+.............
+
+Minor update that modify 'settings' and 'pages' modules import so exception is raised to ease debugging.
+
+Version 0.7.1
+.............
+
+Dummy release just to update documentation about forgotted changelog.
+
 Version 0.7.0
 .............
 
@@ -82,7 +92,7 @@ Version 0.6.1
 
 * Setting name ``EXTRA_BUNDLES`` is deprecated and **will be removed in a futur release**. In project settings rename it to ``BUNDLES``;
 * Remove ``optimus.builder.assets.COMMON_BUNDLES``, this was containing default bundles that was not really useful. If your project used them, you will have errors on page building about missing bundles, you can recover them in your ``settings.BUNDLES`` from : ::
-  
+
     COMMON_BUNDLES = {
         'css_screen_common': Bundle(
             'css/screen.css',
