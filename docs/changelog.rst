@@ -14,6 +14,7 @@ Version 0.8.0 - Unreleased
 * Move changelog to its own file, updated documentation Makefile, added dev requirements;
 * Use ``sphinx_rtd_theme`` in documentation if available;
 * Improved watcher logging output a little bit so it reveals changed file when detected without to use the debug level;
+* Do not enable anymore ``runserver`` command to installed CherryPy, instead raise a better error message explanation;
 
 Version 0.7.2 - 2015/05/05
 --------------------------
