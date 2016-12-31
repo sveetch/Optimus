@@ -13,6 +13,7 @@ Version 0.8.0 - Unreleased
 * Include ``html5writer.py`` taken from ``rstview`` and so remove dependency to ``rstview``, close #19;
 * Move changelog to its own file, updated documentation Makefile, added dev requirements;
 * Use ``sphinx_rtd_theme`` in documentation if available;
+* Improved watcher logging output a little bit so it reveals changed file when detected without to use the debug level;
 
 Version 0.7.2 - 2015/05/05
 --------------------------
