@@ -7,7 +7,7 @@
 Changelog
 =========
 
-Version 0.8.0 - Unreleased
+Version 0.8.0 - 2015/12/31
 --------------------------
 
 * Include ``html5writer.py`` taken from ``rstview`` and so remove dependency to ``rstview``, close #19;
