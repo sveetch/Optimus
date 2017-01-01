@@ -24,7 +24,7 @@ except ImportError:
         Launch the project watcher to automatically re-build knowed elements on changes
         """
         root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
-        raise CommandError("Error: Unable to import CherryPy, you should install it with 'pip install cherrypy==3.2.4'")
+        raise CommandError("Error: Unable to import CherryPy, you should install it with 'pip install cherrypy'")
 
 else:
     @arg('hostname', help="Hostname to bind the server to, use PORT or ADDRESS:PORT")

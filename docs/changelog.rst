@@ -7,7 +7,13 @@
 Changelog
 =========
 
-Version 0.8.0 - 2015/12/31
+Version 0.8.1 - Unreleased
+--------------------------
+
+* Validated working with ``CherryPy==8.7.0``, so remove every occurences about 3.x.x version;
+* Better README/Doc index/Package short description;
+
+Version 0.8.0 - 2016/12/31
 --------------------------
 
 * Include ``html5writer.py`` taken from ``rstview`` and so remove dependency to ``rstview``, close #19;
@@ -16,7 +22,7 @@ Version 0.8.0 - 2015/12/31
 * Improved watcher logging output a little bit so it reveals changed file when detected without to use the debug level;
 * Do not enable anymore ``runserver`` command to installed CherryPy, instead raise a better error message explanation;
 
-Version 0.7.2 - 2015/05/05
+Version 0.7.2 - 2016/05/05
 --------------------------
 
 Minor update that modify 'settings' and 'pages' modules import so exception is raised to ease debugging.

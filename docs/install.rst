@@ -45,7 +45,7 @@ Webserver for development
 
 You can install `cherrypy`_, a simple Web server, to see your builded pages : ::
 
-    pip install cherrypy==3.2.4
+    pip install cherrypy
 
 Read :ref:`usage-webserver-label` to see how to use it.
 
