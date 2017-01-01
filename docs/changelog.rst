@@ -7,7 +7,7 @@
 Changelog
 =========
 
-Version 0.8.1 - Unreleased
+Version 0.8.1 - 2017/01/01
 --------------------------
 
 * Validated working with ``CherryPy==8.7.0``, so remove every occurences about 3.x.x version;
