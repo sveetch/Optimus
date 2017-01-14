@@ -43,9 +43,6 @@ def import_settings(name=None):
         setattr(_settings, "WEBASSETS_CACHE", os.path.join(_settings.PROJECT_DIR, '.webassets-cache'))
 
     # Bundles
-    if hasattr(_settings, "EXTRA_BUNDLES"):
-        setattr(_settings, "BUNDLES", _settings.EXTRA_BUNDLES)
-        logger.warning("'EXTRA_BUNDLES' setting is deprecated and will be removed in futur release, rename it to 'BUNDLES' in your settings.")
     if not hasattr(_settings, "BUNDLES"):
         setattr(_settings, "BUNDLES", {})
     if not hasattr(_settings, "ENABLED_BUNDLES"):

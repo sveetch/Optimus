@@ -35,10 +35,16 @@ Operator system
 
 Optimus has been developed for Linux systems, it works also on Windows and MacOSX but you should have some tasks that will differs from the present documentation.
 
-Asset compressor
-================
 
-Default install comes with `yui-compressor`_ as a dependancy to use with `webassets`_ because it is a great choice to compress CSS and Javascript assets. But beware that it requires you to have a Java Runtime Environment installed on your system, the OpenJDK is perfectly supported.
+Asset filters
+=============
+
+Asset filters are used to process assets, mostly to compress them.
+
+Default install comes without any compressor requirement. It is up to you to choose, install and use assets compressors in your asset bundles.
+
+See `webassets filters documentation <https://webassets.readthedocs.io/en/latest/builtin_filters.html>`_ for more details.
+
 
 Webserver for development
 =========================
@@ -48,6 +54,7 @@ You can install `cherrypy`_, a simple Web server, to see your builded pages : ::
     pip install cherrypy
 
 Read :ref:`usage-webserver-label` to see how to use it.
+
 
 Enable i18n support
 ===================
@@ -61,29 +68,3 @@ Then you will have to enable it by adding the Jinja2 i18n extension in your sett
     )
 
 This is only for a new project manually created, ``i18n`` project template already installs this for you.
-
-.. _install-use-foundation-3:
-
-Use Foundation 3
-================
-
-This will require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
-
-Just target the correct version when you install the Foundation gem : ::
-
-    gem install --version '3.2.5' zurb-foundation
-
-Then you should install the plugin to have a project template to create new projects that allready embeds Foundation 3 : ::
-
-    pip install optimus_foundation
-
-.. _install-use-foundation-5:
-
-Use Foundation 5
-================
-
-This will also require a recent `Compass`_ install and thus, a recent Ruby install too. If you encounter problems with this, you can see to `rvm`_ to install a more recent Ruby version without touching your system packages.
-
-Then just install the plugin to have a project template to create new projects that allready embeds Foundation 5 : ::
-
-    pip install optimus_foundation_5

@@ -19,7 +19,7 @@ SOURCES_DIR = os.path.join(PROJECT_DIR, '$SOURCES_FROM')
 TEMPLATES_DIR = os.path.join(SOURCES_DIR, 'templates')
 # Directory where all stuff will be builded
 PUBLISH_DIR = os.path.join(PROJECT_DIR, '_build/dev')
-# Path where will be moved all the static files, usually this is a directory in 
+# Path where will be moved all the static files, usually this is a directory in
 # the ``PUBLISH_DIR``
 STATIC_DIR = os.path.join(PROJECT_DIR, PUBLISH_DIR, 'static')
 # Path to the i18n messages catalog directory
@@ -39,17 +39,17 @@ STATIC_URL = 'static/'
 BUNDLES = {
     'modernizr_js': Bundle(
         "js/modernizr.src.js",
-        filters='yui_js',
+        filters=None,
         output='js/modernizr.min.js'
     ),
     'app_css': Bundle(
         'css/app.css',
-        filters='yui_css',
+        filters=None,
         output='css/app.min.css'
     ),
     'app_js': Bundle(
         "js/app.js",
-        filters='yui_js',
+        filters=None,
         output='js/app.min.js'
     ),
 }

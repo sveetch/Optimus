@@ -33,7 +33,7 @@ If you just want to use the default settings, you don't need to specify it with 
 Below is a list of all available settings, but not all are created in the settings file when you create a new project with Optimus, only the useful ones. Optionnal settings that are undefined will be set with a default value. When the default value is not defined in the list, you can assume than they are empty.
 
 **DEBUG**
-    When actived (``True``) Optimus will not try to compress asset bundles. It is useful to avoid to re-compress them after any changes, this is the preferred method when developping your templates and CSS, this is why it is the default behavior in the default settings file. Disable it for production settings (this is already done in the production settings file provided in project templates. You can also access this variable from your templates if needed.
+    When setted to ``True``, webassets won't try to pack and compress any bundles. This is the preferred method when developping your templates and CSS and this is why it is the default behavior in the default settings file. You should set it to ``False`` for production settings. This variable is available in templates context.
 **PROJECT_DIR**
     Absolute path to the project directory. The settings files provided in project templates already fills them automatically, you should not need to edit it.
 **SITE_NAME**
@@ -56,29 +56,29 @@ Below is a list of all available settings, but not all are created in the settin
     Language locale name to use as the default for Pages that don't define it, see http://www.i18nguy.com/unicode/language-identifiers.html
 **LANGUAGES**
     A list of locale name for all available languages to manage with PO files. Remember to add it the locale name for the default language from ``LANGUAGE_CODE``.
-    
+
     Sample : ::
-    
+
         LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
-    
+
     This will add the default language and French to the known languages to manage.
-    
+
     Sometime it is also needed to have a label for these languages or some other associated parameters, so your languages entries can be tuples but their first item **must** be the locale name. Here is a sample : ::
-    
+
         LANGUAGES = (
             (LANGUAGE_CODE, "International"),
             ('fr_FR', "France"),
         )
-    
+
     Note that Optimus didn't care about other items in tuples of languages entries, you can add everything you want. But take care that Optimus will allways assume the first item is the locale name it needs.
-    
+
 **STATIC_URL**
     The static url to use in templates and with webassets. This can be a full URL like ``http://``, a relative path or an absolute path.
 **RST_PARSER_SETTINGS**
     ReSTructuredText parser settings to use when building a RST document. This is only useful if you use RST documents in your pages.
-    
+
     Default value is : ::
-    
+
         RST_PARSER_SETTINGS = {
             'initial_header_level': 3,
             'file_insertion_enabled': True,
@@ -86,71 +86,71 @@ Below is a list of all available settings, but not all are created in the settin
             'footnote_references': 'superscript',
             'doctitle_xform': False,
         }
-**EXTRA_BUNDLES**
-    This setting name is deprecated and will be removed in futur release. This was the previous name for ``BUNDLES`` setting.
 **BUNDLES**
     Custom bundles to use for managing assets.
-    
+
     Sample : ::
-    
+
         BUNDLES = {
             'my_css_bundle': Bundle(
                 'css/app.css',
-                filters='yui_css',
+                filters=None,
                 output='css/app.min.css'
             ),
             'my_js_bundle': Bundle(
                 'js/app.js',
-                filters='yui_js',
+                filters=None,
                 output='js/app.min.js'
             ),
         }
-    
+
+    See `webassets bundle documentation <https://webassets.readthedocs.io/en/latest/bundles.html>`_ for more details.
+
 **ENABLED_BUNDLES**
-    Key names of enabled bundles to use, by default all known bundles (from setting ``BUNDLES``) are enabled. If you don't want to enable them all, just define it with a list of bundle names to enable.
+    Key names of enabled bundles to use, by default all knowed bundles (from setting ``BUNDLES``) are enabled. If you don't want to enable them all, just define it with a list of bundle names to enable.
 **FILES_TO_SYNC**
     Sources files or directories to synchronize within the published static directory. This is usually used to put on some assets in the static directory like images that don't need to be compressed with assets bundles.
-    
+
     Note that you should be carefull to not conflict with files targeted by webassets bundles.
 **JINJA_EXTENSIONS**
     Comment, uncomment or add new extension path to use with Jinja here.
-    
+
     Default value is : ::
-    
+
         JINJA_EXTENSIONS = (
             'jinja2.ext.i18n',
         )
-        
+
     Note that you don't need to manually define the webassets extension if you use it, it is automatically appended within the build process if it detects bundles.
 **PAGES_MAP**
     Python path to the file that contains pages map, this is relative to your project, default value is ``pages``, meaning this will search for ``pages.py`` file in your project directory.
 **I18N_EXTRACT_MAP**
     Map for translation rules extraction with `Babel`_.
-    
+
     Default value is : ::
-    
+
         I18N_EXTRACT_MAP = (
             ('pages.py', 'python'),
             ('*settings.py', 'python'),
             ('**/templates/**.html', 'jinja2'),
         )
-    
+
     So the default behavior is only to search for translations in template sources, ``pages.py`` and all common settings files.
 **I18N_EXTRACT_SOURCES**
     List of path to search for translation to extract. In these paths, a scan will be done using the rules from ``I18N_EXTRACT_MAP``.
-    
+
     Default value is : ::
-    
+
         I18N_EXTRACT_SOURCES = (
             PROJECT_DIR,
         )
-        
+
     So it will search recursively in the project directory.
 **I18N_EXTRACT_OPTIONS**
     Options for translation rules extraction with `Babel`_.
-    
+
     Default value is : ::
-    
+
         I18N_EXTRACT_OPTIONS = {
             '**/templates/**.html': {
                 'extensions': 'webassets.ext.jinja2.AssetsExtension',
@@ -187,7 +187,7 @@ You can simply put your assets where you want in the ``sources`` directory and a
 
 But with Optimus this is only required for *real* static assets like images. For CSS and Javascript you should manage them with `webassets`_ that is already installed with Optimus.
 
-With `webassets`_ you manage your assets as **packages** named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
+With `webassets`_ you manage your assets as packages named ``Bundle``, like a bundle for your main CSS, another for your IE CSS hacks/patchs and another for your Javascripts files. You will have to register your custom bundles in ``settings.BUNDLES`` and enable them in ``settings.ENABLED_BUNDLES``.
 
 The benefit of `webassets`_ is that it can pre and post process all your assets. This is usually used to *minify* and pack multiple files in one final file. Read the `webassets documentation`_ for more details how to use this and to manage bundle assets in your templates.
 
@@ -267,14 +267,14 @@ You can override some methods to add logic or change some behaviors in your ``Pa
     Set the ``page_template_name`` context variable.
 **PageViewBase.get_context**
     Set the context page to add variables to expose in the templates. The method does not attempt any argument and return the context.
-    
+
     To add a new variable ``foo`` in your context you may do it like this : ::
-    
+
         class MyPage(PageViewBase):
             title = "My page"
             template_name = "mypage.html"
             destination = "mypage.html"
-            
+
             def get_context(self):
                 # This line set the default context from PageViewBase
                 super(MyPage, self).get_context()

@@ -27,13 +27,12 @@ setup(
     ],
     install_requires=[
         'docutils>=0.9.1',
-        'Jinja2>=2.6',
-        'webassets==0.8',
         'argh==0.24.1',
         'pathtools==0.1.2',
         'watchdog==0.8.3',
+        'Jinja2>=2.6',
         'Babel==1.3.0',
-        'yuicompressor>=2.4.8',
+        'webassets',
     ],
     entry_points={
         'console_scripts': [

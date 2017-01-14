@@ -1,11 +1,20 @@
 .. _cherrypy: http://cherrypy.org/
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
+.. _ClosureJS: https://developers.google.com/closure/compiler/
 .. _Babel: https://pypi.python.org/pypi/Babel
 .. _Argh: http://argh.readthedocs.org
 
 =========
 Changelog
 =========
+
+Version 0.8.2 - 2017/01/15
+--------------------------
+
+* Relaxed ``webassets`` version requirement since the last one (0.12.1) has been validated;
+* Removed ``yuicompressor`` requirement. `ClosureJS`_ is recommended for Javascript compression since YUI is not maintained anymore. But finally Optimus do not require anymore any compressor library. It's up to the user choice;
+* Removed ``EXTRA_BUNDLES`` occurrences since it was deprecated long time ago;
+* Updated documentation;
 
 Version 0.8.1 - 2017/01/01
 --------------------------
