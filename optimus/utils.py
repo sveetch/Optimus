@@ -10,7 +10,7 @@ def init_directory(directory):
     Shortcut to create given directory if it does not allready exists and
     output success to logger.
 
-    Keyword Arguments:
+    Arguments:
         directory (string): Directory to create.
 
     Returns: ``True`` if directory has been created else ``False``.
@@ -25,7 +25,7 @@ def init_directory(directory):
 
 def recursive_directories_create(project_directory, structure, dry_run=False):
     """
-    Recursive directory create from a "tree list"
+    Recursivly create directory structure from given tree.
 
     Sample tree list : ::
 
@@ -38,6 +38,20 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
                 ]
             ]
         ]
+
+    Arguments:
+        project_directory (string): Directory where to create directory
+            tree.
+        structure (list): Directory tree to create, each item is either a
+            string or a list. If an item is a list it is assumed to be a
+            directory name to create. If an item is a list, it is assumed to be
+            a list of sub directories to create.
+
+            First item of a list is allways a string.
+
+    Keyword Arguments:
+        dry_run (bool): Enabled dry run mode, no directory will be created.
+            Default to ``False``.
     """
     logger = logging.getLogger('optimus')
 
@@ -54,8 +68,6 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
         # Follow children directories to create them
         if len(item)>1:
             recursive_directories_create(path_dir, item[1], dry_run=dry_run)
-
-    return
 
 
 def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
