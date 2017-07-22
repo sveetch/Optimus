@@ -1,12 +1,15 @@
-#buildout's specific
-.installed.cfg
-eggs/*
-build/*
-dist/*
+# virtualenv
+/venv
 
 #egg's specific
 *.egg-info
 
 #defaults
-*.pyc
-*.pyo
+/dist
+*.py[cod]
+__pycache__/
+
+#tests
+.tox
+.cache
+__pycache__

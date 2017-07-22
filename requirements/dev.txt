@@ -1,2 +1,5 @@
-sphinx==1.4.5
+ -r tests.txt
+flake8
+sphinx
 sphinx-rtd-theme
+sphinx-autobuild
