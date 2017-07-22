@@ -4,9 +4,16 @@ Various helpers
 """
 import logging, os, shutil
 
+
 def init_directory(directory):
     """
-    Create a new directory if it does not allready exists
+    Shortcut to create given directory if it does not allready exists and
+    output success to logger.
+
+    Keyword Arguments:
+        directory (string): Directory to create.
+
+    Returns: ``True`` if directory has been created else ``False``.
     """
     logger = logging.getLogger('optimus')
     if not os.path.exists(directory):
@@ -15,12 +22,13 @@ def init_directory(directory):
         return True
     return False
 
+
 def recursive_directories_create(project_directory, structure, dry_run=False):
     """
     Recursive directory create from a "tree list"
-    
+
     Sample tree list : ::
-    
+
         structure = [
             [
                 'sources',
@@ -32,7 +40,7 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
         ]
     """
     logger = logging.getLogger('optimus')
-    
+
     for item in structure:
         if len(item)>0:
             new_dir = item[0]
@@ -46,23 +54,24 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
         # Follow children directories to create them
         if len(item)>1:
             recursive_directories_create(path_dir, item[1], dry_run=dry_run)
-        
+
     return
+
 
 def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     """
     For now, this is just a rmtree/copytree of the given path
-    
+
     TODO: In future, this should be a clean synchronize, like with rsync
-          or with making an internal registry of asset files that will be used 
+          or with making an internal registry of asset files that will be used
           to make a diff of changes then apply it ?
-    
-    * ``src`` arg is allways a file path assumed to be located in the 
+
+    * ``src`` arg is allways a file path assumed to be located in the
        path specified with the ``from_path`` argument;
-    * ``dst`` is a file path that will be created in the 
+    * ``dst`` is a file path that will be created in the
        path specified with the ``to_path`` argument;
-    * ``src`` arg is allways a file path assumed to be located in the 
-    * ``dst`` is a file path that will be in 
+    * ``src`` arg is allways a file path assumed to be located in the
+    * ``dst`` is a file path that will be in
     ``settings.``.
     """
     logger = logging.getLogger('optimus')
@@ -70,7 +79,7 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     if not os.path.exists(source):
         logger.warning('The given source does not exist and so can not be synchronized : %s', source)
         return
-    
+
     destination = os.path.join(to_path, src)
     if os.path.exists(destination):
         logger.debug('Removing old asset destination: %s', destination)
@@ -79,6 +88,7 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     logger.debug('Synchronizing asset from "%s" to "%s"', source, destination)
     if not dry_run:
         shutil.copytree(source, destination)
+
 
 def initialize(settings):
     """
@@ -90,6 +100,7 @@ def initialize(settings):
     if settings.FILES_TO_SYNC is not None:
         for item in settings.FILES_TO_SYNC:
             synchronize_assets_sources(settings.SOURCES_DIR, settings.STATIC_DIR, *item)
+
 
 def display_settings(settings, names):
     """
