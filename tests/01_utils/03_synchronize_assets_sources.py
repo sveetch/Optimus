@@ -5,7 +5,7 @@ import pytest
 from optimus.utils import synchronize_assets_sources
 
 
-def test_fail(caplog, temp_builds_dir):
+def test_missing_source(caplog, temp_builds_dir):
     """
     Given source does not exists
     """
@@ -27,16 +27,17 @@ def test_fail(caplog, temp_builds_dir):
     ]
 
 
-def test_simple(caplog, temp_builds_dir):
+def test_basic(caplog, temp_builds_dir):
     """
-    Succeed to sync dummy structure
+    Succeed to sync basic structure
     """
     basepath = temp_builds_dir.join('synchronize_assets_sources_simple')
 
     sourcedir = os.path.join(basepath.strpath, 'foo')
     destdir = os.path.join(basepath.strpath, 'bar')
-    sourcepath = os.path.join(sourcedir, "nope")
-    destpath = os.path.join(destdir, "nope")
+    targetname = "nope"
+    sourcepath = os.path.join(sourcedir, targetname)
+    destpath = os.path.join(destdir, targetname)
 
     # Create some dummy directory structure into source dir
     os.makedirs(os.path.join(sourcepath, 'yes'))
@@ -44,7 +45,7 @@ def test_simple(caplog, temp_builds_dir):
     os.makedirs(os.path.join(sourcepath, 'ouga', 'tchaka'))
     os.makedirs(destpath)
 
-    synchronize_assets_sources(sourcedir, destdir, "nope", None)
+    synchronize_assets_sources(sourcedir, destdir, targetname, None)
 
     assert os.path.exists(destpath) == True
     assert os.path.exists(os.path.join(destpath, 'yes')) == True

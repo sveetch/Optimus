@@ -11,13 +11,13 @@ def init_directory(directory):
     output success to logger.
 
     Arguments:
-        directory (string): Directory to create.
+        directory (str): Directory to create.
 
     Returns: ``True`` if directory has been created else ``False``.
     """
     logger = logging.getLogger('optimus')
     if not os.path.exists(directory):
-        logger.debug('Creating directory: %s', directory)
+        logger.debug('Creating directory: {}'.format(directory))
         os.makedirs(directory)
         return True
     return False
@@ -28,7 +28,7 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
     Recursivly create directory structure from given tree.
 
     Arguments:
-        project_directory (string): Directory where to create directory
+        project_directory (str): Directory where to create directory
             tree.
         tree (list): Directory tree to create, each item is either a
             string or a list. If an item is a list it is assumed to be a
@@ -72,11 +72,12 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
             new_dir = item[0]
             path_dir = os.path.join(project_directory, new_dir)
             if not os.path.exists(path_dir):
-                logger.info('* Creating new directory : %s', path_dir)
+                logger.info('* Creating new directory : {}'.format(path_dir))
                 if not dry_run:
                     os.makedirs(path_dir)
             else:
-                logger.warning('* Following path allready exist : %s', path_dir)
+                logger.warning(('* Following path allready exist : '
+                                '{}').format(path_dir))
         # Follow children directories to create them
         if len(item)>1:
             recursive_directories_create(path_dir, item[1], dry_run=dry_run)
@@ -90,10 +91,12 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     removed so given source dir replace it.
 
     Arguments:
-        from_path (string): Base directory where to get the source dir to copy.
-        to_path (string): Base directory where to put the source dir to copy.
-        src (string): Source directory to copy.
-        dest (string): Unused (!!), to remove.
+        from_path (str): Base directory where to get the source dir to copy.
+        to_path (str): Base directory where to put the source dir to copy.
+        src (str): Source directory name (relative to ``from_path``) to copy.
+        dest (str): NOTE: Unused, actually the source dir name is allways
+            used as destination, dest should trigger a rename on copied item if
+            given.
 
     Keyword Arguments:
         dry_run (bool): Enabled dry run mode, no directory will be created or
@@ -104,29 +107,38 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     destination = os.path.join(to_path, src)
 
     if not os.path.exists(source):
-        logger.warning('The given source does not exist and so can not be synchronized : %s', source)
+        logger.warning(('The given source does not exist and so can '
+                        'not be synchronized : {}').format(source))
         return
 
     if os.path.exists(destination):
-        logger.debug('Removing old asset destination: %s', destination)
+        logger.debug('Removing old asset destination: {}'.format(destination))
         if not dry_run:
             shutil.rmtree(destination)
 
-    logger.debug('Synchronizing asset from "%s" to "%s"', source, destination)
+    logger.debug(('Synchronizing asset from '
+                  '"{}" to "{}"').format(source, destination))
     if not dry_run:
         shutil.copytree(source, destination)
 
 
 def initialize(settings):
     """
-    Init the needed directory structure
+    Init the needed directory structure from settings.
+
+    Arguments:
+        settings (object): Settings object. Require setting attributes
+            ``STATIC_DIR``, ``WEBASSETS_CACHE``, ``SOURCES_DIR``,
+            ``FILES_TO_SYNC`` to be set.
+
     """
     init_directory(settings.STATIC_DIR)
     init_directory(settings.WEBASSETS_CACHE)
 
     if settings.FILES_TO_SYNC is not None:
         for item in settings.FILES_TO_SYNC:
-            synchronize_assets_sources(settings.SOURCES_DIR, settings.STATIC_DIR, *item)
+            synchronize_assets_sources(settings.SOURCES_DIR,
+                                       settings.STATIC_DIR, item, None)
 
 
 def display_settings(settings, names):
