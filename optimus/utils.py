@@ -23,31 +23,43 @@ def init_directory(directory):
     return False
 
 
-def recursive_directories_create(project_directory, structure, dry_run=False):
+def recursive_directories_create(project_directory, tree, dry_run=False):
     """
     Recursivly create directory structure from given tree.
-
-    Sample tree list : ::
-
-        structure = [
-            [
-                'sources',
-                [
-                    ['js'],
-                    ['css'],
-                ]
-            ]
-        ]
 
     Arguments:
         project_directory (string): Directory where to create directory
             tree.
-        structure (list): Directory tree to create, each item is either a
+        tree (list): Directory tree to create, each item is either a
             string or a list. If an item is a list it is assumed to be a
             directory name to create. If an item is a list, it is assumed to be
             a list of sub directories to create.
 
-            First item of a list is allways a string.
+            Sample tree: ::
+
+                tree = [
+                    [
+                        'one',
+                        [
+                            [
+                                'two'
+                            ],
+                            [
+                                'three',
+                                [
+                                    ['foo'],
+                                ],
+                            ],
+                        ]
+                    ],
+                ],
+
+            Will turn to directory structure: ::
+
+                one/
+                ├── three
+                │   └── foo
+                └── two
 
     Keyword Arguments:
         dry_run (bool): Enabled dry run mode, no directory will be created.
@@ -55,7 +67,7 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
     """
     logger = logging.getLogger('optimus')
 
-    for item in structure:
+    for item in tree:
         if len(item)>0:
             new_dir = item[0]
             path_dir = os.path.join(project_directory, new_dir)
@@ -72,31 +84,34 @@ def recursive_directories_create(project_directory, structure, dry_run=False):
 
 def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     """
-    For now, this is just a rmtree/copytree of the given path
+    Copy (or replace existing) given source directory to destination.
 
-    TODO: In future, this should be a clean synchronize, like with rsync
-          or with making an internal registry of asset files that will be used
-          to make a diff of changes then apply it ?
+    If source dir allready exists into given destination, existing dir is
+    removed so given source dir replace it.
 
-    * ``src`` arg is allways a file path assumed to be located in the
-       path specified with the ``from_path`` argument;
-    * ``dst`` is a file path that will be created in the
-       path specified with the ``to_path`` argument;
-    * ``src`` arg is allways a file path assumed to be located in the
-    * ``dst`` is a file path that will be in
-    ``settings.``.
+    Arguments:
+        from_path (string): Base directory where to get the source dir to copy.
+        to_path (string): Base directory where to put the source dir to copy.
+        src (string): Source directory to copy.
+        dest (string): Unused (!!), to remove.
+
+    Keyword Arguments:
+        dry_run (bool): Enabled dry run mode, no directory will be created or
+            removed. Default to ``False``.
     """
     logger = logging.getLogger('optimus')
     source = os.path.join(from_path, src)
+    destination = os.path.join(to_path, src)
+
     if not os.path.exists(source):
         logger.warning('The given source does not exist and so can not be synchronized : %s', source)
         return
 
-    destination = os.path.join(to_path, src)
     if os.path.exists(destination):
         logger.debug('Removing old asset destination: %s', destination)
         if not dry_run:
             shutil.rmtree(destination)
+
     logger.debug('Synchronizing asset from "%s" to "%s"', source, destination)
     if not dry_run:
         shutil.copytree(source, destination)

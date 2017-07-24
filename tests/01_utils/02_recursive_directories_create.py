@@ -63,7 +63,9 @@ from optimus.utils import recursive_directories_create
             [
                 'one',
                 [
-                    ['two'],
+                    [
+                        'two'
+                    ],
                     [
                         'three',
                         [
@@ -82,15 +84,17 @@ from optimus.utils import recursive_directories_create
     ),
 ])
 def test_success(caplog, temp_builds_dir, tree, paths):
-    """Create given tree and check paths exists"""
-    filepath = temp_builds_dir.join('recursive_directories_create_success')
+    """
+    Create given tree and check paths exists
+    """
+    basepath = temp_builds_dir.join('recursive_directories_create_success')
 
-    recursive_directories_create(filepath.strpath, tree)
+    recursive_directories_create(basepath.strpath, tree)
 
     attempted_logs = []
     for item in paths:
-        destination = os.path.join(filepath.strpath, item)
-        print(destination)
+        destination = os.path.join(basepath.strpath, item)
+        # Build attempted log from created dir
         attempted_logs.append((
             'optimus',
             20,
@@ -101,3 +105,63 @@ def test_success(caplog, temp_builds_dir, tree, paths):
 
     assert caplog.record_tuples == attempted_logs
 
+
+def test_warning(caplog, temp_builds_dir):
+    """
+    Create given tree causes warning because of duplicate dir path
+    """
+    basepath = temp_builds_dir.join('recursive_directories_create_warning')
+
+    tree = [
+        [
+            'hello',
+        ],
+        [
+            'hello',
+        ],
+    ]
+
+    destination = os.path.join(basepath.strpath, 'hello')
+
+    recursive_directories_create(basepath.strpath, tree)
+
+    assert caplog.record_tuples == [
+        (
+            'optimus',
+            20,
+            '* Creating new directory : {}'.format(destination)
+        ),
+        (
+            'optimus',
+            30,
+            '* Following path allready exist : {}'.format(destination)
+        ),
+    ]
+
+
+
+def test_dryrun(caplog, temp_builds_dir):
+    """
+    Enable dry run mode so no directory is created
+    """
+    basepath = temp_builds_dir.join('recursive_directories_create_dryrun')
+
+    tree = [
+        [
+            'hello',
+        ],
+    ]
+
+    destination = os.path.join(basepath.strpath, 'hello')
+
+    recursive_directories_create(basepath.strpath, tree, dry_run=True)
+
+    assert caplog.record_tuples == [
+        (
+            'optimus',
+            20,
+            '* Creating new directory : {}'.format(destination)
+        ),
+    ]
+
+    assert os.path.exists(destination) == False
