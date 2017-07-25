@@ -161,14 +161,14 @@ def import_project_module(name, finding_module_err='Unable to find module: {0}',
 
     return settings
 
+
 def import_settings_module(name):
     """Helper to use a distinct error label when loading settings module"""
     return import_project_module(name, finding_module_err='Unable to find settings module: {0}',
                                        import_module_err='Unable to load settings module, it probably have errors: {0}')
 
+
 def import_pages_module(name):
     """Helper to use a distinct error label when loading page module"""
     return import_project_module(name, finding_module_err='Unable to find pages module: {0}',
                                        import_module_err='Unable to load pages module, it probably have errors: {0}')
-
-settings = import_settings()

@@ -26,6 +26,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
+        'six',
         'docutils>=0.9.1',
         'argh==0.24.1',
         'pathtools==0.1.2',

@@ -66,7 +66,7 @@ else:
             raise CommandError("Error: Publish directory does not exist yet, you should build it before")
 
         # Run server with publish directory served with tools.staticdir
-        print "Running HTTP server on address {address} with port {port}".format(address=address, port=port)
+        print("Running HTTP server on address {address} with port {port}").format(address=address, port=port)
 
         cherrypy.config.update({
             'server.socket_host': address,

@@ -103,6 +103,8 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
             removed. Default to ``False``.
     """
     logger = logging.getLogger('optimus')
+    print(from_path, src)
+    print(to_path, src)
     source = os.path.join(from_path, src)
     destination = os.path.join(to_path, src)
 

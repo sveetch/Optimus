@@ -22,7 +22,8 @@ def watch(args):
 
     # Only load optimus stuff after the settings module name has been retrieved
     os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
-    from optimus.conf import settings, import_pages_module
+    from optimus.conf import settings
+    from optimus.conf.loader import import_pages_module
     from optimus.watchers import TemplatesWatchEventHandler, AssetsWatchEventHandler
     from optimus.builder.assets import register_assets
     from optimus.builder.pages import PageBuilder

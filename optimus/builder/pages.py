@@ -59,7 +59,7 @@ class PageViewBase(object):
     def __init__(self, **kwargs):
         self._used_templates = None
 
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
         self.logger = logging.getLogger('optimus')
