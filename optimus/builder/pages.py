@@ -23,7 +23,7 @@ except ImportError:
 
 from optimus.html5writer import SemanticHTML5Writer
 from optimus.lang import LangBase
-from optimus.conf import settings
+from optimus.conf.registry import settings
 
 class PageViewBase(object):
     """
