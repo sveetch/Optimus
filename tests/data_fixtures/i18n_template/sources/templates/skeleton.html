@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ page_lang.language_name }}"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="{{ page_lang.language_name }}"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="{{ page_lang.language_name }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ page_lang.language_name }}"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>{% block meta_title %}{{ SITE.name }}{% endblock %}</title>
+    <meta name="robots" content="follow, all">
+    {% block metas_base %}{% endblock %}
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block base_css %}{% assets "app_css" %}
+        <link rel="stylesheet" href="{{ page_relative_position }}{{ ASSET_URL }}">
+    {% endassets %}{% endblock %}
+    {% block more_css %}{% endblock %}
+    {% block base_js %}{% assets "modernizr_js" %}
+        <script src="{{ page_relative_position }}{{ ASSET_URL }}"></script>
+    {% endassets %}{% endblock %}
+</head>
+
+<body class="{% block body_classes %}lang-{{ page_lang.language_name }}{% endblock %}"{% block body_attrs %}{% endblock %}>
+    {% block base_content %}{% endblock %}
+    
+    {% block more_js %}{% assets "app_js" %}
+        <script src="{{ page_relative_position }}{{ ASSET_URL }}"></script>
+    {% endassets %}{% endblock %}
+</body>
+</html>
