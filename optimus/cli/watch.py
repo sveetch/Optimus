@@ -20,10 +20,13 @@ def watch(args):
     """
     root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
 
-    # Only load optimus stuff after the settings module name has been retrieved
-    os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
+    from optimus.conf.loader import (SETTINGS_NAME_ENVVAR, PROJECT_DIR_ENVVAR,
+                                     import_pages_module)
+
+    os.environ[SETTINGS_NAME_ENVVAR] = args.settings
     from optimus.conf.registry import settings
-    from optimus.conf.loader import import_pages_module
+
+    # Only load optimus stuff after the settings module name has been retrieved
     from optimus.watchers import TemplatesWatchEventHandler, AssetsWatchEventHandler
     from optimus.builder.assets import register_assets
     from optimus.builder.pages import PageBuilder

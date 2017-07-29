@@ -1,4 +1,5 @@
 import os
+import logging
 
 import pytest
 
@@ -20,7 +21,7 @@ def test_missing_source(caplog, temp_builds_dir):
     assert caplog.record_tuples == [
         (
             'optimus',
-            30,
+            logging.WARNING,
             ('The given source does not exist and so can not be '
              'synchronized : {}').format(sourcepath)
         ),
@@ -54,12 +55,12 @@ def test_basic(caplog, temp_builds_dir):
     assert caplog.record_tuples == [
         (
             'optimus',
-            10,
+            logging.DEBUG,
             'Removing old asset destination: {}'.format(destpath)
         ),
         (
             'optimus',
-            10,
+            logging.DEBUG,
             'Synchronizing asset from "{}" to "{}"'.format(sourcepath,
                                                            destpath)
         ),

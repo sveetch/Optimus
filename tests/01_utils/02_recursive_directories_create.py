@@ -1,4 +1,5 @@
 import os
+import logging
 
 import pytest
 
@@ -97,7 +98,7 @@ def test_success(caplog, temp_builds_dir, tree, paths):
         # Build attempted log from created dir
         attempted_logs.append((
             'optimus',
-            20,
+            logging.INFO,
             '* Creating new directory : {}'.format(destination)
         ))
         assert os.path.exists(destination) == True
@@ -128,12 +129,12 @@ def test_warning(caplog, temp_builds_dir):
     assert caplog.record_tuples == [
         (
             'optimus',
-            20,
+            logging.INFO,
             '* Creating new directory : {}'.format(destination)
         ),
         (
             'optimus',
-            30,
+            logging.WARNING,
             '* Following path allready exist : {}'.format(destination)
         ),
     ]
@@ -159,7 +160,7 @@ def test_dryrun(caplog, temp_builds_dir):
     assert caplog.record_tuples == [
         (
             'optimus',
-            20,
+            logging.INFO,
             '* Creating new directory : {}'.format(destination)
         ),
     ]

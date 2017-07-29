@@ -4,26 +4,31 @@ Some fixture methods
 import os
 import pytest
 
-#import optimus
+import optimus
 
 
-#class FixturesSettingsTestMixin(object):
-    #"""Mixin containing some basic settings"""
-    #def __init__(self):
-        ## Base fixture datas directory
-        #self.tests_dir = 'tests'
-        #self.tests_path = os.path.normpath(
-            #os.path.join(
-                #os.path.abspath(os.path.dirname(optimus.__file__)),
-                #'..',
-                #self.tests_dir,
-            #)
-        #)
-        #self.fixtures_dir = 'data_fixtures'
-        #self.fixtures_path = os.path.join(
-            #self.tests_path,
-            #self.fixtures_dir
-        #)
+class FixturesSettingsTestMixin(object):
+    """Mixin containing some basic settings"""
+    def __init__(self):
+        # Use getcwd and package name since abspath on package __file__ won't
+        # play nice with tox (because tests/ dir is not deployed in
+        # site-packages from where tox works)
+        self.package_dir = os.path.join(os.getcwd(), 'optimus')
+
+        self.tests_dir = 'tests'
+        self.tests_path = os.path.normpath(
+            os.path.join(
+                self.package_dir,
+                '..',
+                self.tests_dir,
+            )
+        )
+
+        self.fixtures_dir = 'data_fixtures'
+        self.fixtures_path = os.path.join(
+            self.tests_path,
+            self.fixtures_dir
+        )
 
 
 @pytest.fixture(scope='session')
@@ -33,7 +38,7 @@ def temp_builds_dir(tmpdir_factory):
     return fn
 
 
-#@pytest.fixture(scope="module")
-#def fixtures_settings():
-    #"""Initialize and return settings (mostly paths) for fixtures (scope at module level)"""
-    #return FixturesSettingsTestMixin()
+@pytest.fixture(scope="module")
+def fixtures_settings():
+    """Initialize and return settings (mostly paths) for fixtures (scope at module level)"""
+    return FixturesSettingsTestMixin()

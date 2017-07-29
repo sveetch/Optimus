@@ -16,7 +16,7 @@ class DummySettings(object):
         self.FILES_TO_SYNC = ressources_to_sync
 
 
-def test_basic(caplog, temp_builds_dir):
+def test_basic(temp_builds_dir):
     """
     Basic initialize without ressources to sync
     """
@@ -33,7 +33,7 @@ def test_basic(caplog, temp_builds_dir):
     assert os.path.exists(conf.WEBASSETS_CACHE) == True
 
 
-def test_sync(caplog, temp_builds_dir):
+def test_sync(temp_builds_dir):
     """
     Basic initialize with ressources to sync
     """

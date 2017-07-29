@@ -1,4 +1,5 @@
 import os
+import logging
 
 import pytest
 
@@ -18,7 +19,7 @@ def test_success(caplog, temp_builds_dir):
     assert caplog.record_tuples == [
         (
             'optimus',
-            10,
+            logging.DEBUG,
             'Creating directory: {}'.format(destination)
         )
     ]

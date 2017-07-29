@@ -23,9 +23,12 @@ def po(args):
     # Init, load and builds
     root_logger = init_logging(args.loglevel.upper(), logfile=args.logfile)
 
-    # Only load optimus stuff after the settings module name has been retrieved
-    os.environ['OPTIMUS_SETTINGS_MODULE'] = args.settings
+    from optimus.conf.loader import (SETTINGS_NAME_ENVVAR, PROJECT_DIR_ENVVAR)
+
+    os.environ[SETTINGS_NAME_ENVVAR] = args.settings
     from optimus.conf.registry import settings
+
+    # Only load optimus stuff after the settings module name has been retrieved
     from optimus.utils import display_settings
 
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))

@@ -1,30 +1,131 @@
 # -*- coding: utf-8 -*-
 """
-Settings configuration management
+Module loader helpers
 """
 import os, imp, logging, sys
 
-ENVIRONMENT_VARIABLE = "OPTIMUS_SETTINGS_MODULE"
 
-def import_settings(name=None):
+PROJECT_DIR_ENVVAR = "OPTIMUS_PROJECT_DIR"
+SETTINGS_NAME_ENVVAR = "OPTIMUS_SETTINGS_MODULE"
+
+
+def import_project_module(name, basedir=None,
+                                finding_module_err='Unable to find module: {0}',
+                                import_module_err='Unable to load module: {0}'):
     """
-    Load the settings, use "os.environ" to find the settings module name if "name"
-    argument is not given
+    Load given module name.
+
+    Arguments:
+        name (str): Module name to retrieve from ``basedir``.
+
+    Keyword Arguments:
+        basedir (str): Base directory from where to find module name. If no
+            base directory is given ``os.getcwd()`` is used. Default is
+            ``None``.
+        finding_module_err (str): Message to output when the given module name
+            is not reachable from ``basedir``.
+        import_module_err (str): Message to output when the given module name
+            raise exception when loaded.
+
+    Returns: Finded and loaded module.
+    """
+    basedir = basedir or os.getcwd()
+
+    logger = logging.getLogger('optimus')
+    logger.info('Loading "%s" module', name)
+    logger.info('Module searched in: %s', basedir)
+
+    # Add the project to the sys.path
+    project_name = os.path.basename( os.path.abspath( basedir ) )
+    sys.path.append( os.path.normpath( os.path.join(basedir, '..') ) )
+    # Sys.path is ok, we can import the project
+    try:
+        project_module = __import__(project_name, '', '', [''])
+    except ImportError:
+        logger.critical("Unable to load project named: {0}".format(project_name))
+        raise
+    # Cleanup the sys.path of the project path
+    sys.path.pop()
+
+    fp = pathname = description = None
+    try:
+        fp, pathname, description = imp.find_module(name, [basedir])
+    except ImportError:
+        logger.critical(finding_module_err.format(name))
+        # dont raising exception that is not really helping since it point out
+        # to 'imp.find_module' line
+        #raise
+        sys.exit()
+    else:
+        try:
+            mod = imp.load_module(name, fp, pathname, description)
+        except:
+            logger.critical(import_module_err.format(name))
+            # Print out the exception because it is very useful to debug
+            raise
+            sys.exit()
+    finally:
+        # Close fp explicitly.
+        if fp:
+            fp.close()
+
+    return mod
+
+
+def import_settings_module(name, basedir=None):
+    """
+    Shortcut to have specific error message when loading settings module
+
+    Arguments:
+        name (str): Module name to retrieve from ``basedir``.
+
+    Keyword Arguments:
+        basedir (str): Base directory from where to find module name. If no
+            base directory is given ``os.getcwd()`` is used. Default is
+            ``None``.
+
+    Returns: Finded and loaded module.
+    """
+    return import_project_module(name, basedir=basedir,
+                                 finding_module_err='Unable to find settings module: {0}',
+                                 import_module_err='Unable to load settings module, it probably have errors: {0}')
+
+
+def import_pages_module(name, basedir=None):
+    """
+    Shortcut to have specific error message when loading a page module
+
+    Arguments:
+        name (str): Module name to retrieve from ``basedir``.
+
+    Keyword Arguments:
+        basedir (str): Base directory from where to find module name. If no
+            base directory is given ``os.getcwd()`` is used. Default is
+            ``None``.
+
+    Returns: Finded and loaded module.
+    """
+    return import_project_module(name, basedir=basedir,
+                                 finding_module_err='Unable to find pages module: {0}',
+                                 import_module_err='Unable to load pages module, it probably have errors: {0}')
+
+
+def import_settings(name, basedir):
+    """
+    Load settings module.
+
+    Validate required settings are set, then fill some missing settings to a
+    default value.
+
+    Arguments:
+        name (str): Settings module name to retrieve from ``basedir``.
+        basedir (str): Base directory from where to find settings module name.
+
+    Returns: Settings module
     """
     logger = logging.getLogger('optimus')
 
-    if name is None:
-        # Stealed from "django.conf"
-        try:
-            name = os.environ[ENVIRONMENT_VARIABLE]
-            if not name: # If it's set but is an empty string.
-                raise KeyError
-        except KeyError:
-            # NOTE: This is arguably an EnvironmentError, but that causes
-            # problems with Python's interactive help.
-            raise ImportError("Settings cannot be imported, because environment variable %s is undefined." % ENVIRONMENT_VARIABLE)
-
-    _settings = import_settings_module(name)
+    _settings = import_settings_module(name, basedir)
 
     # Raise exception if these required settings are not defined
     required_settings = ('DEBUG','SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL',)
@@ -33,10 +134,14 @@ def import_settings(name=None):
         if not hasattr(_settings, setting_name):
             missing_settings.append(setting_name)
     if len(missing_settings)>0:
-        logger.error("The following settings are required but not defined in the used settings file: {0}".format(", ".join(missing_settings)))
+        logger.error("The following settings are required but not defined: {0}".format(", ".join(missing_settings)))
         raise NameError
 
     # Fill default required settings
+
+    # The directory where webassets will store his cache
+    if not hasattr(_settings, "PROJECT_DIR"):
+        setattr(_settings, "PROJECT_DIR", os.path.abspath(os.path.dirname(_settings.__file__)))
 
     # The directory where webassets will store his cache
     if not hasattr(_settings, "WEBASSETS_CACHE"):
@@ -98,11 +203,6 @@ def import_settings(name=None):
     if not hasattr(_settings, "FILES_TO_SYNC"):
         setattr(_settings, "FILES_TO_SYNC", ())
 
-    # These are the default watcher settings, you can customize them if you want, uncomment
-    # parts you want to change, usually you'll change only the "pattern" values
-    # You don't need to uncomment this if you want to use the watcher with these default
-    # parameters
-
     # Templates watcher settings
     if not hasattr(_settings, "WATCHER_TEMPLATES_PATTERNS"):
         setattr(_settings, "WATCHER_TEMPLATES_PATTERNS", {})
@@ -111,64 +211,3 @@ def import_settings(name=None):
         setattr(_settings, "WATCHER_ASSETS_PATTERNS", {})
 
     return _settings
-
-
-def import_project_module(name, finding_module_err='Unable to find module: {0}',
-                                import_module_err='Unable to load module: {0}'):
-    """
-    Load the given module name, only from the current directory (where the CLI has been
-    launched)
-    """
-    project_directory = os.getcwd()
-
-    logger = logging.getLogger('optimus')
-    logger.info('Loading "%s" module', name)
-    logger.info('Module searched in: %s', project_directory)
-
-    # Add the project to the sys.path
-    project_name = os.path.basename( os.path.abspath( project_directory ) )
-    sys.path.append( os.path.normpath( os.path.join(project_directory, '..') ) )
-    # Sys.path is ok, we can import the project
-    try:
-        project_module = __import__(project_name, '', '', [''])
-    except ImportError:
-        logger.critical("Unable to load project named '{0}'".format(project_name))
-        raise
-    # Cleanup the sys.path of the project path
-    sys.path.pop()
-
-    fp = pathname = description = None
-    try:
-        fp, pathname, description = imp.find_module(name, [project_directory])
-    except ImportError:
-        logger.critical(finding_module_err.format(name))
-        # dont raising exception that is not really helping since it point out
-        # to 'imp.find_module' line
-        #raise
-        sys.exit()
-    else:
-        try:
-            settings = imp.load_module(name, fp, pathname, description)
-        except:
-            logger.critical(import_module_err.format(name))
-            # Print out the exception because its so useful to debug
-            raise
-            sys.exit()
-    finally:
-        # Close fp explicitly.
-        if fp:
-            fp.close()
-
-    return settings
-
-
-def import_settings_module(name):
-    """Helper to use a distinct error label when loading settings module"""
-    return import_project_module(name, finding_module_err='Unable to find settings module: {0}',
-                                       import_module_err='Unable to load settings module, it probably have errors: {0}')
-
-
-def import_pages_module(name):
-    """Helper to use a distinct error label when loading page module"""
-    return import_project_module(name, finding_module_err='Unable to find pages module: {0}',
-                                       import_module_err='Unable to load pages module, it probably have errors: {0}')
