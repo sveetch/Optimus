@@ -4,15 +4,19 @@ New project starter
 """
 import logging, os, shutil
 from string import Template
+from importlib import import_module
 
 from optimus.utils import recursive_directories_create, synchronize_assets_sources
-from optimus.importlib import import_module
 from optimus.samples import TEMPLATE_ALIAS
+from optimus.exceptions import DestinationExists, TemplateImportError
 
 
 class ProjectStarter(object):
     """
     Object to create a new project with his settings, directory structure, script, etc..
+
+    TODO:
+        Dont require basedir and name args, move them to install() instead.
 
     Arguments:
         basedir (str): Path to the directory where to create new project.
@@ -30,7 +34,31 @@ class ProjectStarter(object):
         self.dry_run = dry_run
         self.logger = logging.getLogger('optimus')
 
-    def get_template_path(self, name):
+    def check_destination(self, basedir, name):
+        """
+        Merge basedir and name into destination path and check if it does not
+        allready exist.
+
+        Arguments:
+            basedir (str): Path to the directory where to create new project.
+            name (str): Directory name to create inside ``basedir``.
+
+        Raises:
+            optimus.exception.DestinationExists: If destination allready
+                exists.
+
+        Returns:
+            string: Destination path.
+        """
+        dest = os.path.join(basedir, name)
+
+        if os.path.exists(dest):
+            raise DestinationExists("Destination allready "
+                                    "exists : {}".format(dest))
+
+        return dest
+
+    def get_template_pythonpath(self, name):
         """
         Return Python path for template
 
@@ -47,6 +75,28 @@ class ProjectStarter(object):
 
         return name
 
+    def get_template_module(self, path):
+        """
+        Return template module if valid
+
+        Arguments:
+            path (str): Python path to template module.
+
+        Raises:
+            optimus.exception.TemplateImportError: If template module import
+                fails.
+
+        Returns:
+            string: Template module.
+        """
+        try:
+            mod = import_module(path)
+        except ImportError:
+            raise TemplateImportError("There is no project template module "
+                                      "named '%s'".format(path))
+
+        return mod
+
     def install(self, template_path):
         """
         Install new project structure and content from project template.
@@ -55,35 +105,30 @@ class ProjectStarter(object):
             template_path (str): Python path or alias name to the template
                 module.
         """
-        project_dir = os.path.join(self.basedir, self.name)
-        if os.path.exists(project_dir):
-            self.logger.error("Project path allready exists : %s", project_dir)
-            return
+        project_dir = self.check_destination(self.basedir, self.name)
 
-        template_path = self.get_template_path(template_path)
+        template_path = self.get_template_pythonpath(template_path)
 
         self.logger.info("Loading the project template from : %s", template_path)
-        try:
-            self.projecttemplate = import_module(template_path)
-        except ImportError:
-            self.logger.error("There is no project template module named '%s'", template_path)
-            return False
-        projecttemplate_path = os.path.abspath(os.path.dirname(self.projecttemplate.__file__))
+
+        self.template = self.get_template_module(template_path)
+
+        projecttemplate_path = os.path.abspath(os.path.dirname(self.template.__file__))
 
         self.logger.info("Creating new Optimus project '%s' in : %s", self.name, self.basedir)
         if not self.dry_run:
             os.makedirs(project_dir)
 
         self.logger.info("Installing directories structure on : %s", project_dir)
-        recursive_directories_create(project_dir, self.projecttemplate.DIRECTORY_STRUCTURE, dry_run=self.dry_run)
+        recursive_directories_create(project_dir, self.template.DIRECTORY_STRUCTURE, dry_run=self.dry_run)
 
         self.logger.info("Synchronizing sources on : %s", project_dir)
-        for item in self.projecttemplate.FILES_TO_SYNC:
-            synchronize_assets_sources(os.path.join(projecttemplate_path, self.projecttemplate.SOURCES_FROM), os.path.join(project_dir, self.projecttemplate.SOURCES_TO), *item, dry_run=self.dry_run)
+        for item in self.template.FILES_TO_SYNC:
+            synchronize_assets_sources(os.path.join(projecttemplate_path, self.template.SOURCES_FROM), os.path.join(project_dir, self.template.SOURCES_TO), *item, dry_run=self.dry_run)
 
-        if hasattr(self.projecttemplate, "LOCALE_DIR"):
-            locale_src = os.path.join(projecttemplate_path, self.projecttemplate.LOCALE_DIR)
-            locale_dst = os.path.join(project_dir, self.projecttemplate.LOCALE_DIR)
+        if hasattr(self.template, "LOCALE_DIR"):
+            locale_src = os.path.join(projecttemplate_path, self.template.LOCALE_DIR)
+            locale_dst = os.path.join(project_dir, self.template.LOCALE_DIR)
             self.logger.info("Installing messages catalogs")
             if not os.path.exists(locale_src):
                 logger.error('Message catalog directory does not exists: %s', locale_src)
@@ -93,7 +138,7 @@ class ProjectStarter(object):
         self.logger.info("Installing default project's files")
         context = {
             'PROJECT_NAME': self.name,
-            'SOURCES_FROM': self.projecttemplate.SOURCES_FROM,
+            'SOURCES_FROM': self.template.SOURCES_FROM,
         }
         self.install_scripts(project_dir, context)
 
@@ -103,10 +148,10 @@ class ProjectStarter(object):
         """
         Write the provided scripts by the "project template"
         """
-        projecttemplate_path = os.path.abspath(os.path.dirname(self.projecttemplate.__file__))
+        projecttemplate_path = os.path.abspath(os.path.dirname(self.template.__file__))
         self.logger.debug("Getting files from '%s'", projecttemplate_path)
 
-        for item in self.projecttemplate.SCRIPT_FILES:
+        for item in self.template.SCRIPT_FILES:
             template_filepath = os.path.join(projecttemplate_path, item[0])
             destination = os.path.join(project_dir, item[1])
             self.logger.info("* Installing '%s' to '%s'", template_filepath, destination)
