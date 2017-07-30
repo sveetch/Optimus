@@ -23,6 +23,7 @@ def watch(args):
     from optimus.conf.loader import (SETTINGS_NAME_ENVVAR, PROJECT_DIR_ENVVAR,
                                      import_pages_module)
 
+    os.environ[PROJECT_DIR_ENVVAR] = os.getcwd() # Should come from an command arg
     os.environ[SETTINGS_NAME_ENVVAR] = args.settings
     from optimus.conf.registry import settings
 

@@ -4,6 +4,8 @@
 #
 # From https://gist.github.com/758430
 #
+# DEPRECATED: Will be replaced by https://github.com/borntyping/python-colorlog
+#
 import ctypes
 import logging
 import os
@@ -137,7 +139,7 @@ def init_logging(loglevel, printout=True, logfile=None):
     """
     rootlogger = logging.getLogger('optimus')
     rootlogger.setLevel(getattr(logging, loglevel))
-    
+
     if not printout and not logfile:
         from StringIO import StringIO
         dummystream = StringIO()
@@ -147,7 +149,7 @@ def init_logging(loglevel, printout=True, logfile=None):
             rootlogger.addHandler(ColorizingStreamHandler())
         if logfile:
             rootlogger.addHandler(logging.FileHandler(logfile))
-    
+
     rootlogger.debug("Set logger level to: %s", loglevel)
     return rootlogger
 

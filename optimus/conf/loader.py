@@ -27,7 +27,8 @@ def import_project_module(name, basedir=None,
         import_module_err (str): Message to output when the given module name
             raise exception when loaded.
 
-    Returns: Finded and loaded module.
+    Returns:
+        object: Finded and loaded module.
     """
     basedir = basedir or os.getcwd()
 
@@ -84,7 +85,8 @@ def import_settings_module(name, basedir=None):
             base directory is given ``os.getcwd()`` is used. Default is
             ``None``.
 
-    Returns: Finded and loaded module.
+    Returns:
+        object: Finded and loaded module.
     """
     return import_project_module(name, basedir=basedir,
                                  finding_module_err='Unable to find settings module: {0}',
@@ -121,7 +123,8 @@ def import_settings(name, basedir):
         name (str): Settings module name to retrieve from ``basedir``.
         basedir (str): Base directory from where to find settings module name.
 
-    Returns: Settings module
+    Returns:
+        object: Settings module.
     """
     logger = logging.getLogger('optimus')
 

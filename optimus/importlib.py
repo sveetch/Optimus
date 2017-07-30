@@ -4,6 +4,8 @@ importlib module for compatibility with Python 2.6
 Stealed from Django, original credits are : ::
 
     Taken from Python 2.7 with permission from/by the original author
+
+DEPRECATED: Python 2.6 will be dropped, importlib allready exists in Python 2.7
 """
 import sys
 
