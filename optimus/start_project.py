@@ -2,18 +2,20 @@
 """
 New project starter
 """
-import logging, os, shutil
+import logging, io, os, shutil
 from string import Template
 from importlib import import_module
 
-from optimus.utils import recursive_directories_create, synchronize_assets_sources
+from optimus.utils import (recursive_directories_create,
+                           synchronize_assets_sources)
 from optimus.samples import TEMPLATE_ALIAS
 from optimus.exceptions import DestinationExists, TemplateImportError
 
 
 class ProjectStarter(object):
     """
-    Object to create a new project with his settings, directory structure, script, etc..
+    Object to create a new project with its settings, directory structure,
+    scripts and assets.
 
     Keyword Arguments:
         dry_run (bool): Dry run mode to perform all tasks but never create
@@ -119,7 +121,14 @@ class ProjectStarter(object):
 
     def deploy_language_files(self, manifest, template_fspath, destination):
         """
-        Write the provided scripts by the "project template"
+        Write provided scripts from template into create project
+
+        Arguments:
+            manifest (object): Template manifest object.
+            template_fspath (str): Template path where to get the locale
+                directory.
+            destination (str): Destination path (the created project
+                directory).
         """
         locale_src = os.path.join(template_fspath, manifest.LOCALE_DIR)
         locale_dst = os.path.join(destination, manifest.LOCALE_DIR)
@@ -130,41 +139,61 @@ class ProjectStarter(object):
         if not self.dry_run:
             shutil.copytree(locale_src, locale_dst)
 
-    def deploy_scripts(self, manifest, template_path, destination, context):
+    def deploy_scripts(self, manifest, source_path, destination, context={}):
         """
-        Write provided scripts by project template into created project.
+        Write provided scripts from project template into created project.
+
+        Arguments:
+            manifest (object): Template manifest object.
+            source_path (str): Path to directory containing script sources.
+            destination (str): Destination path (the created project
+                directory).
+
+        Keyword Arguments:
+            context (dict): Context of variables to give to script template to
+                render. Default to a empty dict.
+
+        Returns:
+            list: List of deployed asset directories.
         """
         deployed = []
 
         for item in manifest.SCRIPT_FILES:
-            template_filepath = os.path.join(template_path, item[0])
-            file_destination = os.path.join(destination, item[1])
-            self.logger.info("* Installing '%s' to '%s'", template_filepath, file_destination)
-            self.render_script(template_filepath, file_destination, context=context)
+            src = os.path.join(source_path, item[0])
+            dst = os.path.join(destination, item[1])
+            self.logger.info("* Installing '%s' to '%s'", src, dst)
+            self.render_script(src, dst, context=context)
+            deployed.append(dst)
 
         return deployed
 
-    def render_script(self, template_filepath, file_destination, context={}):
+    def render_script(self, filepath, destination, context={}):
         """
-        Write a script from the "project template" to the new project
+        Render script source into created project using ``string.Template``.
+
+        Arguments:
+            filepath (str): Filepath source.
+            destination (str): Filepath destination.
+
+        Keyword Arguments:
+            context (dict): Context of variables to give to script template to
+                render. Default to a empty dict.
         """
         # reading template file
-        template_fileobject = open(template_filepath, 'r')
-        content = Template(template_fileobject.read())
-        template_fileobject.close()
+        with io.open(filepath, 'r', encoding='utf-8') as f:
+            content = Template(f.read())
         # render content
         content = content.substitute(**context)
         self.logger.debug("  Writing")
 
         if not self.dry_run:
             # check file destination and creating it if needed
-            dest_path = os.path.dirname(file_destination)
+            dest_path = os.path.dirname(destination)
             if not os.path.exists(dest_path):
                 os.makedirs(dest_path)
             # writing file
-            defaultfileobject = open(file_destination, 'w')
-            defaultfileobject.write(content)
-            defaultfileobject.close()
+            with io.open(destination, 'w', encoding='utf-8') as f:
+                f.write(content)
 
     def install(self, basedir, name, template_pythonpath):
         """
