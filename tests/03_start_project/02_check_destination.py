@@ -16,7 +16,7 @@ def test_check_destination_success(temp_builds_dir):
 
     attempted = os.path.join(basepath.strpath, name)
 
-    starter = ProjectStarter("foo", "bar")
+    starter = ProjectStarter()
     resolved = starter.check_destination(basepath.strpath, name)
 
     #assert resolved == path
@@ -33,7 +33,7 @@ def test_check_destination_fail(temp_builds_dir):
     attempted = os.path.join(basepath.strpath, name)
     os.makedirs(attempted)
 
-    starter = ProjectStarter("foo", "bar")
+    starter = ProjectStarter()
 
     with pytest.raises(DestinationExists):
         resolved = starter.check_destination(basepath.strpath, name)

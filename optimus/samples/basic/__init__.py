@@ -1,5 +1,5 @@
 """
-Default template project to use to create a new project
+Manifest for default template project to use to create a new project
 """
 # Directory structure to create
 DIRECTORY_STRUCTURE = [
@@ -22,9 +22,9 @@ SOURCES_FROM = 'sources'
 # The directory name that will contains 'sources' in the new created projects
 SOURCES_TO = SOURCES_FROM
 
-# Default sources files or directory to synchronize within the new project 
+# Default sources files or directory to copy within the new project
 # sources directory
-# The sync task is performed before the writing task
+# The sync task is performed before the script writing task
 FILES_TO_SYNC = (
     #(SOURCE, DESTINATION)
     ('js', 'js'),
@@ -34,8 +34,8 @@ FILES_TO_SYNC = (
 )
 
 # Script template files
-# NOTE: Files are rendered with the ``String.format()`` method, so remember to double 
-#       all your '{' and '}', else they will be interpreted as format variable, and 
+# NOTE: Files are rendered with the ``String.format()`` method, so remember to double
+#       all your '{' and '}', else they will be interpreted as format variable, and
 #       probably raise a Key error
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],

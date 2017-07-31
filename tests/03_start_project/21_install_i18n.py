@@ -6,25 +6,28 @@ import pytest
 from optimus.start_project import ProjectStarter
 
 
-def test_basic_template(caplog, temp_builds_dir):
+def test_i18n_template(caplog, temp_builds_dir):
     """
     Simply start a dummy project from basic template
     """
-    basepath = temp_builds_dir.join('projectstarter_install_basic_template')
-    project_name = 'basic_sample'
-    template_name = 'optimus.samples.basic'
+    basepath = temp_builds_dir.join('projectstarter_install_i18n_template')
+    project_name = 'i18n_sample'
+    template_name = 'optimus.samples.i18n'
     destination = os.path.join(basepath.strpath, project_name)
 
-    starter = ProjectStarter(basepath.strpath, project_name)
-    starter.install(template_name)
+    starter = ProjectStarter()
+    starter.install(basepath.strpath, project_name, template_name)
 
     assert os.path.exists(destination) == True
     assert os.path.exists(os.path.join(destination, 'settings.py')) == True
+    assert os.path.exists(os.path.join(destination, 'sources', 'templates', 'index.html')) == True
+    assert os.path.exists(os.path.join(destination, 'sources', 'css', 'app.css')) == True
+    assert os.path.exists(os.path.join(destination, 'locale', 'en_US', 'LC_MESSAGES', 'messages.po')) == True
 
     assert caplog.record_tuples[0] == (
         'optimus',
         logging.INFO,
-        'Loading the project template from : {}'.format(template_name)
+        'Loading project template from : {}'.format(template_name)
     )
 
     assert caplog.record_tuples[1] == (

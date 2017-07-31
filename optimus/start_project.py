@@ -15,28 +15,17 @@ class ProjectStarter(object):
     """
     Object to create a new project with his settings, directory structure, script, etc..
 
-    TODO:
-        Dont require basedir and name args, move them to install() instead.
-
-    Arguments:
-        basedir (str): Path to the directory where to create new project.
-        name (str): Name of the new project, will be also the dir name of the
-            created project, this must be a valid module name (without spaces,
-            special chars, etc..)
-
     Keyword Arguments:
         dry_run (bool): Dry run mode to perform all tasks but never create
-            anything.
+            anything on File System.
     """
-    def __init__(self, basedir, name, dry_run=False):
-        self.basedir = basedir
-        self.name = name
+    def __init__(self, dry_run=False):
         self.dry_run = dry_run
         self.logger = logging.getLogger('optimus')
 
     def check_destination(self, basedir, name):
         """
-        Merge basedir and name into destination path and check if it does not
+        Merge basedir and name into destination path then check if it does not
         allready exist.
 
         Arguments:
@@ -97,67 +86,65 @@ class ProjectStarter(object):
 
         return mod
 
-    def install(self, template_path):
+    def deploy_assets(self, manifest, template_fspath, destination):
         """
-        Install new project structure and content from project template.
+        Copy directories defined in ``FILES_TO_SYNC`` from template
+        manifest into created project.
 
         Arguments:
-            template_path (str): Python path or alias name to the template
-                module.
+            manifest (object): Template manifest object.
+            template_fspath (str): Template path where to get the locale
+                directory.
+            destination (str): Destination path (the created project
+                directory).
+
+        Returns:
+            list: List of deployed asset directories.
         """
-        project_dir = self.check_destination(self.basedir, self.name)
+        deployed = []
 
-        template_path = self.get_template_pythonpath(template_path)
+        for src, dst in manifest.FILES_TO_SYNC:
+            sources_from = os.path.join(template_fspath,
+                                        manifest.SOURCES_FROM)
 
-        self.logger.info("Loading the project template from : %s", template_path)
+            sources_to = os.path.join(destination, manifest.SOURCES_TO)
 
-        self.template = self.get_template_module(template_path)
+            deployed.append(
+                synchronize_assets_sources(sources_from, sources_to, src, dst,
+                                           dry_run=self.dry_run)
+            )
 
-        projecttemplate_path = os.path.abspath(os.path.dirname(self.template.__file__))
+        # Drop 'None' values from unexisting files
+        return filter(None, deployed)
 
-        self.logger.info("Creating new Optimus project '%s' in : %s", self.name, self.basedir)
-        if not self.dry_run:
-            os.makedirs(project_dir)
-
-        self.logger.info("Installing directories structure on : %s", project_dir)
-        recursive_directories_create(project_dir, self.template.DIRECTORY_STRUCTURE, dry_run=self.dry_run)
-
-        self.logger.info("Synchronizing sources on : %s", project_dir)
-        for item in self.template.FILES_TO_SYNC:
-            synchronize_assets_sources(os.path.join(projecttemplate_path, self.template.SOURCES_FROM), os.path.join(project_dir, self.template.SOURCES_TO), *item, dry_run=self.dry_run)
-
-        if hasattr(self.template, "LOCALE_DIR"):
-            locale_src = os.path.join(projecttemplate_path, self.template.LOCALE_DIR)
-            locale_dst = os.path.join(project_dir, self.template.LOCALE_DIR)
-            self.logger.info("Installing messages catalogs")
-            if not os.path.exists(locale_src):
-                logger.error('Message catalog directory does not exists: %s', locale_src)
-            if not self.dry_run:
-                shutil.copytree(locale_src, locale_dst)
-
-        self.logger.info("Installing default project's files")
-        context = {
-            'PROJECT_NAME': self.name,
-            'SOURCES_FROM': self.template.SOURCES_FROM,
-        }
-        self.install_scripts(project_dir, context)
-
-        return True
-
-    def install_scripts(self, project_dir, context):
+    def deploy_language_files(self, manifest, template_fspath, destination):
         """
         Write the provided scripts by the "project template"
         """
-        projecttemplate_path = os.path.abspath(os.path.dirname(self.template.__file__))
-        self.logger.debug("Getting files from '%s'", projecttemplate_path)
+        locale_src = os.path.join(template_fspath, manifest.LOCALE_DIR)
+        locale_dst = os.path.join(destination, manifest.LOCALE_DIR)
 
-        for item in self.template.SCRIPT_FILES:
-            template_filepath = os.path.join(projecttemplate_path, item[0])
-            destination = os.path.join(project_dir, item[1])
-            self.logger.info("* Installing '%s' to '%s'", template_filepath, destination)
-            self.write_template_script(template_filepath, destination, context=context)
+        self.logger.info("Installing messages catalogs")
+        if not os.path.exists(locale_src):
+            logger.error('Message catalog directory does not exists: %s', locale_src)
+        if not self.dry_run:
+            shutil.copytree(locale_src, locale_dst)
 
-    def write_template_script(self, template_filepath, destination, context={}):
+    def deploy_scripts(self, manifest, template_path, destination, context):
+        """
+        Write provided scripts by project template into created project.
+        """
+        deployed = []
+
+        for item in manifest.SCRIPT_FILES:
+            template_filepath = os.path.join(template_path, item[0])
+            file_destination = os.path.join(destination, item[1])
+            self.logger.info("* Installing '%s' to '%s'", template_filepath, file_destination)
+            self.render_script(template_filepath, file_destination, context=context)
+
+        return deployed
+
+    def render_script(self, template_filepath, file_destination, context={}):
         """
         Write a script from the "project template" to the new project
         """
@@ -170,11 +157,64 @@ class ProjectStarter(object):
         self.logger.debug("  Writing")
 
         if not self.dry_run:
-            # check destination path and creating it if needed
-            dest_path = os.path.dirname(destination)
+            # check file destination and creating it if needed
+            dest_path = os.path.dirname(file_destination)
             if not os.path.exists(dest_path):
                 os.makedirs(dest_path)
             # writing file
-            defaultfileobject = open(destination, 'w')
+            defaultfileobject = open(file_destination, 'w')
             defaultfileobject.write(content)
             defaultfileobject.close()
+
+    def install(self, basedir, name, template_pythonpath):
+        """
+        Install new project structure and content from project template.
+
+        Arguments:
+            basedir (str): Path to the directory where to create new project.
+            name (str): Name of the new project, will be also the dir name of the
+                created project, this must be a valid module name (without spaces,
+                special chars, etc..)
+            template_pythonpath (str): Python path or alias name to the
+                template module.
+
+        Returns:
+            string: Path where the new project has been created.
+        """
+        destination = self.check_destination(basedir, name)
+
+        template_pythonpath = self.get_template_pythonpath(template_pythonpath)
+
+        self.logger.info("Loading project template "
+                         "from : {}".format(template_pythonpath))
+
+        manifest = self.get_template_module(template_pythonpath)
+
+        template_fspath = os.path.abspath(os.path.dirname(manifest.__file__))
+
+        self.logger.info("Creating new Optimus project '{}' "
+                         "in : {}".format(name, basedir))
+        if not self.dry_run:
+            os.makedirs(destination)
+
+        self.logger.info("Installing directories structure "
+                         "on : {}".format(destination))
+        recursive_directories_create(destination,
+                                     manifest.DIRECTORY_STRUCTURE,
+                                     dry_run=self.dry_run)
+
+        self.logger.info("Copying templates sources on : %s", destination)
+        self.deploy_assets(manifest, template_fspath, destination)
+
+        if hasattr(manifest, "LOCALE_DIR"):
+            self.deploy_language_files(manifest, template_fspath, destination)
+
+        self.logger.info("Installing default project's files")
+        context = {
+            'PROJECT_NAME': name,
+            'SOURCES_FROM': manifest.SOURCES_FROM,
+        }
+        self.logger.debug("Getting files from '%s'", template_fspath)
+        self.deploy_scripts(manifest, template_fspath, destination, context)
+
+        return destination

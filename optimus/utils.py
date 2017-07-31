@@ -101,6 +101,9 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     Keyword Arguments:
         dry_run (bool): Enabled dry run mode, no directory will be created or
             removed. Default to ``False``.
+
+    Returns:
+        str: Copied destination path
     """
     logger = logging.getLogger('optimus')
     source = os.path.join(from_path, src)
@@ -120,6 +123,8 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
                   '"{}" to "{}"').format(source, destination))
     if not dry_run:
         shutil.copytree(source, destination)
+
+    return destination
 
 
 def initialize(settings):

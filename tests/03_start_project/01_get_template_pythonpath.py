@@ -32,7 +32,7 @@ def test_get_template_pythonpath(caplog, name, path, attempted_log):
     """
     Check template path/alias name resolving
     """
-    starter = ProjectStarter("foo", "bar")
+    starter = ProjectStarter()
     resolved = starter.get_template_pythonpath(name)
 
     assert resolved == path
