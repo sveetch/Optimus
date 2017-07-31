@@ -17,7 +17,7 @@ class OptimusBaseException(Exception):
 class DestinationExists(OptimusBaseException):
     """
     Exception to be raised when a destination allready exists for a new project
-    to create
+    to create.
     """
     pass
 
@@ -25,5 +25,12 @@ class DestinationExists(OptimusBaseException):
 class TemplateImportError(OptimusBaseException):
     """
     Exception to be raised when a template module import fails.
+    """
+    pass
+
+
+class TemplateSettingsInvalidError(OptimusBaseException):
+    """
+    Exception to be raised when a template manifest have wrong settings.
     """
     pass

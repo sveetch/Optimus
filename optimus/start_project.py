@@ -9,7 +9,8 @@ from importlib import import_module
 from optimus.utils import (recursive_directories_create,
                            synchronize_assets_sources)
 from optimus.samples import TEMPLATE_ALIAS
-from optimus.exceptions import DestinationExists, TemplateImportError
+from optimus.exceptions import (DestinationExists, TemplateImportError,
+                                TemplateSettingsInvalidError)
 
 
 class ProjectStarter(object):
@@ -135,9 +136,11 @@ class ProjectStarter(object):
         locale_dst = os.path.join(destination, manifest.LOCALE_DIR)
 
         self.logger.info("Installing messages catalogs")
+
         if not os.path.exists(locale_src):
-            logger.error(("Message catalog directory does not "
-                          "exists: {}").format(locale_src))
+            msg = "Message catalog directory does not exists: {}"
+            raise TemplateSettingsInvalidError(msg.format(locale_src))
+
         if not self.dry_run:
             shutil.copytree(locale_src, locale_dst)
 
