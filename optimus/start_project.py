@@ -62,7 +62,8 @@ class ProjectStarter(object):
         """
         if name in TEMPLATE_ALIAS:
             name = TEMPLATE_ALIAS[name]
-            self.logger.debug("Resolved project template name alias to: {}".format(name))
+            self.logger.debug(("Resolved project template name alias "
+                               "to: {}").format(name))
 
         return name
 
@@ -84,7 +85,7 @@ class ProjectStarter(object):
             mod = import_module(path)
         except ImportError:
             raise TemplateImportError("There is no project template module "
-                                      "named '%s'".format(path))
+                                      "named '{}'".format(path))
 
         return mod
 
@@ -135,7 +136,8 @@ class ProjectStarter(object):
 
         self.logger.info("Installing messages catalogs")
         if not os.path.exists(locale_src):
-            logger.error('Message catalog directory does not exists: %s', locale_src)
+            logger.error(("Message catalog directory does not "
+                          "exists: {}").format(locale_src))
         if not self.dry_run:
             shutil.copytree(locale_src, locale_dst)
 
@@ -161,7 +163,7 @@ class ProjectStarter(object):
         for item in manifest.SCRIPT_FILES:
             src = os.path.join(source_path, item[0])
             dst = os.path.join(destination, item[1])
-            self.logger.info("* Installing '%s' to '%s'", src, dst)
+            self.logger.info("* Installing '{}' to '{}'".format(src, dst))
             self.render_script(src, dst, context=context)
             deployed.append(dst)
 
@@ -201,9 +203,9 @@ class ProjectStarter(object):
 
         Arguments:
             basedir (str): Path to the directory where to create new project.
-            name (str): Name of the new project, will be also the dir name of the
-                created project, this must be a valid module name (without spaces,
-                special chars, etc..)
+            name (str): Name of the new project, will be also the dir name of
+                the created project, this must be a valid module name (without
+                spaces, special chars, etc..)
             template_pythonpath (str): Python path or alias name to the
                 template module.
 
@@ -232,7 +234,8 @@ class ProjectStarter(object):
                                      manifest.DIRECTORY_STRUCTURE,
                                      dry_run=self.dry_run)
 
-        self.logger.info("Copying templates sources on : %s", destination)
+        self.logger.info("Copying templates sources "
+                         "on: {}".format(destination))
         self.deploy_assets(manifest, template_fspath, destination)
 
         if hasattr(manifest, "LOCALE_DIR"):
@@ -243,7 +246,7 @@ class ProjectStarter(object):
             'PROJECT_NAME': name,
             'SOURCES_FROM': manifest.SOURCES_FROM,
         }
-        self.logger.debug("Getting files from '%s'", template_fspath)
+        self.logger.debug("Getting files from '{}'".format(template_fspath))
         self.deploy_scripts(manifest, template_fspath, destination, context)
 
         return destination
