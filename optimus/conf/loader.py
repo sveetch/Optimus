@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Module loader helpers
+
+TODO: 'imp' is deprecated since python ~3.4
 """
 import os, imp, logging, sys
 

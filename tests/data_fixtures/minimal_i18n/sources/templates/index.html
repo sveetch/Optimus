@@ -1,0 +1,14 @@
+{% extends "skeleton.html" %}
+
+{% block base_content %}
+<div class="base-container">
+    <div class="center-container">
+        <div class="cell">
+            <div class="center-block">
+                <h1>{{ SITE.name }}</h1>
+                <p>{% trans %}Hello World!{% endtrans %}</p>
+                {% if page_lang.code not in ['fr_FR'] %}<p>There is also a <a href="index_fr_FR.html">French version</a></p>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>{% endblock %}

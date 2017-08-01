@@ -8,6 +8,11 @@
 Changelog
 =========
 
+Version 0.9.0 - Unreleased
+--------------------------
+
+Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage using pytest and tox.
+
 Version 0.8.2 - 2017/01/15
 --------------------------
 

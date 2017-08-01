@@ -6,7 +6,7 @@ import os
 
 DEBUG = True
 
-SITE_NAME = 'basic'
+SITE_NAME = 'minimal'
 
 SITE_DOMAIN = 'localhost'
 

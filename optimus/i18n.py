@@ -2,9 +2,19 @@
 """
 I18n management support within Optimus environnment
 
-Assume we only manage "messages.*" files for POT and PO files and no other catalog type.
+We only manage "messages.*" files for POT and PO files and no other catalog
+type.
+
+TODO:
+    * Test coverage;
+    * Use exceptions instead of logger.error;
+    * New template string substitution;
+    * Avoid to directly use object attributes, prefer to give needed vars as
+      method args;
+    * Use 'io.open' instead of old 'open';
+    * Doctrings;
 """
-import datetime, os, tempfile
+import datetime, logging, os, tempfile
 
 from babel import Locale
 from babel.util import LOCALTZ
@@ -13,22 +23,23 @@ from babel.messages.catalog import Catalog
 from babel.messages.pofile import read_po, write_po
 from babel.messages.mofile import write_mo
 
+
 class I18NManager(object):
     """
     I18n manager for translation catalogs
-    
-    Maked to work simply within Optimus environnment, so not all of babel 
-    options are used. This way the manager can work cleanly and is more easy 
+
+    Maked to work simply within Optimus environnment, so not all of babel
+    options are used. This way the manager can work cleanly and is more easy
     to use.
     """
     catalog_name = "messages.{0}"
     catalog_path = "{0}/LC_MESSAGES"
     header_comment = "# Translations template for PROJECT project\n# Created by Optimus"
 
-    def __init__(self, logger, settings):
-        self.logger = logger
+    def __init__(self, settings):
         self.settings = settings
         self._catalog_template = None
+        self.logger = logging.getLogger('optimus')
 
     def get_template_path(self):
         """Return the full path to the catalog template file"""
@@ -50,17 +61,17 @@ class I18NManager(object):
         """Check if LOCALES_DIR directory exists"""
         return os.path.exists(self.settings.LOCALES_DIR)
 
-    def check_template_path(self): 
+    def check_template_path(self):
         """Check if the catalog template exists"""
         return os.path.exists(self.get_template_path())
-    
+
     def check_catalog_path(self, locale):
         """Check if a translations catalog exists"""
         return os.path.exists(self.get_catalog_path(locale))
 
     def parse_languages(self, languages):
         """
-        Allways return a list of locale name from languages even if items are simple 
+        Allways return a list of locale name from languages even if items are simple
         string or tuples. If tuple, assume its first item is the locale name to use.
         """
         _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x
@@ -69,15 +80,15 @@ class I18NManager(object):
     def init_locales_dir(self):
         """Create LOCALES_DIR directory if not allready exists"""
         if not self.check_locales_dir():
-            self.logger.warning('Locales directory does not exists, creating it')
+            self.logger.warning('Locale directory does not exists, creating it')
             os.makedirs(self.settings.LOCALES_DIR)
 
     @property
     def catalog_template(self):
         """
         Return the catalog template
-        
-        Get it in memory if allready opened, else if exists open it, else 
+
+        Get it in memory if allready opened, else if exists open it, else
         extract it and create it.
         """
         if self._catalog_template is not None:
@@ -96,15 +107,15 @@ class I18NManager(object):
     @catalog_template.deleter
     def catalog_template(self):
         del self._catalog_template
-            
+
     def safe_write_po(self, catalog, filepath, **kwargs):
         """
         Safely write a PO file
-        
-        This means that the PO file is firstly created in a temporary file, so 
-        if it fails it does not overwrite the previous one, if success the 
+
+        This means that the PO file is firstly created in a temporary file, so
+        if it fails it does not overwrite the previous one, if success the
         temporary file is moved over the previous one.
-        
+
         Some part of code have been stealed from babel.messages.frontend
         """
         tmpname = os.path.join(os.path.dirname(filepath), tempfile.gettempprefix() + os.path.basename(filepath))
@@ -132,13 +143,13 @@ class I18NManager(object):
 
     def clone_template(self):
         """
-        Open the template catalog again to clone it and to be able to modify it without 
+        Open the template catalog again to clone it and to be able to modify it without
         change on the "_catalog_template"
-        
-        NOTE: does it invalidate get_catalog_template method and the _catalog_template 
+
+        NOTE: does it invalidate get_catalog_template method and the _catalog_template
         cache usage if after all it is not really usable
-        NOTE: seems in fact that processes does not really need to access to a verbatim 
-        catalog template, so finally we could do cloning in catalog_template, then be 
+        NOTE: seems in fact that processes does not really need to access to a verbatim
+        catalog template, so finally we could do cloning in catalog_template, then be
         able modify it in extract without any loss for further process
         """
         self.logger.debug('Opening template catalog (POT)')
@@ -149,14 +160,14 @@ class I18NManager(object):
 
     def extract(self, force=False):
         """
-        Extract translation strings from sources directory with extract rules then 
+        Extract translation strings from sources directory with extract rules then
         create the template catalog with finded translation strings
-        
-        Only proceed if the template catalog does not exists yet or if 
-        ``force`` argument is ``True`` (this will overwrite previous existing 
+
+        Only proceed if the template catalog does not exists yet or if
+        ``force`` argument is ``True`` (this will overwrite previous existing
         POT file)
-        
-        TODO: actually from the CLI usage this only update POT file when he does not 
+
+        TODO: actually from the CLI usage this only update POT file when he does not
         exist, else it keeps untouched, even if there changes or adds in translations
         """
         if force or not self.check_template_path():
@@ -170,11 +181,11 @@ class I18NManager(object):
                 for filename, lineno, message, comments, context in extracted:
                     filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
                     self._catalog_template.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
-            
+
             outfile = open(self.get_template_path(), 'wb')
             write_po(outfile, self._catalog_template)
             outfile.close()
-            
+
         return self._catalog_template
 
     def init_catalogs(self, languages=None):
@@ -192,10 +203,10 @@ class I18NManager(object):
                 catalog_template.locale = Locale.parse(locale)
                 catalog_template.revision_date = datetime.datetime.now(LOCALTZ)
                 catalog_template.fuzzy = False
-                
+
                 if not os.path.exists(translation_dir):
                     os.makedirs(translation_dir)
-                    
+
                 outfile = open(catalog_path, 'wb')
                 write_po(outfile, catalog_template)
                 outfile.close()
@@ -231,7 +242,7 @@ class I18NManager(object):
                 catalog = read_po(infile, locale)
             finally:
                 infile.close()
-            
+
             # Check errors in catalog
             errs = False
             for message, errors in catalog.check():
