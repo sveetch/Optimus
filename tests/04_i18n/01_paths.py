@@ -11,7 +11,7 @@ from optimus.i18n import I18NManager
 
 def test_path_helpers(temp_builds_dir, fixtures_settings):
     """Check path resolutions and validations"""
-    basepath = temp_builds_dir.join('path_helpers')
+    basepath = temp_builds_dir.join('i18n_path_helpers')
 
     # Copy sample project to temporary dir
     samplename = 'minimal_i18n'

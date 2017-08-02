@@ -38,7 +38,7 @@ class I18NManager(object):
 
     def __init__(self, settings):
         self.settings = settings
-        self._catalog_template = None
+        self._pot = None
         self.logger = logging.getLogger('optimus')
 
     def get_template_path(self):
@@ -83,6 +83,41 @@ class I18NManager(object):
             self.logger.warning('Locale directory does not exists, creating it')
             os.makedirs(self.settings.LOCALES_DIR)
 
+    def extract(self, force=False):
+        """
+        Extract translation strings from sources directory with extract rules then
+        create the template catalog with finded translation strings
+
+        Only proceed if the template catalog does not exists yet or if
+        ``force`` argument is ``True`` (this will overwrite previous existing
+        POT file)
+
+        TODO: actually from the CLI usage this only update POT file when he does not
+        exist, else it keeps untouched, even if there changes or adds in translations
+        """
+        if force or not self.check_template_path():
+            self.logger.info('Proceeding to extraction to update the template catalog (POT)')
+            self._pot = Catalog(project=self.settings.SITE_NAME,
+                                             header_comment=self.header_comment)
+            # Follow all paths to search for pattern to extract
+            for extract_path in self.settings.I18N_EXTRACT_SOURCES:
+                self.logger.debug('Searching for pattern to extract in : {0}'.format(extract_path))
+                extracted = extract_from_dir(
+                    dirname=extract_path,
+                    method_map=self.settings.I18N_EXTRACT_MAP,
+                    options_map=self.settings.I18N_EXTRACT_OPTIONS
+                )
+                # Proceed to extract from given path
+                for filename, lineno, message, comments, context in extracted:
+                    filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
+                    self._pot.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
+
+            outfile = open(self.get_template_path(), 'wb')
+            write_po(outfile, self._pot)
+            outfile.close()
+
+        return self._pot
+
     @property
     def catalog_template(self):
         """
@@ -91,22 +126,22 @@ class I18NManager(object):
         Get it in memory if allready opened, else if exists open it, else
         extract it and create it.
         """
-        if self._catalog_template is not None:
-            return self._catalog_template
+        if self._pot is not None:
+            return self._pot
         if self.check_template_path():
             fp = open(self.get_template_path(), "r")
-            self._catalog_template = read_po(fp)
+            self._pot = read_po(fp)
             fp.close()
-            return self._catalog_template
+            return self._pot
         return self.extract()
 
     @catalog_template.setter
     def catalog_template(self, value):
-        self._catalog_template = value
+        self._pot = value
 
     @catalog_template.deleter
     def catalog_template(self):
-        del self._catalog_template
+        del self._pot
 
     def safe_write_po(self, catalog, filepath, **kwargs):
         """
@@ -157,36 +192,6 @@ class I18NManager(object):
         catalog = read_po(fp)
         fp.close()
         return catalog
-
-    def extract(self, force=False):
-        """
-        Extract translation strings from sources directory with extract rules then
-        create the template catalog with finded translation strings
-
-        Only proceed if the template catalog does not exists yet or if
-        ``force`` argument is ``True`` (this will overwrite previous existing
-        POT file)
-
-        TODO: actually from the CLI usage this only update POT file when he does not
-        exist, else it keeps untouched, even if there changes or adds in translations
-        """
-        if force or not self.check_template_path():
-            self.logger.info('Proceeding to extraction to update the template catalog (POT)')
-            self._catalog_template = Catalog(project=self.settings.SITE_NAME, header_comment=self.header_comment)
-            # Follow all paths to search for pattern to extract
-            for extract_path in self.settings.I18N_EXTRACT_SOURCES:
-                self.logger.debug('Searching for pattern to extract in : {0}'.format(extract_path))
-                extracted = extract_from_dir(dirname=extract_path, method_map=self.settings.I18N_EXTRACT_MAP, options_map=self.settings.I18N_EXTRACT_OPTIONS)
-                # Proceed to extract from given path
-                for filename, lineno, message, comments, context in extracted:
-                    filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
-                    self._catalog_template.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
-
-            outfile = open(self.get_template_path(), 'wb')
-            write_po(outfile, self._catalog_template)
-            outfile.close()
-
-        return self._catalog_template
 
     def init_catalogs(self, languages=None):
         """

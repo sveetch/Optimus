@@ -32,7 +32,7 @@ setup(
         'pathtools==0.1.2',
         'watchdog==0.8.3',
         'Jinja2>=2.6',
-        'Babel==1.3.0',
+        'Babel',
         'webassets',
     ],
     entry_points={
