@@ -25,6 +25,9 @@ clean: delpyc
 
 venv:
 	$(PYTHON) -m venv venv
+	# This is required for those ones using ubuntu<16.04
+	$(PIP) install --upgrade pip
+	$(PIP) install --upgrade setuptools
 
 install: venv
 	$(PIP) install -e .
