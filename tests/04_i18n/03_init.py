@@ -4,7 +4,7 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_project_module
+from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
@@ -19,7 +19,7 @@ def test_init_locales_dir_success(caplog, temp_builds_dir, fixtures_settings):
     shutil.copytree(samplepath, destination)
 
     # Get the settings from temporary sample
-    settings = import_project_module('settings', basedir=destination)
+    settings = import_settings('settings', basedir=destination)
 
     # Remove locale sample
     shutil.rmtree(settings.LOCALES_DIR)

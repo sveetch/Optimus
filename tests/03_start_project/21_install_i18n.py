@@ -8,7 +8,7 @@ from optimus.start_project import ProjectStarter
 
 def test_i18n_template(caplog, temp_builds_dir):
     """
-    Simply start a dummy project from basic template
+    Simply start a dummy project from i18n template
     """
     basepath = temp_builds_dir.join('projectstarter_install_i18n_template')
     project_name = 'i18n_sample'

@@ -83,7 +83,7 @@ class I18NManager(object):
             self.logger.warning('Locale directory does not exists, creating it')
             os.makedirs(self.settings.LOCALES_DIR)
 
-    def extract(self, force=False):
+    def build_pot(self, force=False):
         """
         Extract translation strings from sources directory with extract rules then
         create the template catalog with finded translation strings
@@ -119,7 +119,7 @@ class I18NManager(object):
         return self._pot
 
     @property
-    def catalog_template(self):
+    def pot(self):
         """
         Return the catalog template
 
@@ -133,14 +133,14 @@ class I18NManager(object):
             self._pot = read_po(fp)
             fp.close()
             return self._pot
-        return self.extract()
+        return self.build_pot()
 
-    @catalog_template.setter
-    def catalog_template(self, value):
+    @pot.setter
+    def pot(self, value):
         self._pot = value
 
-    @catalog_template.deleter
-    def catalog_template(self):
+    @pot.deleter
+    def pot(self):
         del self._pot
 
     def safe_write_po(self, catalog, filepath, **kwargs):
@@ -180,12 +180,6 @@ class I18NManager(object):
         """
         Open the template catalog again to clone it and to be able to modify it without
         change on the "_catalog_template"
-
-        NOTE: does it invalidate get_catalog_template method and the _catalog_template
-        cache usage if after all it is not really usable
-        NOTE: seems in fact that processes does not really need to access to a verbatim
-        catalog template, so finally we could do cloning in catalog_template, then be
-        able modify it in extract without any loss for further process
         """
         self.logger.debug('Opening template catalog (POT)')
         fp = open(self.get_template_path(), "r")
@@ -231,7 +225,7 @@ class I18NManager(object):
             finally:
                 infile.close()
             # Update it from the template
-            catalog.update(self.catalog_template)
+            catalog.update(self.pot)
             self.safe_write_po(catalog, catalog_path)
 
     def compile_catalogs(self, languages=None):

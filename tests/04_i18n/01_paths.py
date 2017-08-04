@@ -5,7 +5,7 @@ import shutil
 import pytest
 
 import optimus
-from optimus.conf.loader import import_project_module
+from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
@@ -20,7 +20,7 @@ def test_path_helpers(temp_builds_dir, fixtures_settings):
     shutil.copytree(samplepath, destination)
 
     # Get the settings from temporary sample
-    settings = import_project_module('settings', basedir=destination)
+    settings = import_settings('settings', basedir=destination)
 
     assert settings.SITE_NAME == 'minimal_i18n'
 

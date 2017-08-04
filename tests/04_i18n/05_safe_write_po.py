@@ -4,13 +4,16 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_project_module
+from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
+from babel.messages.catalog import Message
 
 
-def test_extract_success(caplog, temp_builds_dir, fixtures_settings):
-    """Check path resolutions and validations"""
-    basepath = temp_builds_dir.join('i18n_extract_success')
+def test_success(temp_builds_dir, fixtures_settings):
+    """
+    ...
+    """
+    basepath = temp_builds_dir.join('i18n_safe_write_po_success')
 
     # Copy sample project to temporary dir
     samplename = 'minimal_i18n'
@@ -19,10 +22,8 @@ def test_extract_success(caplog, temp_builds_dir, fixtures_settings):
     shutil.copytree(samplepath, destination)
 
     # Get the settings from temporary sample
-    settings = import_project_module('settings', basedir=destination)
+    settings = import_settings('settings', basedir=destination)
 
     manager = I18NManager(settings)
-
-    print(manager.extract(force=True))
 
     assert 1 == 42
