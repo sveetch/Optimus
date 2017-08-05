@@ -129,7 +129,7 @@ class I18NManager(object):
         if self._pot is not None:
             return self._pot
         if self.check_template_path():
-            fp = open(self.get_template_path(), "r")
+            fp = open(self.get_template_path(), "rb")
             self._pot = read_po(fp)
             fp.close()
             return self._pot
@@ -153,17 +153,18 @@ class I18NManager(object):
 
         Some part of code have been stealed from babel.messages.frontend
         """
-        tmpname = os.path.join(os.path.dirname(filepath), tempfile.gettempprefix() + os.path.basename(filepath))
-        tmpfile = open(tmpname, 'w')
+        tmpname = os.path.join(os.path.dirname(filepath),
+                               tempfile.gettempprefix() +
+                               os.path.basename(filepath))
+        # Attempt to write new file to a temp file, clean temp file if it fails
         try:
-            try:
+            with open(tmpname, 'wb') as tmpfile:
                 write_po(tmpfile, catalog, **kwargs)
-            finally:
-                tmpfile.close()
         except:
             os.remove(tmpname)
             raise
 
+        # Finally overwrite file if previous job has succeeded
         try:
             os.rename(tmpname, filepath)
         except OSError:
@@ -182,7 +183,7 @@ class I18NManager(object):
         change on the "_catalog_template"
         """
         self.logger.debug('Opening template catalog (POT)')
-        fp = open(self.get_template_path(), "r")
+        fp = open(self.get_template_path(), "rb")
         catalog = read_po(fp)
         fp.close()
         return catalog

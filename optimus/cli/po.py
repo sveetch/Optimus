@@ -34,7 +34,7 @@ def po(args):
 
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
 
-    i18n = I18NManager(root_logger, settings)
+    i18n = I18NManager(settings)
 
     # NOTE: Should we do this automatically to prevent error on missing files
     #       OR should we only do checking before and abort on the first missing file ?
