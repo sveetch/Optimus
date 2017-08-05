@@ -10,7 +10,7 @@ from optimus.i18n import I18NManager
 from babel.messages.catalog import Message
 
 
-def test_build_pot(caplog, temp_builds_dir, fixtures_settings):
+def test_build_pot(temp_builds_dir, fixtures_settings):
     """
     Force to rebuild POT file
     """
@@ -38,7 +38,7 @@ def test_build_pot(caplog, temp_builds_dir, fixtures_settings):
     assert pot["Hello World!"] == Message("Hello World!")
 
 
-def test_pot_attribute_getter(caplog, temp_builds_dir, fixtures_settings):
+def test_pot_attribute_getter(temp_builds_dir, fixtures_settings):
     """
     Reach the pot attribute that may trigger the build_pot when
     POT does not allready exists

@@ -14,7 +14,7 @@ TODO:
     * Use 'io.open' instead of old 'open';
     * Doctrings;
 """
-import datetime, logging, os, tempfile
+import datetime, io, logging, os, tempfile
 
 from babel import Locale
 from babel.util import LOCALTZ
@@ -85,15 +85,14 @@ class I18NManager(object):
 
     def build_pot(self, force=False):
         """
-        Extract translation strings from sources directory with extract rules then
-        create the template catalog with finded translation strings
+        Extract translation strings and create Portable Object Template (POT)
+        from enabled source directories using defined extract rules.
 
-        Only proceed if the template catalog does not exists yet or if
-        ``force`` argument is ``True`` (this will overwrite previous existing
-        POT file)
+        Default behavior is to proceed only if POT file does not allready
+        exists except if ``force`` is used.
 
-        TODO: actually from the CLI usage this only update POT file when he does not
-        exist, else it keeps untouched, even if there changes or adds in translations
+        NOTE: May only work on internal '_pot' to return without touching
+              'self._pot'.
         """
         if force or not self.check_template_path():
             self.logger.info('Proceeding to extraction to update the template catalog (POT)')
@@ -112,9 +111,8 @@ class I18NManager(object):
                     filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
                     self._pot.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
 
-            outfile = open(self.get_template_path(), 'wb')
-            write_po(outfile, self._pot)
-            outfile.close()
+            with io.open(self.get_template_path(), 'wb') as fp:
+                write_po(fp, self._pot)
 
         return self._pot
 
@@ -129,9 +127,8 @@ class I18NManager(object):
         if self._pot is not None:
             return self._pot
         if self.check_template_path():
-            fp = open(self.get_template_path(), "rb")
-            self._pot = read_po(fp)
-            fp.close()
+            with io.open(self.get_template_path(), 'rb') as fp:
+                self._pot = read_po(fp)
             return self._pot
         return self.build_pot()
 
@@ -145,20 +142,20 @@ class I18NManager(object):
 
     def safe_write_po(self, catalog, filepath, **kwargs):
         """
-        Safely write a PO file
+        Safely write or overwrite a PO(T) file.
 
-        This means that the PO file is firstly created in a temporary file, so
-        if it fails it does not overwrite the previous one, if success the
-        temporary file is moved over the previous one.
+        Try to write catalog to a temporary file then move it to its final
+        destination only writing operation did not fail. This way initial file
+        is not overwrited when operation has failed.
 
-        Some part of code have been stealed from babel.messages.frontend
+        Original code comes from ``babel.messages.frontend``.
         """
         tmpname = os.path.join(os.path.dirname(filepath),
                                tempfile.gettempprefix() +
                                os.path.basename(filepath))
         # Attempt to write new file to a temp file, clean temp file if it fails
         try:
-            with open(tmpname, 'wb') as tmpfile:
+            with io.open(tmpname, 'wb') as tmpfile:
                 write_po(tmpfile, catalog, **kwargs)
         except:
             os.remove(tmpname)
@@ -177,29 +174,33 @@ class I18NManager(object):
             shutil.copy(tmpname, filepath)
             os.remove(tmpname)
 
-    def clone_template(self):
+    def clone_pot(self):
         """
-        Open the template catalog again to clone it and to be able to modify it without
-        change on the "_catalog_template"
+        Helper to clone POT catalog from writed file (not the one in memory)
+        without to touch to ``_pot`` attribute.
         """
         self.logger.debug('Opening template catalog (POT)')
-        fp = open(self.get_template_path(), "rb")
-        catalog = read_po(fp)
-        fp.close()
+        with io.open(self.get_template_path(), "rb") as fp:
+            catalog = read_po(fp)
+
         return catalog
 
     def init_catalogs(self, languages=None):
         """
-        For each knowed language, check if his PO file exists, else create it from the POT
+        For each knowed language, check if its PO file exists else create it
+        from the POT.
         """
-        catalog_template = self.clone_template()
+        catalog_template = self.clone_pot()
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
+        created = []
+
         for locale in languages:
             translation_dir = self.get_catalog_dir(locale)
             catalog_path = self.get_catalog_path(locale)
+
             if not self.check_catalog_path(locale):
                 self.logger.debug('Init catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
-                # write_po from the catalog template
+                # write po from POT
                 catalog_template.locale = Locale.parse(locale)
                 catalog_template.revision_date = datetime.datetime.now(LOCALTZ)
                 catalog_template.fuzzy = False
@@ -207,15 +208,20 @@ class I18NManager(object):
                 if not os.path.exists(translation_dir):
                     os.makedirs(translation_dir)
 
-                outfile = open(catalog_path, 'wb')
-                write_po(outfile, catalog_template)
-                outfile.close()
+                with io.open(catalog_path, 'wb') as fp:
+                    write_po(fp, catalog_template)
+
+                created.append(locale)
+
+        return created
 
     def update_catalogs(self, languages=None):
         """
         Update all knowed catalogs from the catalog template
         """
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
+        updated = []
+
         for locale in languages:
             catalog_path = self.get_catalog_path(locale)
             self.logger.info('Updating catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
@@ -228,6 +234,10 @@ class I18NManager(object):
             # Update it from the template
             catalog.update(self.pot)
             self.safe_write_po(catalog, catalog_path)
+
+            updated.append(locale)
+
+        return updated
 
     def compile_catalogs(self, languages=None):
         """
