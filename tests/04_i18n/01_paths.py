@@ -42,8 +42,8 @@ def test_path_helpers(temp_builds_dir, fixtures_settings):
 
     assert manager.get_catalog_dir(attempted_lang) == attempted_catalogdir
 
-    assert manager.get_catalog_path(attempted_lang) == attempted_po
+    assert manager.get_po_filepath(attempted_lang) == attempted_po
 
-    assert manager.get_compiled_catalog_path(attempted_lang) == attempted_mo
+    assert manager.get_mo_filepath(attempted_lang) == attempted_mo
 
-    assert manager.get_compiled_catalog_path(attempted_lang) == attempted_mo
+    assert manager.get_mo_filepath(attempted_lang) == attempted_mo

@@ -6,12 +6,9 @@ We only manage "messages.*" files for POT and PO files and no other catalog
 type.
 
 TODO:
-    * Test coverage;
     * Use exceptions instead of logger.error;
-    * New template string substitution;
     * Avoid to directly use object attributes, prefer to give needed vars as
       method args;
-    * Use 'io.open' instead of old 'open';
     * Doctrings;
 """
 import datetime, io, logging, os, tempfile
@@ -49,11 +46,11 @@ class I18NManager(object):
         """Return the full path to a translations catalog directory"""
         return os.path.join(self.settings.LOCALES_DIR, self.catalog_path.format(locale))
 
-    def get_catalog_path(self, locale):
+    def get_po_filepath(self, locale):
         """Return the full path to a translations catalog file"""
         return os.path.join(self.get_catalog_dir(locale), self.catalog_name.format("po"))
 
-    def get_compiled_catalog_path(self, locale):
+    def get_mo_filepath(self, locale):
         """Return the full path to a compiled translations catalog file"""
         return os.path.join(self.get_catalog_dir(locale), self.catalog_name.format("mo"))
 
@@ -67,7 +64,7 @@ class I18NManager(object):
 
     def check_catalog_path(self, locale):
         """Check if a translations catalog exists"""
-        return os.path.exists(self.get_catalog_path(locale))
+        return os.path.exists(self.get_po_filepath(locale))
 
     def parse_languages(self, languages):
         """
@@ -179,7 +176,7 @@ class I18NManager(object):
         Helper to clone POT catalog from writed file (not the one in memory)
         without to touch to ``_pot`` attribute.
         """
-        self.logger.debug('Opening template catalog (POT)')
+        self.logger.debug("Opening template catalog (POT)")
         with io.open(self.get_template_path(), "rb") as fp:
             catalog = read_po(fp)
 
@@ -187,8 +184,7 @@ class I18NManager(object):
 
     def init_catalogs(self, languages=None):
         """
-        For each knowed language, check if its PO file exists else create it
-        from the POT.
+        Create PO catalogs from POT if they dont allready exists
         """
         catalog_template = self.clone_pot()
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
@@ -196,10 +192,10 @@ class I18NManager(object):
 
         for locale in languages:
             translation_dir = self.get_catalog_dir(locale)
-            catalog_path = self.get_catalog_path(locale)
+            catalog_path = self.get_po_filepath(locale)
 
             if not self.check_catalog_path(locale):
-                self.logger.debug('Init catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
+                self.logger.debug("Init catalog (PO) for language '{0}' to {1}".format(locale, catalog_path))
                 # write po from POT
                 catalog_template.locale = Locale.parse(locale)
                 catalog_template.revision_date = datetime.datetime.now(LOCALTZ)
@@ -217,20 +213,19 @@ class I18NManager(object):
 
     def update_catalogs(self, languages=None):
         """
-        Update all knowed catalogs from the catalog template
+        Update PO catalogs from POT
         """
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
         updated = []
 
         for locale in languages:
-            catalog_path = self.get_catalog_path(locale)
-            self.logger.info('Updating catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
-            # Open the PO file
-            infile = open(catalog_path, 'U')
-            try:
-                catalog = read_po(infile, locale=locale)
-            finally:
-                infile.close()
+            catalog_path = self.get_po_filepath(locale)
+            self.logger.info("Updating catalog (PO) for language '{0}' to {1}".format(locale, catalog_path))
+
+            # Open PO file
+            with io.open(catalog_path, 'U') as fp:
+                catalog = read_po(fp, locale=locale)
+
             # Update it from the template
             catalog.update(self.pot)
             self.safe_write_po(catalog, catalog_path)
@@ -241,17 +236,21 @@ class I18NManager(object):
 
     def compile_catalogs(self, languages=None):
         """
-        Compile all knowed catalogs
+        Compile PO catalogs to MO files
+
+        Note:
+            Errors are not test covered since ``read_po`` pass them through
+            warnings print to stdout and this is not blocking or detectable.
+            And so the code continue to the compile part.
         """
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
+        compiled = []
+
         for locale in languages:
-            catalog_path = self.get_catalog_path(locale)
-            self.logger.info('Compiling catalog (PO) for language {0} at {1}'.format(locale, catalog_path))
-            infile = open(catalog_path, 'r')
-            try:
-                catalog = read_po(infile, locale)
-            finally:
-                infile.close()
+            self.logger.info("Compiling catalog (MO) for language '{0}' to {1}".format(locale, self.get_mo_filepath(locale)))
+            with io.open(self.get_po_filepath(locale), 'rb') as fp:
+                #
+                catalog = read_po(fp, locale)
 
             # Check errors in catalog
             errs = False
@@ -259,13 +258,14 @@ class I18NManager(object):
                 for error in errors:
                     errs = True
                     self.logger.warning('Error at line {0}: {1}'.format(message.lineno, error))
-            # Don't overwrite the previous MO file if there have been error
+            # Don't overwrite previous MO file if there have been error
             if errs:
                 self.logger.error('There has been errors within the catalog, compilation has been aborted')
                 break
 
-            outfile = open(self.get_compiled_catalog_path(locale), 'wb')
-            try:
-                write_mo(outfile, catalog, use_fuzzy=False)
-            finally:
-                outfile.close()
+            with open(self.get_mo_filepath(locale), 'wb') as fp:
+                write_mo(fp, catalog, use_fuzzy=False)
+
+            compiled.append(locale)
+
+        return compiled

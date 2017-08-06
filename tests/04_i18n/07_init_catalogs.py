@@ -1,4 +1,3 @@
-import io
 import os
 import logging
 import shutil
@@ -7,8 +6,6 @@ import pytest
 
 from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
-from babel.messages.catalog import Catalog, Message
-from babel.messages.pofile import read_po
 
 
 def test_init_catalogs_empty(temp_builds_dir, fixtures_settings):
@@ -34,7 +31,7 @@ def test_init_catalogs_empty(temp_builds_dir, fixtures_settings):
 
 def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     """
-    Init every catalogs
+    Init every enabled catalogs
     """
     basepath = temp_builds_dir.join('i18n_init_catalogs_all')
 
@@ -57,9 +54,8 @@ def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     assert created == ['en_US', 'fr_FR']
 
     for lang in manager.parse_languages(settings.LANGUAGES):
-        assert os.path.exists(manager.get_catalog_path(lang)) == True
+        assert os.path.exists(manager.get_po_filepath(lang)) == True
 
-    # Last log entry should say about creating locale dir
     assert caplog.record_tuples == [
         (
             'optimus',
@@ -79,12 +75,12 @@ def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
         (
             'optimus',
             logging.DEBUG,
-            'Init catalog (PO) for language en_US at {}'.format(manager.get_catalog_path("en_US"))
+            "Init catalog (PO) for language 'en_US' to {}".format(manager.get_po_filepath("en_US"))
         ),
         (
             'optimus',
             logging.DEBUG,
-            'Init catalog (PO) for language fr_FR at {}'.format(manager.get_catalog_path("fr_FR"))
+            "Init catalog (PO) for language 'fr_FR' to {}".format(manager.get_po_filepath("fr_FR"))
         ),
     ]
 
@@ -114,5 +110,5 @@ def test_init_catalogs_one(temp_builds_dir, fixtures_settings):
     assert created == [settings.LANGUAGE_CODE]
 
     assert os.path.exists(
-        manager.get_catalog_path(settings.LANGUAGE_CODE)
+        manager.get_po_filepath(settings.LANGUAGE_CODE)
     ) == True
