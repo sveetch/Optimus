@@ -25,7 +25,6 @@ def test_add_bundle():
         filters=None,
         output='js/modernizr.min.js'
     )
-    bundle_modernizr._internal_env_name = 'modernizr_js'
 
     bundle_css = Bundle(
         'css/app.css',
@@ -33,11 +32,10 @@ def test_add_bundle():
         filters=None,
         output='css/app.min.css'
     )
-    bundle_css._internal_env_name = 'app_css'
 
     # Registering
-    registry.add_bundle(bundle_modernizr)
-    registry.add_bundle(bundle_css)
+    registry.add_bundle('modernizr_js', bundle_modernizr)
+    registry.add_bundle('app_css', bundle_css)
 
     # This will fail on some system since dict is in arbitrary order, to
     # resolve

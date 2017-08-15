@@ -22,8 +22,10 @@ class AssetRegistry(object):
         self.map_dest_to_bundle = {}
         self.logger = logging.getLogger('optimus')
 
-    def add_bundle(self, bundle):
-        name = bundle._internal_env_name
+    def add_bundle(self, name, bundle):
+        # Little trick because a Bundle does not know its name in the
+        # webassets environment
+        bundle._internal_env_name = name
 
         for item in bundle.contents:
             self.map_dest_to_bundle[item] = name
@@ -76,12 +78,9 @@ def register_assets(settings):
     # Register enabled assets bundles
     for bundle_name in settings.ENABLED_BUNDLES:
         logger.debug("Registering bundle: %s", bundle_name)
-        # Little trick because Bundle does not know their used name in the webassets
-        # environment
-        AVAILABLE_BUNDLES[bundle_name]._internal_env_name = bundle_name
 
         assets_env.register(bundle_name, AVAILABLE_BUNDLES[bundle_name])
-        assets_env.optimus_registry.add_bundle(AVAILABLE_BUNDLES[bundle_name])
+        assets_env.optimus_registry.add_bundle(bundle_name, AVAILABLE_BUNDLES[bundle_name])
 
     # for debugging purpopse
     for bundle_name in settings.ENABLED_BUNDLES:
