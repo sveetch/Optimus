@@ -1,41 +1,51 @@
 # -*- coding: utf-8 -*-
+"""
+NOTE:
+
+* Some atribute/method from AssetRegistry have been disabled since they are not
+  used anywhere
+* register_assets now require settings object as argument, to avoid importing
+  directly settings from this module;
+"""
 import copy, logging
 
 from webassets import Environment as AssetsEnvironment
 
-from optimus.conf.registry import settings
 
 class AssetRegistry(object):
     """
     Index all knowed files from registered bundles
     """
-    def __init__(self, elements={}):
-        self.elements = {}
+    #def __init__(self, elements={}):
+    def __init__(self):
+        #self.elements = {}
         self.map_dest_to_bundle = {}
         self.logger = logging.getLogger('optimus')
 
-    def add_bundle(self, bundle): #, items):
+    def add_bundle(self, bundle):
         name = bundle._internal_env_name
 
         for item in bundle.contents:
             self.map_dest_to_bundle[item] = name
 
-    def get_bundle_from_dependency(self, asset_name):
-        """
-        Return the bundles object list that are dependent of the given template name
+    #def get_bundle_from_dependency(self, asset_name):
+        #"""
+        #Return the bundles object list that are dependent of the given template name
 
-        This method is not safe out of the context of scanned bundles, because it use
-        an internal map builded from the scan use by the add_bundle method. In short, it
-        will raise a KeyError exception for every destination that is doesn't known from
-        the internal map.
-        """
-        if asset_name not in self.elements:
-            self.logger.warning("Given asset name is not in the bundle registry: %s", asset_name)
-            return []
-        dependancies = self.elements[asset_name]
-        return [self.map_dest_to_bundle[item] for item in dependancies]
+        #This method is not safe out of the context of scanned bundles, because it use
+        #an internal map builded from the scan use by the add_bundle method. In short, it
+        #will raise a KeyError exception for every destination that is doesn't known from
+        #the internal map.
 
-def register_assets():
+        #NOTE: Not used anymore
+        #"""
+        #if asset_name not in self.elements:
+            #self.logger.warning("Given asset name is not in the bundle registry: %s", asset_name)
+            #return []
+        #dependancies = self.elements[asset_name]
+        #return [self.map_dest_to_bundle[item] for item in dependancies]
+
+def register_assets(settings):
     """
     Initialize webassets environment and its bundles
 

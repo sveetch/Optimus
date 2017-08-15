@@ -41,7 +41,7 @@ def watch(args):
         setattr(settings, 'PAGES', pages_map.PAGES)
 
     # Init environments
-    assets_env = register_assets()
+    assets_env = register_assets(settings)
     pages_env = PageBuilder(assets_env=assets_env)
 
     # add a first build to avoid error on unbuilded project

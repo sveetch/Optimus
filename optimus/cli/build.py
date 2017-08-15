@@ -41,7 +41,7 @@ def build(args):
 
     initialize(settings)
     # Assets
-    assets_env = register_assets()
+    assets_env = register_assets(settings)
     # Pages
     pages_env = PageBuilder(assets_env=assets_env)
     pages_env.build_bulk(settings.PAGES)

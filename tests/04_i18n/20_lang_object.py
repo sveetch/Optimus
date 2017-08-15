@@ -1,7 +1,3 @@
-import logging
-
-import six
-
 import pytest
 
 from optimus.exceptions import InvalidLanguageIdentifier
