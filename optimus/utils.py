@@ -2,7 +2,7 @@
 """
 Various helpers
 """
-import logging, os, shutil
+import logging, os, shutil, sys
 
 
 def init_directory(directory):
@@ -161,3 +161,13 @@ def display_settings(settings, names):
     for item in names:
         value = getattr(settings, item, 'NOT SET')
         logger.debug(" - Settings.{} = {}".format(item, value))
+
+
+class UnicodeMixin(object):
+    """
+    Helper class to ensure ``_str__`` compatibility for python 2 and 3
+    """
+    if sys.version_info > (3, 0):
+        __str__ = lambda x: x.__unicode__()
+    else:
+        __str__ = lambda x: unicode(x).encode('utf-8')

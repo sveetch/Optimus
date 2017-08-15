@@ -34,3 +34,11 @@ class TemplateSettingsInvalidError(OptimusBaseException):
     Exception to be raised when a template manifest have wrong settings.
     """
     pass
+
+
+class InvalidLanguageIdentifier(OptimusBaseException):
+    """
+    Exception to be raised from ``lang.LangBase`` when given language code is
+    invalid
+    """
+    pass
