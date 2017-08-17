@@ -1,12 +1,7 @@
-import logging
-
-import six
-
 import pytest
 
 from webassets import Bundle
 
-from optimus.exceptions import InvalidLanguageIdentifier
 from optimus.builder.assets import AssetRegistry
 
 
@@ -37,10 +32,7 @@ def test_add_bundle():
     registry.add_bundle('modernizr_js', bundle_modernizr)
     registry.add_bundle('app_css', bundle_css)
 
-    # This will fail on some system since dict is in arbitrary order, to
-    # resolve
-    assert registry.map_dest_to_bundle == {
-        'css/app.css': 'app_css',
-        'css/dummy.css': 'app_css',
-        'js/modernizr.src.js': 'modernizr_js'
-    }
+    assert len(registry.map_dest_to_bundle.keys()) == 3
+    assert registry.map_dest_to_bundle['css/app.css'] == 'app_css'
+    assert registry.map_dest_to_bundle['css/dummy.css'] == 'app_css'
+    assert registry.map_dest_to_bundle['js/modernizr.src.js'] == 'modernizr_js'

@@ -57,7 +57,7 @@ def register_assets(settings):
     """
     logger = logging.getLogger('optimus')
     if not settings.ENABLED_BUNDLES:
-        logger.warning("Asset registering skipped as there are no enabled bundles")
+        logger.warning("Asset registering skipped as there are no enabled bundle")
         return None
     logger.info("Starting asset registering")
 
@@ -77,17 +77,19 @@ def register_assets(settings):
 
     # Register enabled assets bundles
     for bundle_name in settings.ENABLED_BUNDLES:
-        logger.debug("Registering bundle: %s", bundle_name)
+        logger.debug("Registering bundle: {}".format(bundle_name))
 
         assets_env.register(bundle_name, AVAILABLE_BUNDLES[bundle_name])
         assets_env.optimus_registry.add_bundle(bundle_name, AVAILABLE_BUNDLES[bundle_name])
 
     # for debugging purpopse
     for bundle_name in settings.ENABLED_BUNDLES:
-        logger.info(" Processing: %s", assets_env[bundle_name].resolve_output())
+        logger.info("  Processing: {}".format(
+            assets_env[bundle_name].resolve_output()
+        ))
         # TODO: conditionnal on the log level to avoid to loop on multiple items if not
         #       in a debug log level
         for url in assets_env[bundle_name].urls():
-            logger.debug(" - %s", url)
+            logger.debug("  - {}".format(url))
 
     return assets_env
