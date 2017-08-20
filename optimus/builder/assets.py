@@ -47,13 +47,10 @@ class AssetRegistry(object):
         #dependancies = self.elements[asset_name]
         #return [self.map_dest_to_bundle[item] for item in dependancies]
 
+
 def register_assets(settings):
     """
     Initialize webassets environment and its bundles
-
-    NOTE: The asset bundles building is lazy, webassets only do building when he is
-          invoked by his template tag **assets** and if it detect that a file in a
-          bundle has changed.
     """
     logger = logging.getLogger('optimus')
     if not settings.ENABLED_BUNDLES:
@@ -71,6 +68,7 @@ def register_assets(settings):
     assets_env.directory = settings.STATIC_DIR
     assets_env.load_path = [settings.SOURCES_DIR]
     assets_env.cache = settings.WEBASSETS_CACHE
+    assets_env.url_expire = settings.WEBASSETS_URLEXPIRE
 
     #
     assets_env.optimus_registry = AssetRegistry()
@@ -82,14 +80,14 @@ def register_assets(settings):
         assets_env.register(bundle_name, AVAILABLE_BUNDLES[bundle_name])
         assets_env.optimus_registry.add_bundle(bundle_name, AVAILABLE_BUNDLES[bundle_name])
 
-    # for debugging purpopse
+    # When after bundle has been registered we can resolve it
     for bundle_name in settings.ENABLED_BUNDLES:
         logger.info("  Processing: {}".format(
             assets_env[bundle_name].resolve_output()
         ))
-        # TODO: conditionnal on the log level to avoid to loop on multiple items if not
-        #       in a debug log level
-        for url in assets_env[bundle_name].urls():
-            logger.debug("  - {}".format(url))
+        # Avoid to loop on every bundle part if we are not in debug logger
+        if logger.getEffectiveLevel() == logging.DEBUG:
+            for url in assets_env[bundle_name].urls():
+                logger.debug("  - {}".format(url))
 
     return assets_env

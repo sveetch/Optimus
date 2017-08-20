@@ -58,19 +58,19 @@ def test_success(monkeypatch, caplog, fixtures_settings):
     assert mod.settings.PUBLISH_DIR == '_build/dev'
 
 
-def test_environ_clean(monkeypatch, caplog, fixtures_settings):
-    """
-    Temporary test to assert monkeypatch is working and os.environ is left
-    clean after test function
-    """
-    # Ensure env vars are correctly reseted
-    assert (PROJECT_DIR_ENVVAR in os.environ) == False
-    assert (SETTINGS_NAME_ENVVAR in os.environ) == False
+#def test_environ_clean(monkeypatch, caplog, fixtures_settings):
+    #"""
+    #Temporary test to assert monkeypatch is working and os.environ is left
+    #clean after test function
+    #"""
+    ## Ensure env vars are correctly reseted
+    #assert (PROJECT_DIR_ENVVAR in os.environ) == False
+    #assert (SETTINGS_NAME_ENVVAR in os.environ) == False
 
 
-    # Ensure settings are not memoized
-    message = ("Settings cannot be imported, because environment variable "
-               "{} is undefined.".format(PROJECT_DIR_ENVVAR))
+    ## Ensure settings are not memoized
+    #message = ("Settings cannot be imported, because environment variable "
+               #"{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
-    with pytest.raises(ImportError, match=message):
-        from optimus.conf.registry import settings
+    #with pytest.raises(ImportError, match=message):
+        #from optimus.conf.registry import settings

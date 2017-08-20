@@ -174,7 +174,7 @@ msgstr[2] ""
 
 """
 
-def test_compile_catalogs_invalid_catalog(capsys, caplog, temp_builds_dir, fixtures_settings):
+def test_compile_catalogs_invalid_catalog(filedescriptor, capsys, caplog, temp_builds_dir, fixtures_settings):
     """
     Try compile an erroneous catalog
 
@@ -197,11 +197,7 @@ def test_compile_catalogs_invalid_catalog(capsys, caplog, temp_builds_dir, fixtu
     erroneous_local = "bg"
     os.makedirs(manager.get_catalog_dir(erroneous_local))
 
-    desc = "w"
-    if six.PY2:
-        desc = "wb"
-
-    with io.open(manager.get_po_filepath(erroneous_local), desc) as fp:
+    with io.open(manager.get_po_filepath(erroneous_local), filedescriptor) as fp:
         fp.write(erroneous_po)
 
     updated = manager.compile_catalogs([erroneous_local])

@@ -152,6 +152,10 @@ def import_settings(name, basedir):
     if not hasattr(_settings, "WEBASSETS_CACHE"):
         setattr(_settings, "WEBASSETS_CACHE", os.path.join(_settings.PROJECT_DIR, '.webassets-cache'))
 
+    # Asset version appended through url querystring behavior
+    if not hasattr(_settings, "WEBASSETS_URLEXPIRE"):
+        setattr(_settings, "WEBASSETS_URLEXPIRE", None)
+
     # Bundles
     if not hasattr(_settings, "BUNDLES"):
         setattr(_settings, "BUNDLES", {})
