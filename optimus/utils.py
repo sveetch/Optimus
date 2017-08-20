@@ -166,6 +166,8 @@ def display_settings(settings, names):
 class UnicodeMixin(object):
     """
     Helper class to ensure ``_str__`` compatibility for python 2 and 3
+
+    TODO: Test coverage is missing
     """
     if sys.version_info > (3, 0):
         __str__ = lambda x: x.__unicode__()

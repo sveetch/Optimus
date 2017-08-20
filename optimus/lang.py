@@ -39,7 +39,7 @@ class LangBase(UnicodeMixin):
         self.code = code or self.code
 
         if self.code is None:
-            msg = ("""Invalid language identifier : You must supply it by """
+            msg = ("""Missing language identifier : You must supply it by """
                    """the way of 'code' argument or as the 'code' class """
                    """attribute.""")
             raise InvalidLanguageIdentifier(msg)

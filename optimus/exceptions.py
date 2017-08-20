@@ -39,6 +39,14 @@ class TemplateSettingsInvalidError(OptimusBaseException):
 class InvalidLanguageIdentifier(OptimusBaseException):
     """
     Exception to be raised from ``lang.LangBase`` when given language code is
-    invalid
+    invalid.
+    """
+    pass
+
+
+class ViewImproperlyConfigured(OptimusBaseException):
+    """
+    Exception to be raised from ``pages.view.base.PageViewBase`` when
+    instanciated with bad value or missing parameters.
     """
     pass

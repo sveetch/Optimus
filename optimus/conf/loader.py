@@ -2,7 +2,11 @@
 """
 Module loader helpers
 
-TODO: 'imp' is deprecated since python ~3.4
+TODO:
+    * 'imp' is deprecated since python ~3.4 => To remove in favor of importlib
+      or make a switch depending of python version;
+    * settings should be initialized ans stored through an object, not directly
+      within 'import_settings';
 """
 import os, imp, logging, sys
 

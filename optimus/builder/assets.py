@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-NOTE:
-
-* Some atribute/method from AssetRegistry have been disabled since they are not
-  used anywhere
-* register_assets now require settings object as argument, to avoid importing
-  directly settings from this module;
-"""
 import copy, logging
 
 from webassets import Environment as AssetsEnvironment
