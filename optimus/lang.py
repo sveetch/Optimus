@@ -56,6 +56,15 @@ class LangBase(UnicodeMixin):
         self.alt_code = self.alt_code or self.code
         self.external_code = self.external_code or self.code
 
+    def __unicode__(self):
+        return self.label
+
+    def __repr__(self):
+        return "<{name} code:{code}>".format(
+            name=self.__class__.__name__,
+            code=self.code
+        )
+
     def split_code(self, code):
         items = code.split('_')
         language_name = items[0]
@@ -65,6 +74,3 @@ class LangBase(UnicodeMixin):
             region_name = items[1]
 
         return language_name, region_name
-
-    def __unicode__(self):
-        return self.label

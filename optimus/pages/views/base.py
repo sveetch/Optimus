@@ -120,7 +120,9 @@ class PageViewBase(object):
         return ((len(self.get_destination().split("/"))-1)*"../" or "./")
 
     def get_template_name(self):
-        return self.template_name.format(language_code=self.get_lang().code)
+        return self.template_name.format(
+            language_code=self.get_lang().code
+        )
 
     def get_context(self):
         self.context.update({
@@ -145,26 +147,35 @@ class PageViewBase(object):
 
         return template.render(lang=self.get_lang(), **context)
 
-    def _recursing_template_search(self, template_name):
-        template_source = self.env.loader.get_source(self.env, template_name)[0]
-        parsed_content = self.env.parse(template_source)
+    def _recurse_template_search(self, env, template_name):
+        """
+        Load template source from given template name then find its template
+        references
+        """
+        template_source = env.loader.get_source(env, template_name)[0]
+        parsed_content = env.parse(template_source)
 
         deps = []
         for item in Jinja2Meta.find_referenced_templates(parsed_content):
             deps.append(item)
-            deps += self._recursing_template_search(item)
+            deps += self._recurse_template_search(env, item)
 
         return deps
 
     def introspect(self, env, force=False):
         """
-        Take the Jinja2 environment as required argument to find all templates dependancies.
+        Take the Jinja2 environment as required argument to find all templates
+        dependancies.
 
         Should return a list of all template dependancies.
         """
         if self._used_templates is None:
             self.env = env
 
-            self._used_templates = [self.get_template_name()] + self._recursing_template_search(self.get_template_name())
+            found = self._recurse_template_search(env,
+                                                   self.get_template_name())
+            self._used_templates = [self.get_template_name()] + found
+
             self.logger.debug(" - Used templates: %s", self._used_templates)
+
         return self._used_templates
