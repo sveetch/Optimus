@@ -379,8 +379,6 @@ def test_render(filedescriptor, temp_builds_dir):
     # Make a view to render
     settings = DummySettings()
 
-    locale = LangBase(code='fr')
-
     view = PageViewBase(
         title='Dummy',
         destination='{language_code}/sample.html',
@@ -400,6 +398,8 @@ def test_render(filedescriptor, temp_builds_dir):
 def test_introspect(filedescriptor, temp_builds_dir):
     """
     Exploit template introspection
+
+    Note: Introspection test lack of recursive template inheritance
     """
     basepath = temp_builds_dir.join('views_base_introspect')
 
@@ -418,22 +418,21 @@ def test_introspect(filedescriptor, temp_builds_dir):
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Hello World!{% endblock %}"""))
 
-    # Make a view to render
+    # Dummy settings
     settings = DummySettings()
 
-    locale = LangBase(code='fr')
+    # Init Jinja environment
+    jinja_env = Jinja2Environment(
+        loader=FileSystemLoader(templates_dir),
+    )
 
+    # Make a view to render
     view = PageViewBase(
         title='Dummy',
         destination='{language_code}/sample.html',
         template_name='sample.html',
         lang='fr',
         settings=settings,
-    )
-
-    # Init Jinja environment
-    jinja_env = Jinja2Environment(
-        loader=FileSystemLoader(templates_dir),
     )
 
     assert view._recurse_template_search(jinja_env, 'sample.html') == [

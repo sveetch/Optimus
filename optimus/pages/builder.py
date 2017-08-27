@@ -85,7 +85,7 @@ class PageBuilder(object):
 
     def scan_bulk(self, page_list):
         """
-        Scan all the given pages to set them their dependancies
+        Scan all the given pages to set their dependancies
 
         Return all used templates from pages and their template dependancies
         """
@@ -97,9 +97,9 @@ class PageBuilder(object):
 
         knowed = set([])
         for page in page_list:
-            finded = self.scan_item(page)
-            self.registry.add_page(page, finded)
-            knowed.update(finded)
+            found = self.scan_item(page)
+            self.registry.add_page(page, found)
+            knowed.update(found)
 
         #import pprint
         #pp = pprint.PrettyPrinter(indent=4)

@@ -7,11 +7,12 @@ import six
 
 from jinja2 import meta as Jinja2Meta
 
+from optimus.utils import UnicodeMixin
 from optimus.lang import LangBase
 from optimus.exceptions import ViewImproperlyConfigured
 
 
-class PageViewBase(object):
+class PageViewBase(UnicodeMixin):
     """
     Base view object for a page
 
@@ -57,8 +58,14 @@ class PageViewBase(object):
 
         self.validate()
 
+    def __unicode__(self):
+        return self.get_destination()
+
     def __repr__(self):
-        return "<Page dest:{}>".format(self.destination)
+        return "<{name} {dest}>".format(
+            name=self.__class__.__name__,
+            dest=self.get_destination()
+        )
 
     def validate(self):
         err = []
@@ -115,7 +122,7 @@ class PageViewBase(object):
         Return the relative path position from the destination file to the root
 
         This is either something like "../../" if the destination is in subdirectories
-        or "./" if at the root
+        or "./" if at the root. Won't never return empty string.
         """
         return ((len(self.get_destination().split("/"))-1)*"../" or "./")
 
