@@ -73,9 +73,6 @@ def test_basic(filedescriptor, caplog, temp_builds_dir):
     """
     basepath = temp_builds_dir.join('assets_register_basic')
 
-    logger = logging.getLogger('optimus')
-    logger.setLevel('DEBUG')
-
     # Make some needed dirs
     sources_dir = os.path.join(basepath.strpath, 'sources')
     static_dir = os.path.join(basepath.strpath, 'static')
@@ -120,8 +117,10 @@ def test_basic(filedescriptor, caplog, temp_builds_dir):
     }
     settings.ENABLED_BUNDLES = ['app_css', 'app_js']
 
-    # Init webassets environment
-    assets_environment = register_assets(settings)
+    # Temporary set logger level
+    with caplog.at_level(logging.DEBUG, logger='optimus'):
+        # Init webassets environment
+        assets_environment = register_assets(settings)
 
     assert caplog.record_tuples == [
         (
@@ -168,9 +167,6 @@ def test_nodebug(filedescriptor, caplog, temp_builds_dir):
     """
     basepath = temp_builds_dir.join('assets_register_nodebug')
 
-    logger = logging.getLogger('optimus')
-    logger.setLevel('INFO')
-
     # Make some needed dirs
     sources_dir = os.path.join(basepath.strpath, 'sources')
     static_dir = os.path.join(basepath.strpath, 'static')
@@ -200,8 +196,10 @@ def test_nodebug(filedescriptor, caplog, temp_builds_dir):
     }
     settings.ENABLED_BUNDLES = ['app_css']
 
-    # Init webassets environment
-    assets_environment = register_assets(settings)
+    # Temporary set logger level
+    with caplog.at_level(logging.INFO, logger='optimus'):
+        # Init webassets environment
+        assets_environment = register_assets(settings)
 
     assert caplog.record_tuples == [
         (
