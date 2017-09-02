@@ -42,7 +42,7 @@ def watch(args):
 
     # Init environments
     assets_env = register_assets(settings)
-    pages_env = PageBuilder(assets_env=assets_env)
+    pages_env = PageBuilder(settings, assets_env=assets_env)
 
     # add a first build to avoid error on unbuilded project
     if not os.path.exists(settings.PUBLISH_DIR):

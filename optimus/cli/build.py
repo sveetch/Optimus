@@ -43,7 +43,7 @@ def build(args):
     # Assets
     assets_env = register_assets(settings)
     # Pages
-    pages_env = PageBuilder(assets_env=assets_env)
+    pages_env = PageBuilder(settings, assets_env=assets_env)
     pages_env.build_bulk(settings.PAGES)
 
     endtime = datetime.datetime.now()

@@ -16,7 +16,6 @@ try:
 except ImportError:
     babel_support = None
 
-from optimus.conf.registry import settings
 from optimus.pages.registry import PageRegistry
 
 
@@ -24,8 +23,10 @@ class PageBuilder(object):
     """
     Builder class to init Jinja2 environment and build the given pages
     """
-    def __init__(self, jinja_env=None, assets_env=None, dry_run=False):
+    def __init__(self, settings, jinja_env=None, assets_env=None, dry_run=False):
         self.logger = logging.getLogger('optimus')
+
+        self.settings = settings
 
         self.assets_env = assets_env
 
@@ -33,7 +34,7 @@ class PageBuilder(object):
         self.translations = {}
 
         self.jinja_env = jinja_env or self.get_environnement(assets_env)
-        self.set_globals()
+        self.jinja_env.globals.update(self.get_globals())
         self.logger.debug("PageBuilder initialized")
 
         self.registry = PageRegistry()
@@ -46,12 +47,13 @@ class PageBuilder(object):
         exts = []
         self.logger.debug("No Jinja2 environment given, initializing a new environment")
 
+
         # It the assets environment is given, active the Jinja extension to use webassets
         if self.assets_env is not None:
             exts.append(AssetsExtension)
 
         # Enabled Jinja extensions
-        for ext in settings.JINJA_EXTENSIONS:
+        for ext in self.settings.JINJA_EXTENSIONS:
             exts.append(ext)
 
         # Active i18n behaviors if i18n extension is loaded and Babel has been imported
@@ -60,28 +62,55 @@ class PageBuilder(object):
             self.logger.debug("'i18n' enabled")
 
         # Boot Jinja environment
-        env = Jinja2Environment(loader=FileSystemLoader(settings.TEMPLATES_DIR), extensions=exts)
+        env = Jinja2Environment(loader=FileSystemLoader(self.settings.TEMPLATES_DIR), extensions=exts)
 
         if assets_env:
             env.assets_environment = assets_env
 
         return env
 
-    def set_globals(self):
+    def get_globals(self):
         """
-        Init the Jinja environment
+        Get additional global context vars from settings
 
-        Register the webassets environment if any
+        Returns:
+            dict: Additional context variables
         """
-        self.jinja_env.globals.update({
-            'debug': settings.DEBUG,
+        return {
+            'debug': self.settings.DEBUG,
             'SITE': {
-                'name': settings.SITE_NAME,
-                'domain': settings.SITE_DOMAIN,
-                'web_url': 'http://%s' % settings.SITE_DOMAIN,
+                'name': self.settings.SITE_NAME,
+                'domain': self.settings.SITE_DOMAIN,
+                'web_url': 'http://%s' % self.settings.SITE_DOMAIN,
             },
-            'STATIC_URL': settings.STATIC_URL,
-        })
+            'STATIC_URL': self.settings.STATIC_URL,
+        }
+
+    def get_translation_for_item(self, page_item):
+        """
+        Try to load the translations for the page language if any, then install it in Jinja2
+
+        It does not reload a language translations if a previous page has allready loaded it
+        """
+        # Get the page language object if any, else the default one
+        lang = page_item.get_lang()
+        # Load language translations only if it have not been yet
+        if lang.code not in self.translations:
+            self.logger.debug(' - Loading translations for locale: %s - %s', lang.code, lang)
+            self.translations[lang.code] = babel_support.Translations.load(self.settings.LOCALES_DIR, lang.code, 'messages')
+
+        # Install it in the Jinja env
+        self.jinja_env.install_gettext_translations(self.translations[lang.code], newstyle=False)
+
+    def scan_item(self, page_item):
+        """
+        Scan the given page
+
+        Return a list of all used templates by the page
+        """
+        self.logger.info(' Scanning page: %s', page_item.get_destination())
+
+        return page_item.introspect(self.jinja_env)
 
     def scan_bulk(self, page_list):
         """
@@ -109,15 +138,36 @@ class PageBuilder(object):
         #print
         return knowed
 
-    def scan_item(self, page_item):
+    def build_item(self, page_item):
         """
-        Scan the given page
+        Build the given page
 
-        Return a list of all used templates by the page
+        Return the destination path of the builded page
         """
-        self.logger.info(' Scanning page: %s', page_item.get_destination())
+        self.logger.info(' Building page: %s', page_item.get_destination())
 
-        return page_item.introspect(self.jinja_env)
+        # Optional i18n
+        if self.internationalized:
+            self.get_translation_for_item(page_item)
+
+        # Template render
+        content = page_item.render(self.jinja_env)
+
+        destination_path = os.path.join(self.settings.PUBLISH_DIR, page_item.get_destination())
+        # Creating destination path if needed
+        destination_dir, destination_file = os.path.split(destination_path)
+        if not os.path.exists(destination_dir):
+            self.logger.debug(' - Creating new directory : %s', destination_dir)
+            if not self.dry_run:
+                os.makedirs(destination_dir)
+        # Write it
+        self.logger.debug(' - Writing to: %s', destination_path)
+        if not self.dry_run:
+            fp = open(destination_path, 'w')
+            fp.write(content.encode('utf-8'))
+            fp.close()
+
+        return destination_path
 
     def build_bulk(self, page_list):
         """
@@ -136,50 +186,3 @@ class PageBuilder(object):
             builded.append( self.build_item(page) )
 
         return builded
-
-    def get_translation_for_item(self, page_item):
-        """
-        Try to load the translations for the page language if any, then install it in Jinja2
-
-        It does not reload a language translations if a previous page has allready loaded it
-        """
-        # Get the page language object if any, else the default one
-        lang = page_item.get_lang()
-        # Load language translations only if it have not been yet
-        if lang.code not in self.translations:
-            self.logger.debug(' - Loading translations for locale: %s - %s', lang.code, lang)
-            self.translations[lang.code] = babel_support.Translations.load(settings.LOCALES_DIR, lang.code, 'messages')
-
-        # Install it in the Jinja env
-        self.jinja_env.install_gettext_translations(self.translations[lang.code], newstyle=False)
-
-    def build_item(self, page_item):
-        """
-        Build the given page
-
-        Return the destination path of the builded page
-        """
-        self.logger.info(' Building page: %s', page_item.get_destination())
-
-        # Optional i18n
-        if self.internationalized:
-            self.get_translation_for_item(page_item)
-
-        # Template render
-        content = page_item.render(self.jinja_env)
-
-        destination_path = os.path.join(settings.PUBLISH_DIR, page_item.get_destination())
-        # Creating destination path if needed
-        destination_dir, destination_file = os.path.split(destination_path)
-        if not os.path.exists(destination_dir):
-            self.logger.debug(' - Creating new directory : %s', destination_dir)
-            if not self.dry_run:
-                os.makedirs(destination_dir)
-        # Write it
-        self.logger.debug(' - Writing to: %s', destination_path)
-        if not self.dry_run:
-            fp = open(destination_path, 'w')
-            fp.write(content.encode('utf-8'))
-            fp.close()
-
-        return destination_path

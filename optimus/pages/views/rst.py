@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Page building with Jinja2
+
+Note: No test coverage yet, maybe this would be ported to a plugin
 """
 import copy
 

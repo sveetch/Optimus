@@ -1,6 +1,5 @@
 import io
 import os
-import logging
 
 import pytest
 

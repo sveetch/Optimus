@@ -45,9 +45,9 @@ def test_success(monkeypatch, caplog, fixtures_settings):
     monkeypatch.setenv(SETTINGS_NAME_ENVVAR, 'minimal_settings')
 
     # Tricky/Creepy way to check automatic settings loading from registry so
-    # the settings is not memoized and wont alter further test.
+    # the settings is not memorized and wont alter further test.
     # WARNING: any further test must not try to do "from optimus.conf import
-    # registry" else it will be memoized.
+    # registry" else it will be memorized.
     mod = import_project_module('registry', basedir=os.path.join(
         os.path.abspath(os.path.dirname(optimus.__file__)),
         'conf'
@@ -68,7 +68,7 @@ def test_success(monkeypatch, caplog, fixtures_settings):
     #assert (SETTINGS_NAME_ENVVAR in os.environ) == False
 
 
-    ## Ensure settings are not memoized
+    ## Ensure settings are not memorized
     #message = ("Settings cannot be imported, because environment variable "
                #"{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
