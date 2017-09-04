@@ -125,6 +125,8 @@ def import_settings(name, basedir):
     Validate required settings are set, then fill some missing settings to a
     default value.
 
+    TODO: 'PROJECT_DIR' must be required
+
     Arguments:
         name (str): Settings module name to retrieve from ``basedir``.
         basedir (str): Base directory from where to find settings module name.
@@ -137,7 +139,7 @@ def import_settings(name, basedir):
     _settings = import_settings_module(name, basedir)
 
     # Raise exception if these required settings are not defined
-    required_settings = ('DEBUG','SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL',)
+    required_settings = ('PROJECT_DIR', 'DEBUG','SITE_NAME','SITE_DOMAIN','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL',)
     missing_settings = []
     for setting_name in required_settings:
         if not hasattr(_settings, setting_name):
@@ -148,9 +150,9 @@ def import_settings(name, basedir):
 
     # Fill default required settings
 
-    # The directory where webassets will store his cache
-    if not hasattr(_settings, "PROJECT_DIR"):
-        setattr(_settings, "PROJECT_DIR", os.path.abspath(os.path.dirname(_settings.__file__)))
+    ## The directory where webassets will store his cache
+    #if not hasattr(_settings, "PROJECT_DIR"):
+        #setattr(_settings, "PROJECT_DIR", os.path.abspath(os.path.dirname(_settings.__file__)))
 
     # The directory where webassets will store his cache
     if not hasattr(_settings, "WEBASSETS_CACHE"):

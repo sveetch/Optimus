@@ -2,8 +2,9 @@
 """
 The project pages map for basic_i18n
 """
-from optimus.builder.pages import PageViewBase
-from optimus.conf import settings
+from optimus.pages.views.base import PageViewBase
+# Dont import settings since it will break tests
+#from optimus.conf import settings
 """
 Page objects
 """

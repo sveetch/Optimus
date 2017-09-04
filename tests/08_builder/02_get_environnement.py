@@ -21,9 +21,9 @@ def test_get_environnement(fixtures_settings, caplog):
         tags = set(['dummy'])
 
     # Get basic sample settings
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
     module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=basedir)
+    settings = import_settings(name=module_name, basedir=projectdir)
 
     # Init builder with default environment
     builder = PageBuilder(settings)
@@ -49,12 +49,17 @@ def test_get_environnement(fixtures_settings, caplog):
         (
             'optimus',
             logging.INFO,
-            'Module searched in: {}'.format(basedir)
+            'Module searched in: {}'.format(projectdir)
         ),
         (
             'optimus',
             logging.DEBUG,
             ('No Jinja2 environment given, initializing a new environment')
+        ),
+        (
+            'optimus',
+            logging.DEBUG,
+            "'i18n' enabled"
         ),
         (
             'optimus',

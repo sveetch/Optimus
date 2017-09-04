@@ -2,8 +2,8 @@
 """
 The project pages map for basic
 """
-from optimus.builder.pages import PageViewBase
-from optimus.conf import settings
+from optimus.pages.views.base import PageViewBase
+#from optimus.conf import settings
 """
 Page objects
 """

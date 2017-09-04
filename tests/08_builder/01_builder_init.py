@@ -17,9 +17,9 @@ def test_empty(fixtures_settings, caplog):
     environments
     """
     # Get basic sample settings
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
     module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=basedir)
+    settings = import_settings(name=module_name, basedir=projectdir)
 
     # Init builder
     builder = PageBuilder(settings)
@@ -38,12 +38,17 @@ def test_empty(fixtures_settings, caplog):
         (
             'optimus',
             logging.INFO,
-            'Module searched in: {}'.format(basedir)
+            'Module searched in: {}'.format(projectdir)
         ),
         (
             'optimus',
             logging.DEBUG,
             ('No Jinja2 environment given, initializing a new environment')
+        ),
+        (
+            'optimus',
+            logging.DEBUG,
+            "'i18n' enabled"
         ),
         (
             'optimus',
@@ -58,9 +63,9 @@ def test_custom_jinja(fixtures_settings, caplog):
     Init with settings from basic_template and custom jinja environment
     """
     # Get basic sample settings
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
     module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=basedir)
+    settings = import_settings(name=module_name, basedir=projectdir)
 
     # Init a custom Jinja environment without any extension
     jinja_env = Jinja2Environment(
@@ -82,7 +87,7 @@ def test_custom_jinja(fixtures_settings, caplog):
         (
             'optimus',
             logging.INFO,
-            'Module searched in: {}'.format(basedir)
+            'Module searched in: {}'.format(projectdir)
         ),
         (
             'optimus',

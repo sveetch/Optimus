@@ -14,9 +14,9 @@ def test_get_globals(fixtures_settings, caplog):
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
     """
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
     module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=basedir)
+    settings = import_settings(name=module_name, basedir=projectdir)
 
     # Init builder with default environment
     builder = PageBuilder(settings)

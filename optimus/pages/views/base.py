@@ -37,8 +37,8 @@ class PageViewBase(UnicodeMixin):
     overriden from the ``context`` class attribute, only from the ``get_context`` class
     method.
 
-    View need settings to be defined inside view either as argument on instance
-    init or later through attribute setter.
+    View need settings to be defined either as argument on instance init or later
+    through attribute setter.
     """
     title = None
     template_name = None

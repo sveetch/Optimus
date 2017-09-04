@@ -44,6 +44,13 @@ class InvalidLanguageIdentifier(OptimusBaseException):
     pass
 
 
+class InvalidSettings(OptimusBaseException):
+    """
+    Exception to be raised for invalid settings from 'conf.model'
+    """
+    pass
+
+
 class ViewImproperlyConfigured(OptimusBaseException):
     """
     Exception to be raised from ``pages.view.base.PageViewBase`` when

@@ -12,7 +12,7 @@ from webassets.ext.jinja2 import AssetsExtension
 
 # Optional babel import
 try:
-    from babel import babel_support
+    from babel import support as babel_support
 except ImportError:
     babel_support = None
 
@@ -92,15 +92,23 @@ class PageBuilder(object):
 
         It does not reload a language translations if a previous page has allready loaded it
         """
-        # Get the page language object if any, else the default one
+        if not babel_support:
+            return None
+
+        # Get page language object
         lang = page_item.get_lang()
-        # Load language translations only if it have not been yet
+
+        # Dont load again allredy registered catalog
         if lang.code not in self.translations:
             self.logger.debug(' - Loading translations for locale: %s - %s', lang.code, lang)
             self.translations[lang.code] = babel_support.Translations.load(self.settings.LOCALES_DIR, lang.code, 'messages')
 
         # Install it in the Jinja env
+        print(self.jinja_env)
+        print(dir(self.jinja_env))
         self.jinja_env.install_gettext_translations(self.translations[lang.code], newstyle=False)
+
+        return self.translations[lang.code]
 
     def scan_item(self, page_item):
         """
@@ -130,12 +138,6 @@ class PageBuilder(object):
             self.registry.add_page(page, found)
             knowed.update(found)
 
-        #import pprint
-        #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(self.registry.elements)
-        #print "="*60
-        #pp.pprint(self.registry.map_dest_to_page)
-        #print
         return knowed
 
     def build_item(self, page_item):

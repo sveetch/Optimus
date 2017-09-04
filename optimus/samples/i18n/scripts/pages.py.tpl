@@ -2,7 +2,7 @@
 """
 The project pages map for $PROJECT_NAME
 """
-from optimus.builder.pages import PageViewBase
+from optimus.pages.views.base import PageViewBase
 from optimus.conf.registry import settings
 """
 Page objects
