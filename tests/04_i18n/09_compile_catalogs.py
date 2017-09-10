@@ -7,11 +7,11 @@ import six
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
-def test_compile_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
+def test_compile_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,
+                              fixtures_settings):
     """
     Compile every enabled catalogs
     """
@@ -23,8 +23,8 @@ def test_compile_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     compiled = manager.compile_catalogs()
@@ -32,16 +32,6 @@ def test_compile_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     assert compiled == ['en_US', 'fr_FR']
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
         (
             'optimus',
             logging.INFO,
@@ -55,7 +45,8 @@ def test_compile_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_compile_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
+def test_compile_catalogs_one(minimal_i18n_settings, caplog, temp_builds_dir,
+                              fixtures_settings):
     """
     Compile only default locale catalog
     """
@@ -67,8 +58,8 @@ def test_compile_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     updated = manager.compile_catalogs([settings.LANGUAGE_CODE])
@@ -83,22 +74,14 @@ def test_compile_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
         (
             'optimus',
             logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
-        (
-            'optimus',
-            logging.INFO,
             "Compiling catalog (MO) for language 'en_US' to {}".format(manager.get_mo_filepath("en_US"))
         ),
     ]
 
 
-def test_compile_catalogs_filenotfounderror(caplog, temp_builds_dir, fixtures_settings):
+def test_compile_catalogs_filenotfounderror(minimal_i18n_settings, caplog,
+                                            temp_builds_dir,
+                                            fixtures_settings):
     """
     Try compile unexisting catalog
 
@@ -112,8 +95,8 @@ def test_compile_catalogs_filenotfounderror(caplog, temp_builds_dir, fixtures_se
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     erroneous_local = "idontexist"
@@ -129,7 +112,8 @@ def test_compile_catalogs_filenotfounderror(caplog, temp_builds_dir, fixtures_se
         updated = manager.compile_catalogs([erroneous_local])
 
 
-#def test_compile_catalogs_warning(caplog, temp_builds_dir, fixtures_settings):
+#def test_compile_catalogs_warning(minimal_i18n_settings, caplog,
+                                   #temp_builds_dir, fixtures_settings):
     #"""
     #Almost empty PO doesnt raise error but warnings, keep this for history
     #"""
@@ -141,8 +125,8 @@ def test_compile_catalogs_filenotfounderror(caplog, temp_builds_dir, fixtures_se
     #destination = os.path.join(basepath.strpath, samplename)
     #shutil.copytree(samplepath, destination)
 
-    ## Get manager with settings from temporary sample
-    #settings = import_settings('settings', basedir=destination)
+    ## Get manager with settings
+    #settings = minimal_i18n_settings(destination)
     #manager = I18NManager(settings)
 
     ## Create erroneous catalog to compile
@@ -174,7 +158,9 @@ msgstr[2] ""
 
 """
 
-def test_compile_catalogs_invalid_catalog(filedescriptor, capsys, caplog, temp_builds_dir, fixtures_settings):
+def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
+                                          filedescriptor, capsys, caplog,
+                                          temp_builds_dir, fixtures_settings):
     """
     Try compile an erroneous catalog
 
@@ -189,8 +175,8 @@ def test_compile_catalogs_invalid_catalog(filedescriptor, capsys, caplog, temp_b
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Create erroneous catalog to compile
@@ -203,16 +189,6 @@ def test_compile_catalogs_invalid_catalog(filedescriptor, capsys, caplog, temp_b
     updated = manager.compile_catalogs([erroneous_local])
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
         (
             'optimus',
             logging.INFO,
