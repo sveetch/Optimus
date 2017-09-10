@@ -56,3 +56,36 @@ def filedescriptor():
     if six.PY2:
         return "wb"
     return "w"
+
+
+@pytest.fixture(scope="function")
+def minimal_i18n_settings():
+    """
+    Return a function to load minimal i18n settings.
+
+    Function require an argument for base directory to set some settings
+    like PROJECT_DIR, SOURCES_DIR, etc..
+
+    This is a convenient way of importing settings without to import it.
+    """
+    from optimus.conf.model import SettingsModel
+
+    def settings_func(basedir):
+        settings = SettingsModel()
+        settings.load_from_kwargs(
+            DEBUG = True,
+            PROJECT_DIR = basedir,
+            SITE_NAME = 'minimal_i18n',
+            SITE_DOMAIN = 'localhost',
+            SOURCES_DIR = os.path.join(basedir, 'sources'),
+            TEMPLATES_DIR = os.path.join(basedir, 'sources', 'templates'),
+            PUBLISH_DIR = os.path.join(basedir, '_build/dev'),
+            STATIC_DIR = os.path.join(basedir, '_build/dev', 'static'),
+            STATIC_URL = 'static/',
+            LOCALES_DIR = os.path.join(basedir, 'locale'),
+            LANGUAGE_CODE = "en_US",
+            LANGUAGES = ("en_US", 'fr_FR'),
+        )
+        return settings
+
+    return settings_func

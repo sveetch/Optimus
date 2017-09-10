@@ -4,11 +4,11 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
-def test_init_catalogs_empty(temp_builds_dir, fixtures_settings):
+def test_init_catalogs_empty(minimal_i18n_settings, temp_builds_dir,
+                             fixtures_settings):
     """
     Nothing to do since sample allready contains every language catalogs
     """
@@ -20,8 +20,8 @@ def test_init_catalogs_empty(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     created = manager.init_catalogs()
@@ -29,7 +29,8 @@ def test_init_catalogs_empty(temp_builds_dir, fixtures_settings):
     assert created == []
 
 
-def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
+def test_init_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,
+                           fixtures_settings):
     """
     Init every enabled catalogs
     """
@@ -41,8 +42,8 @@ def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Empty locale dir from every enabled language
@@ -57,16 +58,6 @@ def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
         assert os.path.exists(manager.get_po_filepath(lang)) == True
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
         (
             'optimus',
             logging.DEBUG,
@@ -85,7 +76,8 @@ def test_init_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_init_catalogs_one(temp_builds_dir, fixtures_settings):
+def test_init_catalogs_one(minimal_i18n_settings, temp_builds_dir,
+                           fixtures_settings):
     """
     Init only default locale catalog
     """
@@ -97,8 +89,8 @@ def test_init_catalogs_one(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Empty locale dir from every enabled language

@@ -5,13 +5,13 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 from babel.messages.catalog import Catalog, Message
 from babel.messages.pofile import read_po
 
 
-def test_creating_po_success(temp_builds_dir, fixtures_settings):
+def test_creating_po_success(minimal_i18n_settings, temp_builds_dir,
+                             fixtures_settings):
     """
     safe_write_po usage to create new file
     """
@@ -26,8 +26,8 @@ def test_creating_po_success(temp_builds_dir, fixtures_settings):
     dummy_name = "dummy_pot.pot"
     dummy_pot = os.path.join(destination, dummy_name)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Create a dummy catalog to write
@@ -52,7 +52,8 @@ def test_creating_po_success(temp_builds_dir, fixtures_settings):
     assert pots == [dummy_name]
 
 
-def test_overwrite_po_success(temp_builds_dir, fixtures_settings):
+def test_overwrite_po_success(minimal_i18n_settings, temp_builds_dir,
+                              fixtures_settings):
     """
     safe_write_po usage for overwritting file
     """
@@ -67,8 +68,8 @@ def test_overwrite_po_success(temp_builds_dir, fixtures_settings):
     dummy_name = "dummy_pot.pot"
     dummy_pot = os.path.join(destination, dummy_name)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Create a dummy catalog to write
@@ -104,7 +105,8 @@ def test_overwrite_po_success(temp_builds_dir, fixtures_settings):
     assert dummy_catalog["ping"] == Message('ping', string='pong')
 
 
-def test_overwrite_po_fail(temp_builds_dir, fixtures_settings):
+def test_overwrite_po_fail(minimal_i18n_settings, temp_builds_dir,
+                           fixtures_settings):
     """
     safe_write_po usage for overwritting file failing but left untouched
     initial file
@@ -120,8 +122,8 @@ def test_overwrite_po_fail(temp_builds_dir, fixtures_settings):
     dummy_name = "dummy_pot.pot"
     dummy_pot = os.path.join(destination, dummy_name)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     # Create a dummy catalog to write

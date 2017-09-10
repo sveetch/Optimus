@@ -3,7 +3,6 @@
 Settings file for minimal i18n
 """
 import os
-from webassets import Bundle
 
 DEBUG = True
 

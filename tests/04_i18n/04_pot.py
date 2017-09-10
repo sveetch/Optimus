@@ -5,12 +5,11 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 from babel.messages.catalog import Message
 
 
-def test_build_pot(temp_builds_dir, fixtures_settings):
+def test_build_pot(minimal_i18n_settings, temp_builds_dir, fixtures_settings):
     """
     Force to rebuild POT file
     """
@@ -22,8 +21,8 @@ def test_build_pot(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get the settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get settings
+    settings = minimal_i18n_settings(destination)
 
     manager = I18NManager(settings)
 
@@ -38,7 +37,8 @@ def test_build_pot(temp_builds_dir, fixtures_settings):
     assert pot["Hello World!"] == Message("Hello World!")
 
 
-def test_pot_attribute_getter(temp_builds_dir, fixtures_settings):
+def test_pot_attribute_getter(minimal_i18n_settings, temp_builds_dir,
+                              fixtures_settings):
     """
     Reach the pot attribute that may trigger the build_pot when
     POT does not allready exists
@@ -51,8 +51,8 @@ def test_pot_attribute_getter(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get the settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get settings
+    settings = minimal_i18n_settings(destination)
 
     manager = I18NManager(settings)
 

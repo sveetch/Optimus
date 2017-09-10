@@ -5,13 +5,12 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 from babel.messages.catalog import Catalog, Message
 from babel.messages.pofile import read_po
 
 
-def test_clone_pot(temp_builds_dir, fixtures_settings):
+def test_clone_pot(minimal_i18n_settings, temp_builds_dir, fixtures_settings):
     """
     Check POT cloning
     """
@@ -23,8 +22,8 @@ def test_clone_pot(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
     manager.build_pot(force=True)
 

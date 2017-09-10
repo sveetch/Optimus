@@ -4,11 +4,11 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
-def test_update_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
+def test_update_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,
+                             fixtures_settings):
     """
     Update every catalogs
     """
@@ -20,8 +20,8 @@ def test_update_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     updated = manager.update_catalogs()
@@ -29,16 +29,6 @@ def test_update_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     assert updated == ['en_US', 'fr_FR']
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
         (
             'optimus',
             logging.INFO,
@@ -52,7 +42,8 @@ def test_update_catalogs_all(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_update_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
+def test_update_catalogs_one(minimal_i18n_settings, caplog, temp_builds_dir,
+                             fixtures_settings):
     """
     Update only default locale catalog
     """
@@ -64,8 +55,8 @@ def test_update_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get manager with settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get manager with settings
+    settings = minimal_i18n_settings(destination)
     manager = I18NManager(settings)
 
     updated = manager.update_catalogs([settings.LANGUAGE_CODE])
@@ -77,16 +68,6 @@ def test_update_catalogs_one(caplog, temp_builds_dir, fixtures_settings):
     ) == True
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "settings" module'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(destination)
-        ),
         (
             'optimus',
             logging.INFO,

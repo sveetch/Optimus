@@ -4,12 +4,11 @@ import shutil
 
 import pytest
 
-import optimus
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
-def test_path_helpers(temp_builds_dir, fixtures_settings):
+def test_path_helpers(minimal_i18n_settings, temp_builds_dir,
+                      fixtures_settings):
     """Check path resolutions and validations"""
     basepath = temp_builds_dir.join('i18n_path_helpers')
 
@@ -19,8 +18,8 @@ def test_path_helpers(temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get the settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get settings
+    settings = minimal_i18n_settings(destination)
 
     assert settings.SITE_NAME == 'minimal_i18n'
 

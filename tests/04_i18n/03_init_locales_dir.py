@@ -4,11 +4,11 @@ import shutil
 
 import pytest
 
-from optimus.conf.loader import import_settings
 from optimus.i18n import I18NManager
 
 
-def test_init_locales_dir_success(caplog, temp_builds_dir, fixtures_settings):
+def test_init_locales_dir_success(minimal_i18n_settings, caplog,
+                                  temp_builds_dir, fixtures_settings):
     """Check path resolutions and validations"""
     basepath = temp_builds_dir.join('i18n_init_locales_dir_success')
 
@@ -18,8 +18,8 @@ def test_init_locales_dir_success(caplog, temp_builds_dir, fixtures_settings):
     destination = os.path.join(basepath.strpath, samplename)
     shutil.copytree(samplepath, destination)
 
-    # Get the settings from temporary sample
-    settings = import_settings('settings', basedir=destination)
+    # Get settings
+    settings = minimal_i18n_settings(destination)
 
     # Remove locale sample
     shutil.rmtree(settings.LOCALES_DIR)
