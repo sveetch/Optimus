@@ -6,6 +6,8 @@ import os
 
 DEBUG = True
 
+PROJECT_DIR = '/home/foo'
+
 SITE_NAME = 'minimal'
 
 SITE_DOMAIN = 'localhost'

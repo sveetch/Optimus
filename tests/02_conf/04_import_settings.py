@@ -3,6 +3,7 @@ import logging
 
 import pytest
 
+from optimus.exceptions import InvalidSettings
 from optimus.conf.loader import import_settings
 
 
@@ -50,6 +51,7 @@ def test_success(fixtures_settings):
     """
     basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
 
+    print(basedir)
     mod = import_settings(name='settings', basedir=basedir)
 
     assert mod.SITE_NAME == "basic"
@@ -62,7 +64,11 @@ def test_missing_required_settings(caplog, fixtures_settings):
     basedir = os.path.join(fixtures_settings.fixtures_path, 'dummy_package')
     module_name = 'miss_required_settings'
 
-    with pytest.raises(NameError):
+    exception_msg = ('The following settings are required but not defined: '
+                     'PROJECT_DIR, SOURCES_DIR, TEMPLATES_DIR, PUBLISH_DIR, '
+                     'STATIC_DIR')
+
+    with pytest.raises(InvalidSettings, message=exception_msg):
         import_settings(name=module_name, basedir=basedir)
 
     assert caplog.record_tuples == [
@@ -76,12 +82,6 @@ def test_missing_required_settings(caplog, fixtures_settings):
             logging.INFO,
             'Module searched in: {}'.format(basedir)
         ),
-        (
-            'optimus',
-            logging.ERROR,
-            ('The following settings are required but not defined: '
-             'SOURCES_DIR, TEMPLATES_DIR, PUBLISH_DIR, STATIC_DIR')
-        ),
     ]
 
 
@@ -94,6 +94,6 @@ def test_minimal_settings_fill(fixtures_settings):
 
     mod = import_settings(name=module_name, basedir=basedir)
 
-    assert mod.PROJECT_DIR == os.path.abspath(os.path.dirname(mod.__file__))
+    assert mod.PROJECT_DIR == '/home/foo'
     assert mod.BUNDLES == {}
     assert list(mod.ENABLED_BUNDLES) == []

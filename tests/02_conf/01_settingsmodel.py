@@ -39,6 +39,7 @@ def test_load_from_kwargs_no_defaults():
                                        BAR="Yep",
                                        HELLO="world",
                                        nope="ni",
+                                       check=False,
                                        defaults=False)
 
     assert sorted(loaded) == sorted(['FOO', 'BAR', 'HELLO'])
@@ -66,7 +67,7 @@ def test_load_from_module_no_defaults():
     dummy_mod = DummyModule()
     settings = SettingsModel()
 
-    loaded = settings.load_from_module(dummy_mod, defaults=False)
+    loaded = settings.load_from_module(dummy_mod, check=False, defaults=False)
 
     assert sorted(loaded) == sorted(['FOO', 'BAR', 'HELLO'])
 
@@ -95,12 +96,13 @@ def test_check_required_success():
     # Tamper required settings
     settings._required_settings = ('FOO', 'PLOP')
 
-    loaded = settings.load_from_kwargs(FOO=True, BAR=True, defaults=False)
+    loaded = settings.load_from_kwargs(FOO=True, BAR=True, check=False,
+                                       defaults=False)
 
     with pytest.raises(InvalidSettings):
         settings.check()
 
-    loaded = settings.load_from_kwargs(PLOP=True, defaults=False)
+    loaded = settings.load_from_kwargs(PLOP=True, check=False, defaults=False)
 
     settings.check()
 
@@ -116,6 +118,7 @@ def test_apply_defaults():
     # Disable automatic defaults apply to test it separately
     loaded = settings.load_from_kwargs(PROJECT_DIR=projectdir,
                                        LANGUAGE_CODE='fr',
+                                       check=False,
                                        defaults=False)
 
     settings.apply_defaults()

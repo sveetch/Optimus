@@ -24,8 +24,8 @@ class SettingsModel(object):
     _PROJECT_DIR = None
     _excluded_names = []
     _required_settings = (
-        'DEBUG', 'SITE_NAME', 'SITE_DOMAIN', 'SOURCES_DIR', 'TEMPLATES_DIR',
-        'PUBLISH_DIR','STATIC_DIR','STATIC_URL'
+        'PROJECT_DIR', 'DEBUG', 'SITE_NAME', 'SITE_DOMAIN', 'SOURCES_DIR',
+        'TEMPLATES_DIR', 'PUBLISH_DIR', 'STATIC_DIR', 'STATIC_URL',
     )
 
     def __init__(self, *args, **kwargs):
@@ -43,10 +43,7 @@ class SettingsModel(object):
 
     def check(self):
         """
-        Filter to validate setting name
-
-        Name must be uppercase, not starting with a '_' character and not
-        registred in exluded names.
+        Check for required settings
         """
         missing_settings = []
 
@@ -59,7 +56,7 @@ class SettingsModel(object):
                   "defined: {0}").format(", ".join(missing_settings))
             raise InvalidSettings(msg)
 
-    def load_from_kwargs(self, defaults=True, **kwargs):
+    def load_from_kwargs(self, check=True, defaults=True, **kwargs):
         """
         Set setting attribute from given named arguments
         """
@@ -70,13 +67,15 @@ class SettingsModel(object):
                 setattr(self, name, kwargs.get(name))
                 setted.append(name)
 
+        if check:
+            self.check()
         if defaults:
             self.apply_defaults()
 
         return setted
 
 
-    def load_from_module(self, settings_module, defaults=True):
+    def load_from_module(self, settings_module, check=True, defaults=True):
         """
         Set setting attribute from given module variables
         """
@@ -87,6 +86,8 @@ class SettingsModel(object):
                 setattr(self, name, getattr(settings_module, name))
                 setted.append(name)
 
+        if check:
+            self.check()
         if defaults:
             self.apply_defaults()
 

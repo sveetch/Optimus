@@ -15,7 +15,7 @@ def test_fail_basedir(monkeypatch, caplog, fixtures_settings):
     message = ("Settings cannot be imported, because environment variable "
                "{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
-    with pytest.raises(ImportError, match=message):
+    with pytest.raises(ImportError, message=message):
         from optimus.conf.registry import settings
 
 
@@ -28,7 +28,7 @@ def test_fail_name(monkeypatch, caplog, fixtures_settings):
     message = ("Settings cannot be imported, because environment variable "
                "{} is undefined.".format(SETTINGS_NAME_ENVVAR))
 
-    with pytest.raises(ImportError, match=message):
+    with pytest.raises(ImportError, message=message):
         from optimus.conf.registry import settings
 
 
@@ -36,7 +36,7 @@ def test_success(monkeypatch, caplog, fixtures_settings):
     """
     Check automatic settings loading from registry is working
 
-    Broken since i didnt finded a clean way to re-import (not reload it)
+    Broken since i didnt finded a clean way to re-import (not reload)
     settings module to avoid troubles with previously imported stuff
     """
     basedir = os.path.join(fixtures_settings.fixtures_path, 'dummy_package')
@@ -72,5 +72,5 @@ def test_success(monkeypatch, caplog, fixtures_settings):
     #message = ("Settings cannot be imported, because environment variable "
                #"{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
-    #with pytest.raises(ImportError, match=message):
+    #with pytest.raises(ImportError, message=message):
         #from optimus.conf.registry import settings
