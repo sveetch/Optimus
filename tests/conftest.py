@@ -59,18 +59,65 @@ def filedescriptor():
 
 
 @pytest.fixture(scope="function")
-def minimal_i18n_settings():
+def minimal_basic_settings():
     """
-    Return a function to load minimal i18n settings.
+    Return a function to load minimal basic settings
 
     Function require an argument for base directory to set some settings
     like PROJECT_DIR, SOURCES_DIR, etc..
 
     This is a convenient way of importing settings without to import it.
     """
-    from optimus.conf.model import SettingsModel
-
     def settings_func(basedir):
+        from optimus.conf.model import SettingsModel
+        from webassets import Bundle
+
+        settings = SettingsModel()
+        settings.load_from_kwargs(
+            DEBUG = True,
+            PROJECT_DIR = basedir,
+            SITE_NAME = 'basic',
+            SITE_DOMAIN = 'localhost',
+            SOURCES_DIR = os.path.join(basedir, 'sources'),
+            TEMPLATES_DIR = os.path.join(basedir, 'sources', 'templates'),
+            PUBLISH_DIR = os.path.join(basedir, '_build/dev'),
+            STATIC_DIR = os.path.join(basedir, '_build/dev', 'static'),
+            STATIC_URL = 'static/',
+            BUNDLES = {
+                'modernizr_js': Bundle(
+                    "js/modernizr.src.js",
+                    filters=None,
+                    output='js/modernizr.min.js'
+                ),
+                'app_css': Bundle(
+                    'css/app.css',
+                    filters=None,
+                    output='css/app.min.css'
+                ),
+                'app_js': Bundle(
+                    "js/app.js",
+                    filters=None,
+                    output='js/app.min.js'
+                ),
+            },
+            FILES_TO_SYNC = (
+                ('css', 'css'),
+            ),
+        )
+        return settings
+
+    return settings_func
+
+
+@pytest.fixture(scope="function")
+def minimal_i18n_settings():
+    """
+    Alike 'minimal_basic_settings' return a function to load minimal i18n
+    settings
+    """
+    def settings_func(basedir):
+        from optimus.conf.model import SettingsModel
+
         settings = SettingsModel()
         settings.load_from_kwargs(
             DEBUG = True,

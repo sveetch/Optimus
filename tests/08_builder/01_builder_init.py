@@ -7,19 +7,17 @@ from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
 from jinja2.ext import Extension
 
-from optimus.conf.loader import import_settings
 from optimus.pages.builder import PageBuilder
 
 
-def test_empty(fixtures_settings, caplog):
+def test_empty(minimal_basic_settings, fixtures_settings, caplog):
     """
-    Empty init with settings from basic_template, no custom jinja or webassets
-    environments
+    Empty init with settings from 'minimal_basic' structure, no custom jinja or
+    webassets environments
     """
     # Get basic sample settings
-    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
-    module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=projectdir)
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'minimal_basic')
+    settings = minimal_basic_settings(projectdir)
 
     # Init builder
     builder = PageBuilder(settings)
@@ -30,16 +28,6 @@ def test_empty(fixtures_settings, caplog):
     ]
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "{}" module'.format(module_name)
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(projectdir)
-        ),
         (
             'optimus',
             logging.DEBUG,
@@ -58,14 +46,14 @@ def test_empty(fixtures_settings, caplog):
     ]
 
 
-def test_custom_jinja(fixtures_settings, caplog):
+def test_custom_jinja(minimal_basic_settings, fixtures_settings, caplog):
     """
-    Init with settings from basic_template and custom jinja environment
+    Init with settings from 'minimal_basic' structure and custom jinja
+    environment
     """
     # Get basic sample settings
-    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
-    module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=projectdir)
+    projectdir = os.path.join(fixtures_settings.fixtures_path, 'minimal_basic')
+    settings = minimal_basic_settings(projectdir)
 
     # Init a custom Jinja environment without any extension
     jinja_env = Jinja2Environment(
@@ -79,16 +67,6 @@ def test_custom_jinja(fixtures_settings, caplog):
     assert list(builder.jinja_env.extensions.keys()) == []
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "{}" module'.format(module_name)
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(projectdir)
-        ),
         (
             'optimus',
             logging.DEBUG,

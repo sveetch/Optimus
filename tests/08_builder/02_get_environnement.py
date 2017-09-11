@@ -5,11 +5,10 @@ import pytest
 
 from jinja2.ext import Extension
 
-from optimus.conf.loader import import_settings
 from optimus.pages.builder import PageBuilder
 
 
-def test_get_environnement(fixtures_settings, caplog):
+def test_get_environnement(minimal_basic_settings, fixtures_settings, caplog):
     """
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
@@ -22,8 +21,7 @@ def test_get_environnement(fixtures_settings, caplog):
 
     # Get basic sample settings
     projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
-    module_name = 'settings'
-    settings = import_settings(name=module_name, basedir=projectdir)
+    settings = minimal_basic_settings(projectdir)
 
     # Init builder with default environment
     builder = PageBuilder(settings)
@@ -41,16 +39,6 @@ def test_get_environnement(fixtures_settings, caplog):
 
     # Using 'get_environnement' afterwards trigger additional debug log
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "{}" module'.format(module_name)
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            'Module searched in: {}'.format(projectdir)
-        ),
         (
             'optimus',
             logging.DEBUG,
