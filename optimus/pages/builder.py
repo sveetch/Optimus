@@ -104,8 +104,6 @@ class PageBuilder(object):
             self.translations[lang.code] = babel_support.Translations.load(self.settings.LOCALES_DIR, lang.code, 'messages')
 
         # Install it in the Jinja env
-        print(self.jinja_env)
-        print(dir(self.jinja_env))
         self.jinja_env.install_gettext_translations(self.translations[lang.code], newstyle=False)
 
         return self.translations[lang.code]

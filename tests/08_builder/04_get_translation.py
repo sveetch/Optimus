@@ -6,12 +6,12 @@ import pytest
 
 from jinja2.ext import Extension
 
-from optimus.conf.loader import import_settings, import_pages_module
+from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.start_project import ProjectStarter
 
 
-def test_get_translation(fixtures_settings, temp_builds_dir, caplog):
+def test_get_translation(i18n_template_settings, fixtures_settings, temp_builds_dir, caplog):
     """
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
@@ -27,30 +27,32 @@ def test_get_translation(fixtures_settings, temp_builds_dir, caplog):
     with caplog.at_level(logging.WARNING, logger='optimus'):
         assert os.path.exists(projectdir) == True
 
-        module_name = 'settings'
-        settings = import_settings(name=module_name, basedir=projectdir)
+        settings = i18n_template_settings(projectdir)
 
         assert settings.SITE_NAME == 'basic_i18n'
 
         # Init builder with default environment
         builder = PageBuilder(settings)
+        # Ensure i18n is enabled
+        assert list(builder.jinja_env.extensions.keys()) == [
+            'jinja2.ext.InternationalizationExtension',
+        ]
 
-        # TODO: FAILING since there still have an issue with settings import
-        # being memorized, conf loader correctly fill defined vars from
-        # settings but keep defined vars from previously imported settings
-        # (from past tests) so Dummy extensions from '02_get_environment' is
-        # still here but no i18n extension (as it should be).
-        assert list(builder.jinja_env.extensions.keys()) == []
+        # Define settings to view afterwards
+        assert hasattr(settings, 'PAGES_MAP') == True
+        pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
+        for pageview in pages_map.PAGES:
+            pageview.settings = settings
+        setattr(settings, 'PAGES', pages_map.PAGES)
 
-        if hasattr(settings, 'PAGES_MAP'):
-            pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
-            # Define settings to view afterwards
-            for pageview in pages_map.PAGES:
-                pageview.settings = settings
-            setattr(settings, 'PAGES', pages_map.PAGES)
-
+        # Get enabled catalog lang from enabled page views
+        translations = []
         for item in settings.PAGES:
-            builder.get_translation_for_item(item)
+            t = builder.get_translation_for_item(item)
+            translations.append(t.info()['language-team'])
 
-        assert 1 == 42
+        assert translations == [
+            'en_US <LL@li.org>',
+            'fr_FR <LL@li.org>',
+        ]
 
