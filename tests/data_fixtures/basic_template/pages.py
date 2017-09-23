@@ -3,10 +3,7 @@
 The project pages map for basic
 """
 from optimus.pages.views.base import PageViewBase
-#from optimus.conf import settings
-"""
-Page objects
-"""
+
 class Index(PageViewBase):
     """
     Index page

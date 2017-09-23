@@ -1,3 +1,3 @@
 """
-Just a dummy package for import tests
+Just a dummy package to test again importing modules.
 """

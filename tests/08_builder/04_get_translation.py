@@ -4,14 +4,12 @@ import shutil
 
 import pytest
 
-from jinja2.ext import Extension
-
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
-from optimus.start_project import ProjectStarter
 
 
-def test_get_translation(i18n_template_settings, fixtures_settings, temp_builds_dir, caplog):
+def test_get_translation(i18n_template_settings, fixtures_settings,
+                         temp_builds_dir, caplog):
     """
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
@@ -20,7 +18,7 @@ def test_get_translation(i18n_template_settings, fixtures_settings, temp_builds_
     project_name = 'i18n_sample'
     projectdir = os.path.join(basepath.strpath, project_name)
 
-    # Copy i18n sample from fixtures dir
+    # Copy sample from fixtures dir
     templatedir = os.path.join(fixtures_settings.fixtures_path, 'i18n_template')
     shutil.copytree(templatedir, projectdir)
 
