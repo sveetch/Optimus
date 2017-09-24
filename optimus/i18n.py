@@ -263,7 +263,7 @@ class I18NManager(object):
                 self.logger.error('There has been errors within the catalog, compilation has been aborted')
                 break
 
-            with open(self.get_mo_filepath(locale), 'wb') as fp:
+            with io.open(self.get_mo_filepath(locale), 'wb') as fp:
                 write_mo(fp, catalog, use_fuzzy=False)
 
             compiled.append(locale)

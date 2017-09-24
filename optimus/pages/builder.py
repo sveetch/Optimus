@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-TODO: Dont import settings module anymore, instead require it to passed as
-      argument
-"""
 import logging
+import io
 import os
 
 from jinja2 import Environment as Jinja2Environment
@@ -163,9 +160,8 @@ class PageBuilder(object):
         # Write it
         self.logger.debug(' - Writing to: %s', destination_path)
         if not self.dry_run:
-            fp = open(destination_path, 'w')
-            fp.write(content.encode('utf-8'))
-            fp.close()
+            with io.open(destination_path, 'w') as fp:
+                fp.write(content)
 
         return destination_path
 
