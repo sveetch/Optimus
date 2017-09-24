@@ -67,6 +67,9 @@ def minimal_basic_settings():
     like PROJECT_DIR, SOURCES_DIR, etc..
 
     This is a convenient way of importing settings without to import it.
+
+    WARNING: For sanity, following settings have to be identic to the ones
+             from ``data_fixtures/basic_template/settings.py``.
     """
     def settings_func(basedir):
         from optimus.conf.model import SettingsModel

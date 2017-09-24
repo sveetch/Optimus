@@ -1,0 +1,14 @@
+{% extends "skeleton.html" %}
+
+{% block base_content %}
+<div class="base-container">
+    <div class="center-container">
+        <div class="cell">
+            <div class="center-block">
+                <h1>{{ SITE.name }}</h1>
+                <h2>{% block content_title %}{% endblock %}</h2>
+                <p>{% block sub_content %}{% endblock %}</p>
+            </div>
+        </div>
+    </div>
+</div>{% endblock %}

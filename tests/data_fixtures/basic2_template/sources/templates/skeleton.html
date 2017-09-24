@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block meta_title %}{{ SITE.name }}{% endblock %}</title>
+    {% block metas_base %}{% endblock %}
+
+    {% include "_metas.html" %}
+
+    {% block base_css %}{% assets "app_css" %}
+        <link rel="stylesheet" href="{{ page_relative_position }}{{ ASSET_URL }}">
+    {% endassets %}{% endblock %}
+    {% block more_css %}{% endblock %}
+    {% block base_js %}{% assets "modernizr_js" %}
+        <script src="{{ page_relative_position }}{{ ASSET_URL }}"></script>
+    {% endassets %}{% endblock %}
+</head>
+
+<body class="{% block body_classes %}{% endblock %}"{% block body_attrs %}{% endblock %}>
+    {% block base_content %}{% endblock %}
+
+    {% block more_js %}{% assets "app_js" %}
+        <script src="{{ page_relative_position }}{{ ASSET_URL }}"></script>
+    {% endassets %}{% endblock %}
+</body>
+</html>
