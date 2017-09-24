@@ -26,6 +26,13 @@ from optimus.builder.assets import register_assets
             'sub/bar.html',
         ],
     ),
+    (
+        'i18n_template',
+        [
+            'index.html',
+            'index_fr_FR.html',
+        ],
+    ),
 ])
 def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
                     sample_fixture_name, attempted_destinations):
@@ -111,6 +118,13 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
             'index.html',
             'sub/foo.html',
             'sub/bar.html',
+        ],
+    ),
+    (
+        'i18n_template',
+        [
+            'index.html',
+            'index_fr_FR.html',
         ],
     ),
 ])
