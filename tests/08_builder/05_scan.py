@@ -6,7 +6,7 @@ import pytest
 
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
-from optimus.builder.assets import register_assets
+from optimus.assets.registry import register_assets
 
 
 @pytest.mark.parametrize('sample_fixture_name,attempted_templates', [

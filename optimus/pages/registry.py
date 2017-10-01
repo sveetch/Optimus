@@ -7,9 +7,10 @@ class PageRegistry(object):
     Index templates and memorize page destination that use them
 
     TODO:
-        @elements is a dict indexed on template names which contain destinations using them, it should be named 'templates'.
-        @get_pages_from_dependency() return a list of destinations using a template name, it should be named 'get_pages_from_templates'
-        @map_dest_to_page is dict indexed on destinations which contain page view
+        Docstring:
+            @elements is a dict indexed on template names which contain destinations using them, it should be named 'templates'.
+            @get_pages_from_dependency() return a list of destinations using a template name, it should be named 'get_pages_from_templates'
+            @map_dest_to_page is dict indexed on destinations which contain page view
     """
     def __init__(self, elements={}):
         self.elements = {}

@@ -2,7 +2,7 @@ import pytest
 
 from webassets import Bundle
 
-from optimus.builder.assets import AssetRegistry
+from optimus.assets.registry import AssetRegistry
 
 
 def test_empty():

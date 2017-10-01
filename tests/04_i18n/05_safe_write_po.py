@@ -5,7 +5,8 @@ import shutil
 
 import pytest
 
-from optimus.i18n import I18NManager
+from optimus.i18n.manager import I18NManager
+
 from babel.messages.catalog import Catalog, Message
 from babel.messages.pofile import read_po
 

@@ -1,7 +1,7 @@
 import pytest
 
 from optimus.exceptions import InvalidLanguageIdentifier
-from optimus.lang import LangBase
+from optimus.i18n.lang import LangBase
 
 
 def test_missing_code():

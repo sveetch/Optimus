@@ -11,7 +11,7 @@ from webassets.ext.jinja2 import AssetsExtension
 
 from optimus.exceptions import ViewImproperlyConfigured
 from optimus.pages.views.base import PageViewBase
-from optimus.lang import LangBase
+from optimus.i18n.lang import LangBase
 
 
 class DummySettings(object):

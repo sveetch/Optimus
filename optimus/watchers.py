@@ -2,7 +2,9 @@
 """
 Command line action to launch the project watcher
 
-TODO: Watcher may bug in case of an unbuilded project in some
+TODO: Test coverage (without using watchdog, just mock it)
+
+NOTE: Watcher may bug in case of an unbuilded project in some
       cases (like in DEBUG=False), this has to be verified
 """
 from pathtools.patterns import match_path

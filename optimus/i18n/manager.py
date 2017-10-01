@@ -259,6 +259,7 @@ class I18NManager(object):
                     errs = True
                     self.logger.warning('Error at line {0}: {1}'.format(message.lineno, error))
             # Don't overwrite previous MO file if there have been error
+            # TODO: Raise exception instead of logging error
             if errs:
                 self.logger.error('There has been errors within the catalog, compilation has been aborted')
                 break

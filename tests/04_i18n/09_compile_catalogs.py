@@ -7,7 +7,7 @@ import six
 
 import pytest
 
-from optimus.i18n import I18NManager
+from optimus.i18n.manager import I18NManager
 
 
 def test_compile_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,

@@ -8,7 +8,7 @@ import pytest
 
 from webassets import Bundle
 
-from optimus.builder.assets import register_assets
+from optimus.assets.registry import register_assets
 
 
 class DummySettings(object):

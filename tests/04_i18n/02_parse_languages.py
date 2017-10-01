@@ -1,6 +1,6 @@
 import pytest
 
-from optimus.i18n import I18NManager
+from optimus.i18n.manager import I18NManager
 
 
 @pytest.mark.parametrize('languages,attempted', [

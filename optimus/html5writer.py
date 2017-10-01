@@ -13,6 +13,7 @@ from docutils.writers import html4css1
 from docutils.core import publish_parts
 from docutils.parsers.rst import roles, directives, Directive
 
+
 class SemanticHTML5Writer(html4css1.Writer):
     """
     This docutils writer will use the SemanticHTML5Translator class below.
@@ -20,6 +21,7 @@ class SemanticHTML5Writer(html4css1.Writer):
     def __init__(self):
         html4css1.Writer.__init__(self)
         self.translator_class = SemanticHTML5Translator
+
 
 class SemanticHTML5Translator(html4css1.HTMLTranslator):
     """
@@ -74,22 +76,28 @@ class kbd(nodes.Inline, nodes.TextElement):
 
 nodes._add_node_class_names('kbd')
 
+
 def inline_roles(role, raw, text, *args):
     if role == 'kbd':
         return [kbd('kbd', text)], []
     elif role == 'var':
         return [nodes.literal('var', text)], []
 
+
 roles.register_local_role('kbd', inline_roles)
 roles.register_local_role('var', inline_roles)
+
 
 # FIXME: this has to be lowercase for some reason
 class abbreviation(nodes.Inline, nodes.TextElement):
     """Node for abbreviations with explanations."""
 
+
 nodes._add_node_class_names('abbreviation')
 
+
 _abbr_re = re.compile('\((.*)\)$', re.S)
+
 
 def abbr_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     text = utils.unescape(text)

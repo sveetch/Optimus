@@ -4,7 +4,7 @@ import shutil
 
 import pytest
 
-from optimus.i18n import I18NManager
+from optimus.i18n.manager import I18NManager
 
 
 def test_init_locales_dir_success(minimal_i18n_settings, caplog,

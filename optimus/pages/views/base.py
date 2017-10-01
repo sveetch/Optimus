@@ -7,9 +7,9 @@ import six
 
 from jinja2 import meta as Jinja2Meta
 
-from optimus.utils import UnicodeMixin
-from optimus.lang import LangBase
 from optimus.exceptions import ViewImproperlyConfigured
+from optimus.utils import UnicodeMixin
+from optimus.i18n.lang import LangBase
 
 
 class PageViewBase(UnicodeMixin):
