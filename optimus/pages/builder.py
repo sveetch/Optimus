@@ -120,6 +120,9 @@ class PageBuilder(object):
         Scan all the given pages to set their dependancies
 
         Return all used templates from pages and their template dependancies
+
+        TODO: Implement a 'settings' kwarg to pass to scan_item to connect
+        settings object to view.
         """
         self.logger.info("Starting page builds")
 

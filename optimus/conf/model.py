@@ -109,10 +109,20 @@ class SettingsModel(object):
         """
         # Templates watcher settings
         if not hasattr(self, "WATCHER_TEMPLATES_PATTERNS"):
-            self.WATCHER_TEMPLATES_PATTERNS = {}
+            self.WATCHER_TEMPLATES_PATTERNS = {
+                'patterns': ['*.html'],
+                'ignore_patterns': None,
+                'ignore_directories': False,
+                'case_sensitive': False,
+            }
         # Assets watcher settings
         if not hasattr(self, "WATCHER_ASSETS_PATTERNS"):
-            self.WATCHER_ASSETS_PATTERNS = {}
+            self.WATCHER_ASSETS_PATTERNS = {
+                'patterns': ['*.css', '*.js', '*.json'],
+                'ignore_patterns': None,
+                'ignore_directories': False,
+                'case_sensitive': False,
+            }
 
     def _default_webassets(self):
         """

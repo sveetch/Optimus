@@ -28,7 +28,8 @@ def watch(args):
     from optimus.conf.registry import settings
 
     # Only load optimus stuff after the settings module name has been retrieved
-    from optimus.watchers import TemplatesWatchEventHandler, AssetsWatchEventHandler
+    from optimus.watchers.templates import TemplatesWatchEventHandler
+    from optimus.watchers.assets import AssetsWatchEventHandler
     from optimus.builder.assets import register_assets
     from optimus.builder.pages import PageBuilder
     from optimus.utils import initialize, display_settings
@@ -53,27 +54,10 @@ def watch(args):
 
     observer = Observer()
 
-    # Templates watcher settings
-    watcher_templates_patterns = {
-        'patterns': ['*.html'],
-        'ignore_patterns': None,
-        'ignore_directories': False,
-        'case_sensitive': False,
-    }
-    watcher_templates_patterns.update(settings.WATCHER_TEMPLATES_PATTERNS)
-    # Assets watcher settings
-    watcher_assets_patterns = {
-        'patterns': ['*.css', '*.js', '*.json'],
-        'ignore_patterns': None,
-        'ignore_directories': False,
-        'case_sensitive': False,
-    }
-    watcher_assets_patterns.update(settings.WATCHER_ASSETS_PATTERNS)
-
     # Init templates and assets event watchers
-    templates_event_handler = TemplatesWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_templates_patterns)
+    templates_event_handler = TemplatesWatchEventHandler(settings, pages_env, **settings.WATCHER_TEMPLATES_PATTERNS)
     if assets_env is not None:
-        assets_event_handler = AssetsWatchEventHandler(settings, root_logger, assets_env, pages_env, **watcher_assets_patterns)
+        assets_event_handler = AssetsWatchEventHandler(settings, assets_env, pages_env, **settings.WATCHER_ASSETS_PATTERNS)
     # Registering event watchers and start to watch
     observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
     if assets_env is not None:

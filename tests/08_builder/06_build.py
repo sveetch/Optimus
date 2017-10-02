@@ -59,7 +59,7 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     settings = minimal_basic_settings(projectdir)
 
     # Enabled production mode for webassets without url expire in a custom
-    # cache dir, so we have solid asset file name for comparaison
+    # cache dir, so we have stable asset filename for comparaison
     cache_dir = os.path.join(projectdir, 'webassets-cache')
     os.makedirs(cache_dir)
     settings.DEBUG = False
