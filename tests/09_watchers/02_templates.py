@@ -43,8 +43,8 @@ def test_on_created(minimal_basic_settings, fixtures_settings, temp_builds_dir):
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
 
     # Connect views to settings and registry
-    # TODO: This is not obvious/easy/natural/pratical to need to perform this
-    # manually, builder should implement a method to connect every knowed pages
+    # TODO: This is painfull to need to perform this
+    # manually. Builder should implements a method to connect every knowed pages
     # from pages map to their settings. 'scan_bulk' itself is only required
     # within watcher that needs template introspection to find dependencies
     for pageview in pages_map.PAGES:
@@ -58,10 +58,12 @@ def test_on_created(minimal_basic_settings, fixtures_settings, temp_builds_dir):
     assert handler.on_created(Event('foo.txt')) == []
     assert handler.on_created(Event('bar.html')) == []
 
+    # Unexisting file in template dir
     assert handler.on_created(
         Event(os.path.join(settings.TEMPLATES_DIR, 'bar.html'))
     ) == []
 
+    # All view templates directly used in sample views
     assert sorted(handler.on_created(
         Event(os.path.join(settings.TEMPLATES_DIR, 'skeleton.html'))
     )) == addbuildir(settings.PUBLISH_DIR, sorted([
@@ -70,4 +72,10 @@ def test_on_created(minimal_basic_settings, fixtures_settings, temp_builds_dir):
         'sub/foo.html',
     ]))
 
-    assert 1 == 42
+    # Only a base template for views from sub/
+    assert sorted(handler.on_created(
+        Event(os.path.join(settings.TEMPLATES_DIR, 'sub', 'base.html'))
+    )) == addbuildir(settings.PUBLISH_DIR, sorted([
+        'sub/bar.html',
+        'sub/foo.html',
+    ]))
