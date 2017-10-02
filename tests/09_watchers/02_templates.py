@@ -62,12 +62,12 @@ def test_on_created(minimal_basic_settings, fixtures_settings, temp_builds_dir):
         Event(os.path.join(settings.TEMPLATES_DIR, 'bar.html'))
     ) == []
 
-    assert handler.on_created(
+    assert sorted(handler.on_created(
         Event(os.path.join(settings.TEMPLATES_DIR, 'skeleton.html'))
-    ) == addbuildir(settings.PUBLISH_DIR, [
+    )) == addbuildir(settings.PUBLISH_DIR, sorted([
+        'index.html',
         'sub/bar.html',
         'sub/foo.html',
-        'index.html',
-    ])
+    ]))
 
     assert 1 == 42
