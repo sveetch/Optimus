@@ -56,7 +56,6 @@ def test_scan_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     # Collect finded templates for each defined page view
     knowed = set([])
     for pageview in pages_map.PAGES:
-        pageview.settings = settings
         found = builder.scan_item(pageview)
         knowed.update(found)
 
@@ -107,10 +106,6 @@ def test_scan_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     assets_env = register_assets(settings)
     builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
-
-    # Register settings to pages
-    for pageview in pages_map.PAGES:
-        pageview.settings = settings
 
     # Collect finded templates for each defined page view
     knowed = builder.scan_bulk(pages_map.PAGES)

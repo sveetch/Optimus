@@ -42,13 +42,7 @@ def test_on_created(minimal_basic_settings, fixtures_settings, temp_builds_dir):
     pages_builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
 
-    # Connect views to settings and registry
-    # TODO: This is painfull to need to perform this
-    # manually. Builder should implements a method to connect every knowed pages
-    # from pages map to their settings. 'scan_bulk' itself is only required
-    # within watcher that needs template introspection to find dependencies
-    for pageview in pages_map.PAGES:
-        pageview.settings = settings
+    # Fill registry
     pages_builder.scan_bulk(pages_map.PAGES)
 
     handler = TemplatesWatchEventHandler(settings, pages_builder,

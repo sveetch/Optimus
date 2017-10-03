@@ -14,6 +14,7 @@ except ImportError:
     babel_support = None
 
 from optimus.pages.registry import PageRegistry
+from optimus.exceptions import ViewImproperlyConfigured
 
 
 class PageBuilder(object):
@@ -111,6 +112,12 @@ class PageBuilder(object):
 
         Return a list of all used templates by the page
         """
+        # Connect stored settings to page if not allready set
+        try:
+            page_item.settings
+        except ViewImproperlyConfigured:
+            page_item.settings = self.settings
+
         self.logger.info(' Scanning page: %s', page_item.get_destination())
 
         return page_item.introspect(self.jinja_env)
@@ -144,6 +151,12 @@ class PageBuilder(object):
 
         Return the destination path of the builded page
         """
+        # Connect stored settings to page if not allready set
+        try:
+            page_item.settings
+        except ViewImproperlyConfigured:
+            page_item.settings = self.settings
+
         self.logger.info(' Building page: %s', page_item.get_destination())
 
         # Optional i18n
