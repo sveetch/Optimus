@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Templates watcher handler
-
-NOTE: Watcher may bug in case of an unbuilded project in some
-      cases (like in DEBUG=False), this has to be verified
 """
 import logging
 
@@ -26,29 +23,9 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
         super(TemplatesWatchEventHandler, self).__init__(*args, **kwargs)
 
-    def on_moved(self, event):
-        # We are only interested for the destination
-        if match_path(event.dest_path,
-                included_patterns=self.patterns,
-                excluded_patterns=self.ignore_patterns,
-                case_sensitive=self.case_sensitive):
-            self.logger.debug("Change detected from a move on: %s", event.dest_path)
-
-            return self.build_for_item(event.dest_path)
-
-    def on_created(self, event):
-        self.logger.debug("Change detected from a create on: %s", event.src_path)
-
-        return self.build_for_item(event.src_path)
-
-    def on_modified(self, event):
-        self.logger.debug("Change detected from an edit on: %s", event.src_path)
-
-        return self.build_for_item(event.src_path)
-
     def build_for_item(self, path):
         """
-        (Re)build all pages using the changed template
+        (Re)build all pages using given template path
 
         ``path`` argument is a template path
         """
@@ -64,3 +41,25 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             built.extend(builds)
 
         return built
+
+    def on_moved(self, event):
+        # We are only interested for the destination
+        if match_path(event.dest_path,
+                included_patterns=self.patterns,
+                excluded_patterns=self.ignore_patterns,
+                case_sensitive=self.case_sensitive):
+            self.logger.debug("Change detected from a move on: %s", event.dest_path)
+
+            return self.build_for_item(event.dest_path)
+
+        return []
+
+    def on_created(self, event):
+        self.logger.debug("Change detected from a create on: %s", event.src_path)
+
+        return self.build_for_item(event.src_path)
+
+    def on_modified(self, event):
+        self.logger.debug("Change detected from an edit on: %s", event.src_path)
+
+        return self.build_for_item(event.src_path)

@@ -57,6 +57,16 @@ def filedescriptor():
         return "wb"
     return "w"
 
+@pytest.fixture(scope="function")
+def prepend_items():
+    """
+    Return a function than prepend any item from 'paths' list with 'prefix'
+    """
+    def prepend_func(prefix, paths):
+        return [os.path.join(prefix, item) for item in paths]
+
+    return prepend_func
+
 
 @pytest.fixture(scope="function")
 def minimal_basic_settings():
@@ -68,7 +78,7 @@ def minimal_basic_settings():
 
     This is a convenient way of importing settings without to import it.
 
-    WARNING: For sanity, following settings have to be identic to the ones
+    WARNING: For sanity, following settings have to be identic to those ones
              from ``data_fixtures/basic_template/settings.py``.
     """
     def settings_func(basedir):
@@ -147,7 +157,7 @@ def i18n_template_settings():
     Alike 'minimal_basic_settings' return a function to load basic i18n
     settings.
 
-    WARNING: For sanity, following settings have to be identic to the ones
+    WARNING: For sanity, following settings have to be identic to those ones
              from ``data_fixtures/basic_i18n/settings.py``.
     """
     def settings_func(basedir):
