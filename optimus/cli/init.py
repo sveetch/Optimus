@@ -7,7 +7,7 @@ from string import ascii_letters, digits
 
 from argh import arg, CommandError
 
-from optimus.logs import init_logging
+from optimus.oldlogs import init_logging
 from optimus.start_project import ProjectStarter
 
 @arg('name', help="Project's name to use, must be a valid python module name")

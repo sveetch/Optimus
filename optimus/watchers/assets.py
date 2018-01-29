@@ -57,7 +57,7 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         return built
 
     def on_moved(self, event):
-        # We are only interested for the destination
+        # We are only interested for destination
         if match_path(event.dest_path,
                 included_patterns=self.patterns,
                 excluded_patterns=self.ignore_patterns,

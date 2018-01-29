@@ -6,7 +6,7 @@ import datetime, os
 
 from argh import arg
 
-from optimus.logs import init_logging
+from optimus.oldlogs import init_logging
 
 @arg('-s', '--settings', default='settings', help="Python path to the settings module")
 @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")

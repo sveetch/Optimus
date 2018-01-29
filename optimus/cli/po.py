@@ -6,7 +6,7 @@ import datetime, os
 
 from argh import arg
 
-from optimus.logs import init_logging
+from optimus.oldlogs import init_logging
 from optimus.i18n import I18NManager
 
 @arg('-i', '--init', default=False, help="Initialize structure, create template catalog (POT) and initialize catalogs (PO)")

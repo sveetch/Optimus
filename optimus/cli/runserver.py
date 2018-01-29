@@ -9,7 +9,7 @@ from watchdog.observers import Observer
 from argh import arg
 from argh.exceptions import CommandError
 
-from optimus.logs import init_logging
+from optimus.oldlogs import init_logging
 
 try:
     import cherrypy

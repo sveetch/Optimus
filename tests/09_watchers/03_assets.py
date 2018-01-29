@@ -88,7 +88,6 @@ def test_events(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     # Dummy file out of template dir
     assert handler.on_created(Event('foo.txt')) == []
     assert handler.on_created(Event('nope.js')) == []
-    assert handler.on_moved(Event('nope1.js', 'nope2.js')) == []
 
     assert sorted(handler.on_created(
         Event('js/app.js')
@@ -109,6 +108,8 @@ def test_events(minimal_basic_settings, fixtures_settings, temp_builds_dir,
             'sub/foo.html',
         ])
     )
+
+    assert handler.on_moved(Event('nope1.js', 'nope2.js')) == []
 
     assert sorted(handler.on_moved(
         Event('dummy', 'css/app.css')
