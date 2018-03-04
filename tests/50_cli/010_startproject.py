@@ -9,7 +9,7 @@ from click.testing import CliRunner
 from optimus.cliclick.console_script import cli_frontend
 
 
-def test_basic_sample(caplog):
+def test_start_basic_sample(caplog):
     """
     Testing basic sample install
     """
@@ -49,7 +49,7 @@ def test_basic_sample(caplog):
         assert result.exit_code == 0
 
 
-def test_i18n_sample(caplog):
+def test_start_i18n_sample(caplog):
     """
     Testing i18n sample install
     """
@@ -91,7 +91,7 @@ def test_i18n_sample(caplog):
         assert result.exit_code == 0
 
 
-def test_dryrun(caplog):
+def test_start_dryrun(caplog):
     """
     Testing basic sample with dry run mode
     """

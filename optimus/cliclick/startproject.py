@@ -45,7 +45,7 @@ def startproject_command(context, name, template, dry_run):
                 return
 
     if dry_run:
-        logger.warning("'Dry run' mode enabled")
+        logger.warning("'Dry run mode enabled")
 
     # TODO: optionnal command option to specify another path where the project
     #       will be created

@@ -2,11 +2,14 @@
 Some fixture methods
 """
 import os
+import sys
+
 import pytest
 
 import six
 
 import optimus
+from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 
 
 class FixturesSettingsTestMixin(object):
@@ -202,3 +205,19 @@ def i18n_template_settings():
         return settings
 
     return settings_func
+
+
+@pytest.fixture(scope="function")
+def flush_settings():
+    """
+    Flush everything about previous imported settings so each test can import
+    its own settings without inheriting from import cache
+    """
+    if 'settings' in sys.modules:
+        del sys.modules['settings']
+    if 'optimus.conf.registry' in sys.modules:
+        del sys.modules['optimus.conf.registry']
+    if PROJECT_DIR_ENVVAR in os.environ:
+        del os.environ[PROJECT_DIR_ENVVAR]
+    if SETTINGS_NAME_ENVVAR in os.environ:
+        del os.environ[SETTINGS_NAME_ENVVAR]

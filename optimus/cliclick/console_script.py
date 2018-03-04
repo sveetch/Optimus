@@ -7,7 +7,7 @@ from optimus.cliclick.version import version_command
 #from optimus.cliclick.build import build
 #from optimus.cliclick.watch import watch
 from optimus.cliclick.startproject import startproject_command
-#from optimus.cliclick.po import po
+from optimus.cliclick.po import po_command
 #from optimus.cliclick.runserver import runserver
 from optimus.logs import init_logger
 
@@ -50,6 +50,7 @@ def cli_frontend(ctx, verbose):
 
 # Attach commands methods to the main grouper
 cli_frontend.add_command(version_command, name="version")
+cli_frontend.add_command(po_command, name="po")
 #cli_frontend.add_command(compile_command, name="compile")
 #cli_frontend.add_command(watch_command, name="watch")
 cli_frontend.add_command(startproject_command, name="init")
