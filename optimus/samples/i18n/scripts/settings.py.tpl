@@ -59,5 +59,5 @@ FILES_TO_SYNC = (
     #(SOURCE, DESTINATION)
     #('images', 'images'),
     #('fonts', 'fonts'),
-    ('css', 'css'),
+    'css',
 )

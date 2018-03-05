@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-import sys
 
 import pytest
 
@@ -9,7 +8,6 @@ import click
 from click.testing import CliRunner
 
 from optimus.cliclick.console_script import cli_frontend
-from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 
 
 def test_po_init(caplog, flush_settings):

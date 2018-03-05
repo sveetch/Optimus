@@ -1,24 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Command line action to manage translation catalogs
+Command line action to build project pages
 """
 import os
 import logging
 import click
 
 from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
-from optimus.start_project import ProjectStarter
-from optimus.i18n.manager import I18NManager
-from optimus.utils import display_settings
+from optimus.utils import initialize, display_settings
+from optimus.conf.loader import import_pages_module
+from optimus.pages.builder import PageBuilder
+from optimus.assets.registry import register_assets
 
 
-@click.command('po', short_help="Manage project translation catalogs")
-@click.option('--init', is_flag=True,
-              help=("Initialize structure, create template catalog (POT) and initialize catalogs (PO)"))
-@click.option('--update', is_flag=True,
-              help=("Extract translations, update the template catalog (POT) and update the catalogs (PO)"))
-@click.option('--compile', is_flag=True,
-              help=("Process to compilation of catalogs"))
+@click.command('build', short_help="Build project pages")
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
               help=("Base directory where to search for settings file."),
               default=os.getcwd())
@@ -26,9 +21,9 @@ from optimus.utils import display_settings
               help=(("Settings file name to use without '.py' extension")),
               default="settings")
 @click.pass_context
-def po_command(context, init, update, compile, basedir, settings_name):
+def build_command(context, basedir, settings_name):
     """
-    Manage project translation catalogs for all registred languages
+    Build project pages
     """
     logger = logging.getLogger("optimus")
 
@@ -44,16 +39,12 @@ def po_command(context, init, update, compile, basedir, settings_name):
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
 
-    # Proceed to operations
-    i18n = I18NManager(settings)
+    initialize(settings)
 
-    if init or update or compile:
-        i18n.init_locales_dir()
-        i18n.build_pot(force=update)
-        i18n.init_catalogs()
+    # Init webassets and builder
+    assets_env = register_assets(settings)
+    builder = PageBuilder(settings, assets_env=assets_env)
+    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
 
-    if update:
-        i18n.update_catalogs()
-
-    if compile:
-        i18n.compile_catalogs()
+    # Collect finded templates for each defined page view
+    buildeds = builder.build_bulk(pages_map.PAGES)

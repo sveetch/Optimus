@@ -49,5 +49,5 @@ BUNDLES = {
 # Sources files or directory to synchronize within the static directory
 FILES_TO_SYNC = (
     #(SOURCE, DESTINATION)
-    ('css', 'css'),
+    'css',
 )

@@ -142,6 +142,7 @@ def initialize(settings):
 
     if settings.FILES_TO_SYNC is not None:
         for item in settings.FILES_TO_SYNC:
+            print(item)
             synchronize_assets_sources(settings.SOURCES_DIR,
                                        settings.STATIC_DIR, item, None)
 
