@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Command line action to build project pages
+Command line action to watch project sources
 """
 import os
 import logging
+import time
 
 import click
+
+from watchdog.observers import Observer
 
 from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.utils import initialize, display_settings
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
+from optimus.watchers.templates import TemplatesWatchEventHandler
+from optimus.watchers.assets import AssetsWatchEventHandler
 
 
-@click.command('build', short_help="Build project pages")
+@click.command('watch', short_help="Watch for changes in project sources")
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
               help=("Base directory where to search for settings file."),
               default=os.getcwd())
@@ -22,9 +27,9 @@ from optimus.assets.registry import register_assets
               help=(("Settings file name to use without '.py' extension")),
               default="settings")
 @click.pass_context
-def build_command(context, basedir, settings_name):
+def watch_command(context, basedir, settings_name):
     """
-    Build project pages
+    Watch for changes in project sources to automatically build project ressources
     """
     logger = logging.getLogger("optimus")
 
@@ -48,4 +53,28 @@ def build_command(context, basedir, settings_name):
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
 
     # Proceed to page building from registered pages
+    logger.debug('Trigger pages build to start')
     buildeds = builder.build_bulk(pages_map.PAGES)
+
+    builder.scan_bulk(pages_map.PAGES)
+
+    observer = Observer()
+
+    # Init templates and assets event watchers
+    templates_event_handler = TemplatesWatchEventHandler(settings, builder, **settings.WATCHER_TEMPLATES_PATTERNS)
+    if assets_env is not None:
+        assets_event_handler = AssetsWatchEventHandler(settings, assets_env, builder, **settings.WATCHER_ASSETS_PATTERNS)
+    # Registering event watchers and start to watch
+    observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
+    if assets_env is not None:
+        observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
+
+    logger.warning('Starting to watch sources, use CTRL+C to stop it')
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        logger.warning('Stopping watcher..')
+        observer.stop()
+    observer.join()
