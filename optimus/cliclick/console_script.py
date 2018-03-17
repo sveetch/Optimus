@@ -8,7 +8,7 @@ from optimus.cliclick.startproject import startproject_command
 from optimus.cliclick.build import build_command
 from optimus.cliclick.watch import watch_command
 from optimus.cliclick.po import po_command
-#from optimus.cliclick.runserver import runserver_command
+from optimus.cliclick.runserver import runserver_command
 from optimus.logs import init_logger
 
 
@@ -54,4 +54,4 @@ cli_frontend.add_command(startproject_command, name="init")
 cli_frontend.add_command(build_command, name="build")
 cli_frontend.add_command(watch_command, name="watch")
 cli_frontend.add_command(po_command, name="po")
-#cli_frontend.add_command(runserver_command, name="runserver")
+cli_frontend.add_command(runserver_command, name="runserver")

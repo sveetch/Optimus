@@ -7,7 +7,6 @@ import logging
 import click
 
 from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
-from optimus.start_project import ProjectStarter
 from optimus.i18n.manager import I18NManager
 from optimus.utils import display_settings
 
