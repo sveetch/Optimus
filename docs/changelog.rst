@@ -13,6 +13,9 @@ Version 0.9.0 - Unreleased
 
 Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage using pytest and tox.
 
+* Drop 'argh' in favor of 'click' for commandline scripts, close #23;
+* Big cleaning for sanity and update for Python3 support, close #22;
+
 Version 0.8.2 - 2017/01/15
 --------------------------
 

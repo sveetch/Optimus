@@ -30,8 +30,8 @@ Also you can install it directly on your system without `virtualenv`_, just use 
 
     sudo pip install optimus
 
-Operator system
-===============
+Operating system
+================
 
 Optimus has been developed for Linux systems, it works also on Windows and MacOSX but you should have some tasks that will differs from the present documentation.
 
