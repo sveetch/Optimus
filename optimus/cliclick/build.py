@@ -16,10 +16,12 @@ from optimus.assets.registry import register_assets
 
 @click.command('build', short_help="Build project pages")
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
-              help=("Base directory where to search for settings file."),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
               default=os.getcwd())
 @click.option('--settings-name', metavar='NAME',
-              help=(("Settings file name to use without '.py' extension")),
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
               default="settings")
 @click.pass_context
 def build_command(context, basedir, settings_name):

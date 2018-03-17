@@ -15,7 +15,8 @@ from optimus.start_project import ProjectStarter
 @click.argument('name')
 @click.option('--template', metavar='NAME',
               help=(("A template name either 'basic' or 'i18n'. Also a valid "
-                     "Python path to an external template can be given.")),
+                     "Python path to an external template can be given."
+                     "Default value is 'basic'.")),
               default="basic")
 @click.option('--dry-run', is_flag=True,
               help=("Dry run mode will perform all processus but will not "

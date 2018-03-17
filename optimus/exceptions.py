@@ -57,3 +57,10 @@ class ViewImproperlyConfigured(OptimusBaseException):
     instanciated with bad value or missing parameters.
     """
     pass
+
+
+class InvalidHostname(OptimusBaseException):
+    """
+    Exception to be raised when a parsed hostname is invalid.
+    """
+    pass

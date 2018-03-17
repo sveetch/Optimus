@@ -21,10 +21,12 @@ from optimus.watchers.assets import AssetsWatchEventHandler
 
 @click.command('watch', short_help="Watch for changes in project sources")
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
-              help=("Base directory where to search for settings file."),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
               default=os.getcwd())
 @click.option('--settings-name', metavar='NAME',
-              help=(("Settings file name to use without '.py' extension")),
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
               default="settings")
 @click.pass_context
 def watch_command(context, basedir, settings_name):

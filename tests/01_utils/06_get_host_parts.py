@@ -7,7 +7,8 @@ import click
 from click.testing import CliRunner
 
 from optimus.cliclick.console_script import cli_frontend
-from optimus.cliclick.runserver import InvalidHostname, get_host_parts
+from optimus.exceptions import InvalidHostname
+from optimus.utils import display_settings, get_host_parts
 
 
 @pytest.mark.parametrize('hostname,ip,port', [

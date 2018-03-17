@@ -7,7 +7,9 @@ import logging
 import click
 
 from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
-from optimus.utils import display_settings
+from optimus.exceptions import InvalidHostname
+from optimus.utils import display_settings, get_host_parts
+
 
 try:
     import cherrypy
@@ -16,60 +18,25 @@ except ImportError:
 else:
     CHERRYPY_AVAILABLE = True
 
-class InvalidHostname(ValueError):
-    pass
-
-
-def get_host_parts(hostname, default_name='127.0.0.1', default_port=80):
-    """
-    Parse given hostname
-
-    Arguments:
-        hostname (str): A valid hostname containing a valid host name with
-            optional port separated with a ``:``.
-
-    Keyword Arguments:
-        default_name (str): Default hostname when none is given. Default value
-            is ``127.0.0.1``.
-        default_port (int): Default port when none is given. Default value is
-            ``80``.
-
-    Returns:
-        tuple: Host name (string) and port (integer).
-    """
-    name = None
-    port = None
-    hostparts = hostname.split(':')
-
-    if len(hostparts)>2:
-        raise InvalidHostname("Invalid hostname format, too many ':'")
-    elif len(hostparts)==2:
-        name, port = hostparts
-        if not port or not name:
-            raise InvalidHostname("Invalid hostname format, address or port is empty")
-
-        try:
-            port = int(port)
-        except ValueError:
-            raise InvalidHostname("Invalid port given: {0}".format(port))
-    else:
-        name = hostparts[0]
-
-
-    return (name or default_name, port or default_port)
 
 
 @click.command('runserver', short_help=("Launch a simple HTTP server on "
                                         "built project"))
 @click.argument('hostname', default="127.0.0.1:80")
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
-              help=("Base directory where to search for settings file."),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
               default=os.getcwd())
 @click.option('--settings-name', metavar='NAME',
-              help=("Settings file name to use without '.py' extension"),
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
               default="settings")
+@click.option('--index', metavar='FILENAME',
+              help=("Filename to use as directory index. "
+                    "Default value is 'index.html'."),
+              default="index.html")
 @click.pass_context
-def runserver_command(context, basedir, settings_name, hostname):
+def runserver_command(context, basedir, settings_name, index, hostname):
     """
     Launch a simple HTTP server rooted on the project build directory
 
@@ -129,7 +96,7 @@ def runserver_command(context, basedir, settings_name, hostname):
     # Configure webapp static
     conf = {
         '/': {
-            'tools.staticdir.index': 'index.html', # Option to give another one
+            'tools.staticdir.index': index,
             'tools.staticdir.on': True,
             'tools.staticdir.dir': settings.PUBLISH_DIR,
         },

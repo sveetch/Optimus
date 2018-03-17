@@ -19,10 +19,12 @@ from optimus.utils import display_settings
 @click.option('--compile', is_flag=True,
               help=("Process to compilation of catalogs"))
 @click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
-              help=("Base directory where to search for settings file."),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
               default=os.getcwd())
 @click.option('--settings-name', metavar='NAME',
-              help=(("Settings file name to use without '.py' extension")),
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
               default="settings")
 @click.pass_context
 def po_command(context, init, update, compile, basedir, settings_name):
