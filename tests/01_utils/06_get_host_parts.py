@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
-
 import pytest
 
-import click
-from click.testing import CliRunner
-
-from optimus.cliclick.console_script import cli_frontend
 from optimus.exceptions import InvalidHostname
-from optimus.utils import display_settings, get_host_parts
+from optimus.utils import get_host_parts
 
 
 @pytest.mark.parametrize('hostname,ip,port', [

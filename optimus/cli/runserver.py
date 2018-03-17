@@ -2,88 +2,104 @@
 """
 Command line action to launch a simple HTTP server rooted on the project build directory
 """
-import os, time
+import os
+import logging
+import click
 
-from watchdog.observers import Observer
+from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus.exceptions import InvalidHostname
+from optimus.utils import display_settings, get_host_parts
 
-from argh import arg
-from argh.exceptions import CommandError
-
-from optimus.oldlogs import init_logging
 
 try:
     import cherrypy
 except ImportError:
-    @arg('hostname', help="Hostname to bind the server to, use PORT or ADDRESS:PORT")
-    @arg('-s', '--settings', default='settings', help='Python path to the settings module')
-    @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
-    @arg('--logfile', default=None, help='A filepath that if setted, will be used to save logs output')
-    @arg('--silent', default=False, help="If setted, logs output won't be printed out")
-    def runserver(args):
-        """
-        Launch the project watcher to automatically re-build knowed elements on changes
-        """
-        root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
-        raise CommandError("Error: Unable to import CherryPy, you should install it with 'pip install cherrypy'")
-
+    CHERRYPY_AVAILABLE = False
 else:
-    @arg('hostname', help="Hostname to bind the server to, use PORT or ADDRESS:PORT")
-    @arg('-s', '--settings', default='settings', help='Python path to the settings module')
-    @arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
-    @arg('--logfile', default=None, help='A filepath that if setted, will be used to save logs output')
-    @arg('--silent', default=False, help="If setted, logs output won't be printed out")
-    def runserver(args):
-        """
-        Launch the project watcher to automatically re-build knowed elements on changes
-        """
-        root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
+    CHERRYPY_AVAILABLE = True
 
-        from optimus.conf.loader import (SETTINGS_NAME_ENVVAR,
-                                         PROJECT_DIR_ENVVAR)
 
-        os.environ[PROJECT_DIR_ENVVAR] = os.getcwd() # Should come from an command arg
-        os.environ[SETTINGS_NAME_ENVVAR] = args.settings
-        from optimus.conf.registry import settings
 
-        # Only load optimus stuff after the settings module name has been retrieved
-        from optimus.utils import display_settings
+@click.command('runserver', short_help=("Launch a simple HTTP server on "
+                                        "built project"))
+@click.argument('hostname', default="127.0.0.1:80")
+@click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
+              default=os.getcwd())
+@click.option('--settings-name', metavar='NAME',
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
+              default="settings")
+@click.option('--index', metavar='FILENAME',
+              help=("Filename to use as directory index. "
+                    "Default value is 'index.html'."),
+              default="index.html")
+@click.pass_context
+def runserver_command(context, basedir, settings_name, index, hostname):
+    """
+    Launch a simple HTTP server rooted on the project build directory
 
-        display_settings(settings, ('DEBUG', 'PROJECT_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL'))
+    Default behavior is to bind server on IP address '127.0.0.1' and port
+    '80'. You may give another host to bind to as argument 'HOSTNAME'.
 
-        # Parse given hostname
-        address, port = ("127.0.0.1", "80")
-        _splits = args.hostname.split(':')
-        if len(_splits)>2:
-            raise CommandError("Error: Invalid hostname format, too many ':'")
-        elif len(_splits)==2:
-            address, port = _splits
-            if not port or not address:
-                raise CommandError("Error: Invalid hostname format, address or port is empty")
-        else:
-            port = _splits[0]
+    'HOSTNAME' can be either a simple address like '0.0.0.0' or an address and
+    port like '0.0.0.0:8001'. If no custom port is given, '80' is used as default.
+    """
+    logger = logging.getLogger("optimus")
 
-        try:
-            int(port)
-        except ValueError:
-            raise CommandError("Error: Invalid port given: {0}".format(port))
+    if not CHERRYPY_AVAILABLE:
+        logger.error(("Unable to import CherryPy, you need to install it "
+                      "with 'pip install cherrypy'"))
+        raise click.Abort()
 
-        if not os.path.exists(settings.PUBLISH_DIR):
-            raise CommandError("Error: Publish directory does not exist yet, you should build it before")
+    # Set required environment variables to load settings
+    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+        os.environ[PROJECT_DIR_ENVVAR] = basedir
+    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+        os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
-        # Run server with publish directory served with tools.staticdir
-        print("Running HTTP server on address {address} with port {port}").format(address=address, port=port)
+    # Load current project settings
+    from optimus.conf.registry import settings
 
-        cherrypy.config.update({
-            'server.socket_host': address,
-            'server.socket_port': int(port),
-            'engine.autoreload_on': False,
-        })
+    # Debug output
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
+                                'TEMPLATES_DIR', 'LOCALES_DIR'))
 
-        conf = {
-            '/': {
-                'tools.staticdir.index': 'index.html',
-                'tools.staticdir.on': True,
-                'tools.staticdir.dir': settings.PUBLISH_DIR,
-            },
-        }
-        cherrypy.quickstart(None, '/', config=conf)
+    # Get hostname to bind to
+    try:
+        address, port = get_host_parts(hostname)
+    except InvalidHostname as e:
+        logger.error(e)
+        raise click.Abort()
+
+    # Check project publish directory exists
+    if not os.path.exists(settings.PUBLISH_DIR):
+        logger.error(("Publish directory does not exist yet, you need to "
+                      "build it before"))
+        raise click.Abort()
+
+    # Run server with publish directory served with tools.staticdir
+    logger.info(("Running HTTP server on "
+                 "address {address} with port {port}").format(
+                    address=address,
+                    port=port,
+               ))
+
+    # Configure webapp server
+    cherrypy.config.update({
+        'server.socket_host': address,
+        'server.socket_port': port,
+        'engine.autoreload_on': False,
+    })
+
+    # Configure webapp static
+    conf = {
+        '/': {
+            'tools.staticdir.index': index,
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': settings.PUBLISH_DIR,
+        },
+    }
+
+    cherrypy.quickstart(None, '/', config=conf)

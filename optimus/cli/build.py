@@ -1,50 +1,53 @@
 # -*- coding: utf-8 -*-
 """
-Command line action to build a project
+Command line action to build project pages
 """
-import datetime, os
+import os
+import logging
 
-from argh import arg
+import click
 
-from optimus.oldlogs import init_logging
+from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus.utils import initialize, display_settings
+from optimus.conf.loader import import_pages_module
+from optimus.pages.builder import PageBuilder
+from optimus.assets.registry import register_assets
 
-@arg('-s', '--settings', default='settings', help="Python path to the settings module")
-@arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help="The minimal verbosity level to limit logs output")
-@arg('--logfile', default=None, help="A filepath that if setted, will be used to save logs output")
-#@arg('--dry-run', default=False, help="Parse page templates, scan them to search their dependancies but don't build them")
-def build(args):
+
+@click.command('build', short_help="Build project pages")
+@click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
+              default=os.getcwd())
+@click.option('--settings-name', metavar='NAME',
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
+              default="settings")
+@click.pass_context
+def build_command(context, basedir, settings_name):
     """
-    Build elements for a project
+    Build project pages
     """
-    starttime = datetime.datetime.now()
-    # Init, load and builds
-    root_logger = init_logging(args.loglevel.upper(), logfile=args.logfile)
+    logger = logging.getLogger("optimus")
 
-    from optimus.conf.loader import (SETTINGS_NAME_ENVVAR, PROJECT_DIR_ENVVAR,
-                                     import_pages_module)
+    # Set required environment variables to load settings
+    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+        os.environ[PROJECT_DIR_ENVVAR] = basedir
+    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+        os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
-    os.environ[PROJECT_DIR_ENVVAR] = os.getcwd() # Should come from an command arg
-    os.environ[SETTINGS_NAME_ENVVAR] = args.settings
+    # Load current project settings
     from optimus.conf.registry import settings
 
-    # Only load optimus stuff after the settings module name has been retrieved
-    from optimus.builder.assets import register_assets
-    from optimus.builder.pages import PageBuilder
-    from optimus.utils import initialize, display_settings
-
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL'))
-
-    if hasattr(settings, 'PAGES_MAP'):
-        root_logger.info('Loading external pages map')
-        pages_map = import_pages_module(settings.PAGES_MAP)
-        setattr(settings, 'PAGES', pages_map.PAGES)
+    # Debug output
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
 
     initialize(settings)
-    # Assets
-    assets_env = register_assets(settings)
-    # Pages
-    pages_env = PageBuilder(settings, assets_env=assets_env)
-    pages_env.build_bulk(settings.PAGES)
 
-    endtime = datetime.datetime.now()
-    root_logger.info('Done in %s', str(endtime-starttime))
+    # Init webassets and builder
+    assets_env = register_assets(settings)
+    builder = PageBuilder(settings, assets_env=assets_env)
+    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
+
+    # Proceed to page building from registered pages
+    buildeds = builder.build_bulk(pages_map.PAGES)

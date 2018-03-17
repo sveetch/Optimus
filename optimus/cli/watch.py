@@ -1,74 +1,82 @@
 # -*- coding: utf-8 -*-
 """
-Command line action to launch the project watcher
+Command line action to watch project sources
 """
-import os, time
+import os
+import logging
+import time
+
+import click
 
 from watchdog.observers import Observer
 
-from argh import arg
+from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus.utils import initialize, display_settings
+from optimus.conf.loader import import_pages_module
+from optimus.pages.builder import PageBuilder
+from optimus.assets.registry import register_assets
+from optimus.watchers.templates import TemplatesWatchEventHandler
+from optimus.watchers.assets import AssetsWatchEventHandler
 
-from optimus.oldlogs import init_logging
 
-@arg('-s', '--settings', default='settings', help='Python path to the settings module')
-@arg('-l', '--loglevel', default='info', choices=['debug','info','warning','error','critical'], help='The minimal verbosity level to limit logs output')
-@arg('--logfile', default=None, help='A filepath that if setted, will be used to save logs output')
-@arg('--silent', default=False, help="If setted, logs output won't be printed out")
-def watch(args):
+@click.command('watch', short_help="Watch for changes in project sources")
+@click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
+              help=("Base directory where to search for settings file. "
+                    "Default value use current directory."),
+              default=os.getcwd())
+@click.option('--settings-name', metavar='NAME',
+              help=("Settings file name to use without '.py' extension. "
+                    "Default value is 'settings'."),
+              default="settings")
+@click.pass_context
+def watch_command(context, basedir, settings_name):
     """
-    Launch the project watcher to automatically re-build knowed elements on changes
+    Watch for changes in project sources to automatically build project ressources
     """
-    root_logger = init_logging(args.loglevel.upper(), printout=not(args.silent), logfile=args.logfile)
+    logger = logging.getLogger("optimus")
 
-    from optimus.conf.loader import (SETTINGS_NAME_ENVVAR, PROJECT_DIR_ENVVAR,
-                                     import_pages_module)
+    # Set required environment variables to load settings
+    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+        os.environ[PROJECT_DIR_ENVVAR] = basedir
+    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+        os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
-    os.environ[PROJECT_DIR_ENVVAR] = os.getcwd() # Should come from an command arg
-    os.environ[SETTINGS_NAME_ENVVAR] = args.settings
+    # Load current project settings
     from optimus.conf.registry import settings
 
-    # Only load optimus stuff after the settings module name has been retrieved
-    from optimus.watchers.templates import TemplatesWatchEventHandler
-    from optimus.watchers.assets import AssetsWatchEventHandler
-    from optimus.builder.assets import register_assets
-    from optimus.builder.pages import PageBuilder
-    from optimus.utils import initialize, display_settings
+    # Debug output
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
 
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','PUBLISH_DIR','STATIC_DIR','STATIC_URL'))
+    initialize(settings)
 
-    if hasattr(settings, 'PAGES_MAP'):
-        root_logger.info('Loading external pages map')
-        pages_map = import_pages_module(settings.PAGES_MAP)
-        setattr(settings, 'PAGES', pages_map.PAGES)
-
-    # Init environments
+    # Init webassets and builder
     assets_env = register_assets(settings)
-    pages_env = PageBuilder(settings, assets_env=assets_env)
+    builder = PageBuilder(settings, assets_env=assets_env)
+    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
 
-    # add a first build to avoid error on unbuilded project
-    if not os.path.exists(settings.PUBLISH_DIR):
-        root_logger.info('Seems you never do a first build so do it now')
-        pages_env.build_bulk(settings.PAGES)
+    # Proceed to page building from registered pages
+    logger.debug('Trigger pages build to start')
+    buildeds = builder.build_bulk(pages_map.PAGES)
 
-    pages_env.scan_bulk(settings.PAGES)
+    builder.scan_bulk(pages_map.PAGES)
 
     observer = Observer()
 
     # Init templates and assets event watchers
-    templates_event_handler = TemplatesWatchEventHandler(settings, pages_env, **settings.WATCHER_TEMPLATES_PATTERNS)
+    templates_event_handler = TemplatesWatchEventHandler(settings, builder, **settings.WATCHER_TEMPLATES_PATTERNS)
     if assets_env is not None:
-        assets_event_handler = AssetsWatchEventHandler(settings, assets_env, pages_env, **settings.WATCHER_ASSETS_PATTERNS)
+        assets_event_handler = AssetsWatchEventHandler(settings, assets_env, builder, **settings.WATCHER_ASSETS_PATTERNS)
     # Registering event watchers and start to watch
     observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
     if assets_env is not None:
         observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
 
-    root_logger.warning('Launching the watcher, use CTRL+C to stop it')
+    logger.warning('Starting to watch sources, use CTRL+C to stop it')
     observer.start()
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        root_logger.warning('Stopping watcher..')
+        logger.warning('Stopping watcher..')
         observer.stop()
     observer.join()

@@ -9,6 +9,9 @@ PYTEST=venv/bin/py.test
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo
+	@echo "  install             -- to install project into a virtual environnement with python-venv"
+	@echo "  install-dev         -- to install everything for development"
+	@echo
 	@echo "  delpyc              -- to remove all *.pyc files, this is recursive from the current directory"
 	@echo "  clean               -- to clean local repository from all stuff created during development"
 	@echo
@@ -19,9 +22,10 @@ help:
 
 delpyc:
 	find . -name "*\.pyc"|xargs rm -f
+	find . -type d -name "__pycache__"|xargs rm -Rf
 
 clean: delpyc
-	rm -Rf venv dist .tox Optimus.egg-info .cache docs/_build
+	rm -Rf venv dist .tox Optimus.egg-info .cache docs/_build .pytest_cache
 
 venv:
 	$(PYTHON) -m venv venv
@@ -36,7 +40,7 @@ install-dev: install
 	$(PIP) install -r requirements/dev.txt
 
 flake:
-	$(FLAKE) --show-source crispy_forms_foundation
+	$(FLAKE) --show-source optimus
 
 tests:
 	$(PYTEST) -vv tests/

@@ -17,20 +17,17 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Intended Audience :: Developers',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Site Management',
-        'Topic :: Text Processing :: Markup',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
         'six',
         'docutils>=0.9.1',
-        'argh==0.24.1', # To remove when click cli is done
         'click>=5.1,<6.0', # Usage to implement
-        'pathtools==0.1.2',
         'watchdog==0.8.3',
         'Jinja2>=2.6',
         'Babel',
@@ -40,8 +37,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'optimus-cli = optimus.cli.console_script:main',
-            'optimus-click = optimus.cliclick.console_script:cli_frontend',
+            'optimus-cli = optimus.cli.console_script:cli_frontend',
         ]
     },
     include_package_data=True,

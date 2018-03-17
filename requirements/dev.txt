@@ -3,3 +3,4 @@ flake8
 sphinx
 sphinx-rtd-theme
 sphinx-autobuild
+cherrypy

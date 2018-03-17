@@ -6,7 +6,7 @@ import pytest
 import click
 from click.testing import CliRunner
 
-from optimus.cliclick.console_script import cli_frontend
+from optimus.cli.console_script import cli_frontend
 
 
 def test_version_output(caplog):
