@@ -1,6 +1,13 @@
 """
 Logging
 =======
+
+Optimus makes a lot usage of logging during its processes to inform user about
+what it is doing or errors that occured.
+
+To be more readable, its logger is configured to be colored using
+``colorlog`` package.
+
 """
 import logging
 

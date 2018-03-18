@@ -1,6 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-New project starter
+Project starter
+===============
+
+This component eases starting a new project without to recreate basic structure
+each time.
+
+Project structure and configuration are created using project template.
+A project template contains some sources to copy in new project directory
+and render some scripts templates (like settings or page views files).
+
+Once done, the project is ready to be used.
+
+Project template can be either an embedded one from Optimus or an external
+one available as a Python package, its Python path will be used to reach it.
+
 """
 import logging, io, os, shutil
 from string import Template
