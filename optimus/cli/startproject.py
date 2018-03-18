@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Command line action to start a new project
-"""
 import os
 import logging
 import click

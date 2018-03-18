@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Command line action to watch project sources
-"""
 import os
 import logging
 import time

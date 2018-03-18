@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Command line action to manage translation catalogs
-"""
 import os
 import logging
 import click

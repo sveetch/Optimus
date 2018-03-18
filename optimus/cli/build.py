@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Command line action to build project pages
-"""
 import os
 import logging
 

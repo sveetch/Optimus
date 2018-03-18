@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Command line action to launch a simple HTTP server rooted on the project build directory
-"""
 import os
 import logging
 import click
