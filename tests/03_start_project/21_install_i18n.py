@@ -39,7 +39,7 @@ def test_i18n_template(caplog, temp_builds_dir):
     assert caplog.record_tuples[2] == (
         'optimus',
         logging.INFO,
-        "Installing directories structure on : {}".format(destination)
+        "Installing directories structure to : {}".format(destination)
     )
 
     assert (('optimus', logging.INFO, "Installing default project's files") in caplog.record_tuples) == True

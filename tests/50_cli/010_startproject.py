@@ -31,7 +31,7 @@ def test_start_basic_sample(caplog):
                 name=projet_name,
                 cwd=test_cwd
             ),
-            "Installing directories structure on : {path}".format(
+            "Installing directories structure to : {path}".format(
                 path=project_path
             ),
         ]
@@ -72,7 +72,7 @@ def test_start_i18n_sample(caplog):
                 name=projet_name,
                 cwd=test_cwd
             ),
-            "Installing directories structure on : {path}".format(
+            "Installing directories structure to : {path}".format(
                 path=project_path
             ),
         ]
@@ -114,7 +114,7 @@ def test_start_dryrun(caplog):
                 name=projet_name,
                 cwd=test_cwd
             ),
-            "Installing directories structure on : {path}".format(
+            "Installing directories structure to : {path}".format(
                 path=project_path
             ),
         ]

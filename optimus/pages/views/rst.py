@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Page building with Jinja2
-
-NOTE: No test coverage yet, maybe this would be ported to a plugin
-"""
 import copy
 
 import docutils

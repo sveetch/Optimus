@@ -21,6 +21,10 @@ class ProjectStarter(object):
     Keyword Arguments:
         dry_run (bool): Dry run mode to perform all tasks but never create
             anything on File System.
+
+    Attributes:
+        dry_run (bool): Dry run mode state.
+        logger (logging.Logger): Application logger.
     """
     def __init__(self, dry_run=False):
         self.dry_run = dry_run
@@ -32,7 +36,7 @@ class ProjectStarter(object):
         allready exist.
 
         Arguments:
-            basedir (str): Path to the directory where to create new project.
+            basedir (str): Path to directory where to create new project.
             name (str): Directory name to create inside ``basedir``.
 
         Raises:
@@ -52,7 +56,7 @@ class ProjectStarter(object):
 
     def get_template_pythonpath(self, name):
         """
-        Return Python path for template
+        Return Python path for template.
 
         Arguments:
             name (str): Either a full Python path to a template module or an
@@ -70,7 +74,7 @@ class ProjectStarter(object):
 
     def get_template_module(self, path):
         """
-        Return template module if valid
+        Return template module if valid.
 
         Arguments:
             path (str): Python path to template module.
@@ -232,13 +236,13 @@ class ProjectStarter(object):
             os.makedirs(destination)
 
         self.logger.info("Installing directories structure "
-                         "on : {}".format(destination))
+                         "to : {}".format(destination))
         recursive_directories_create(destination,
                                      manifest.DIRECTORY_STRUCTURE,
                                      dry_run=self.dry_run)
 
         self.logger.info("Copying templates sources "
-                         "on: {}".format(destination))
+                         "to: {}".format(destination))
         self.deploy_assets(manifest, template_fspath, destination)
 
         if hasattr(manifest, "LOCALE_DIR"):

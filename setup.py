@@ -27,7 +27,7 @@ setup(
     install_requires=[
         'six',
         'docutils>=0.9.1',
-        'click>=5.1,<6.0', # Usage to implement
+        'click>=5.1,<6.0',
         'watchdog==0.8.3',
         'Jinja2>=2.6',
         'Babel',
