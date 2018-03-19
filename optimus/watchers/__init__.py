@@ -1,9 +1,20 @@
+# -*- coding: utf-8 -*-
+"""
+.. _watchdog: https://github.com/gorakhargosh/watchdog
+
+Watcher handlers
+================
+
+This component contains `watchdog`_ handlers to use to watch a project
+sources.
+
+"""
 import os
 
 
 class BaseHandler(object):
     """
-    Base class for handlers
+    Base class for handlers.
 
     Assume children inheriting this class have a ``settings`` attribute with a
     valid ``SettingsModel`` instance as value.
@@ -12,6 +23,9 @@ class BaseHandler(object):
     def get_relative_template_path(self, path):
         """
         Retrieve relative path from templates directory.
+
+        Arguments:
+            path (str): Path to a template file.
 
         Returns:
             string: Relative path either from templates directory or untouched
@@ -25,6 +39,9 @@ class BaseHandler(object):
     def get_relative_asset_path(self, path):
         """
         Retrieve relative path from assets directory.
+
+        Arguments:
+            path (str): Path to an asset file.
 
         Returns:
             string: Relative path either from assets directory or untouched

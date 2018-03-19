@@ -18,7 +18,7 @@ def init_logger(level, printout=True):
     """
     Initialize app logger to configure its level/handler/formatter/etc..
 
-    Args:
+    Arguments:
         level (str): Level name (``debug``, ``info``, etc..).
 
     Keyword Arguments:

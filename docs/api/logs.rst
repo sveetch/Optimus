@@ -1,0 +1,2 @@
+.. automodule:: optimus.logs
+    :members:

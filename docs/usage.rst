@@ -38,8 +38,8 @@ It will create project directory and fill it with basic content. But Optimus can
 
 * ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
 * ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
-* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project including all `Foundation`_ **3** stuff, you will have to install it before (see :ref:`install-use-foundation-3`);
-* ``optimus_foundation_5`` : `Optimus-foundation-5`_ that create a new project including all `Foundation`_ **5** stuff, you will have to install it before (see :ref:`install-use-foundation-5`);
+* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project including all `Foundation`_ **3** stuff, you will have to install it before;
+* ``optimus_foundation_5`` : `Optimus-foundation-5`_ that create a new project including all `Foundation`_ **5** stuff, you will have to install it before;
 
 To create a new project with the I18n sample, you will have to do something like : ::
 
@@ -69,7 +69,7 @@ Assuming you want to add French translations, you will have to add this setting 
 
     # A list of locale name for all available languages to manage with PO files
     LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
-    
+
 Note the first item that also adds the locale name from the default language from the setting ``LANGUAGE_CODE``.
 
 Then you will need to flag the strings to translate in your templates with the ``{% trans %}`` template tag from `Jinja2`_ (see `Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_ for more details) like this : ::
@@ -93,7 +93,7 @@ This will extract translation strings from your templates (and other files in yo
 
 This command is safe for existing translations, if a translation catalogs allready exists, it will not be overwrited. Only non existing translation catalogs will be created.
 
-Now open your catalog files (``*.PO``) edit them to fill the translations for your languages, then compile them (see `Compilation`_). 
+Now open your catalog files (``*.PO``) edit them to fill the translations for your languages, then compile them (see `Compilation`_).
 
 Update
 ------
@@ -128,7 +128,7 @@ This will launch a process that will watch for changes and rebuild pages if need
 
 To stop the watcher process, just use the common keyboard combo ``CTRL+C``.
 
-This is useful in development, but note that the watcher is limited to watch only for templates and assets changes. 
+This is useful in development, but note that the watcher is limited to watch only for templates and assets changes.
 
 Watch mode will not detect if :
 

@@ -23,20 +23,22 @@ Links
 * Download its `PyPi package <https://pypi.python.org/pypi/Optimus>`_;
 * Clone it on its `Github repository <https://github.com/sveetch/Optimus>`_;
 
-Contents
---------
+User’s Guide
+************
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    install.rst
    basics.rst
    usage.rst
+
+Developer’s Guide
+*****************
+
+.. toctree::
+   :maxdepth: 1
+
+   development.rst
    changelog.rst
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
-
+   api/index.rst

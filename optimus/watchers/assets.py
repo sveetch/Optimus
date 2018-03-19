@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Assets watcher handler
-"""
 import logging
 
 from pathtools.patterns import match_path
@@ -13,7 +10,14 @@ from optimus.watchers import BaseHandler
 
 class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     """
-    Assets changes handler
+    Assets changes handler.
+
+    Args:
+        settings (optimus.conf.model.SettingsModel): Project settings.
+
+    Attributes:
+        settings (optimus.conf.model.SettingsModel): Filled from argument.
+        logger (logging.Logger): Boussole logger.
     """
     def __init__(self, settings, assets_env, pages_builder, *args, **kwargs):
         self.settings = settings
@@ -57,6 +61,16 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         return built
 
     def on_moved(self, event):
+        """
+        Called when a file or a directory is moved or renamed.
+
+        Many editors don't directly change a file, instead they make a
+        transitional file like ``*.part`` then move it to the final filename.
+
+        Arguments:
+            event: Watchdog event, either ``watchdog.events.DirMovedEvent`` or
+                ``watchdog.events.FileModifiedEvent``.
+        """
         # We are only interested for destination
         if match_path(event.dest_path,
                 included_patterns=self.patterns,
@@ -69,11 +83,25 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         return []
 
     def on_created(self, event):
+        """
+        Called when a new file or directory is created.
+
+        Arguments:
+            event: Watchdog event, either ``watchdog.events.DirCreatedEvent``
+                or ``watchdog.events.FileCreatedEvent``.
+        """
         self.logger.debug("Change detected from a create on: %s", event.src_path)
 
         return self.build_for_item(event.src_path)
 
     def on_modified(self, event):
+        """
+        Called when a file or directory is modified.
+
+        Arguments:
+            event: Watchdog event, ``watchdog.events.DirModifiedEvent`` or
+                ``watchdog.events.FileModifiedEvent``.
+        """
         self.logger.debug("Change detected from an edit on: %s", event.src_path)
 
         return self.build_for_item(event.src_path)

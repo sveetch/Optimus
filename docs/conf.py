@@ -14,6 +14,7 @@
 
 import sys
 import os
+
 from optimus import __version__ as optimus_version
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -30,7 +31,11 @@ from optimus import __version__ as optimus_version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.todo',
+    #'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Optimus'
-copyright = u'2013-2015, David THENON'
+copyright = u'2013-2018, David THENON'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -267,3 +272,6 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# Napoleon settings
+napoleon_include_private_with_doc = True
