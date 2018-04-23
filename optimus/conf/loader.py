@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Module loader helpers
+*********************
 
 TODO:
     * 'imp' is deprecated since python ~3.4 => To remove in favor of importlib

@@ -10,14 +10,23 @@ from optimus.watchers import BaseHandler
 
 class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     """
-    Template changes handler.
+    Template events handler.
 
-    Args:
+    Arguments:
         settings (optimus.conf.model.SettingsModel): Project settings.
+        pages_builder (optimus.pages.builder.PageBuilder): Page builder object
+            that is triggered to perform page building.
+        args: Additional arguments to be passed to handler, commonly for
+            watchdog API.
+
+    Keyword Arguments:
+        kwargs: Optionnal keyword arguments commonly for watchdog API.
 
     Attributes:
-        settings (optimus.conf.model.SettingsModel): Filled from argument.
-        logger (logging.Logger): Boussole logger.
+        settings (optimus.conf.model.SettingsModel): As given from arguments.
+        pages_builder (optimus.pages.builder.PageBuilder): As given from
+            arguments.
+        logger (logging.Logger): Optimus logger.
     """
     def __init__(self, settings, pages_builder, *args, **kwargs):
         self.settings = settings
@@ -29,9 +38,19 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
     def build_for_item(self, path):
         """
-        (Re)build all pages using given template path
+        Build all pages using given template path.
+
+        If template is a snippet included in other templates they will be
+        flagged for build too. This is recursive so a snippet in a snippet in
+        a snippet will raises to page templates.
 
         ``path`` argument is a template path
+
+        Arguments:
+            path (string): Template path.
+
+        Returns:
+            list: List of builded pages.
         """
         rel_path = self.get_relative_template_path(path)
         built = []

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Settings registration
+*********************
+
+This is the entry point to reach settings from project page module.
 """
 import os
 

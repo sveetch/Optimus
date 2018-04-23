@@ -13,5 +13,7 @@ Modules
 
    exceptions.rst
    logs.rst
-   start_project.rst
+   conf.rst
+   assets.rst
    watchers.rst
+   start_project.rst

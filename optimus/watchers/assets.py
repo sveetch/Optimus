@@ -10,14 +10,28 @@ from optimus.watchers import BaseHandler
 
 class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     """
-    Assets changes handler.
+    Assets events handler
 
-    Args:
+    Since assets filename change when they are rebuiled, this handler also
+    performs page rebuild to include the right assets urls.
+
+    Arguments:
         settings (optimus.conf.model.SettingsModel): Project settings.
+        assets_env (webassets.Environment): Webasset environment.
+        pages_builder (optimus.pages.builder.PageBuilder): Page builder object
+            that is triggered to perform page building.
+        args: Additional arguments to be passed to handler, commonly for
+            watchdog API.
+
+    Keyword Arguments:
+        kwargs: Optionnal keyword arguments commonly for watchdog API.
 
     Attributes:
-        settings (optimus.conf.model.SettingsModel): Filled from argument.
-        logger (logging.Logger): Boussole logger.
+        settings (optimus.conf.model.SettingsModel): As given from arguments.
+        assets_env (webassets.Environment): Webasset As given from arguments.
+        pages_builder (optimus.pages.builder.PageBuilder): As given from
+            arguments.
+        logger (logging.Logger): Optimus logger.
     """
     def __init__(self, settings, assets_env, pages_builder, *args, **kwargs):
         self.settings = settings
@@ -30,11 +44,13 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
     def build_for_item(self, path):
         """
-        (Re)build the bundle containing the given asset path, then rebuild all pages
-        because in debug mode webassets use an url from his internal cache that change
-        at each rebuild
+        Build bundle containing given asset path and all pages.
 
-        ``path`` argument is an asset path
+        Arguments:
+            path (string): Asset path.
+
+        Returns:
+            list: List of builded pages.
         """
         rel_path = self.get_relative_asset_path(path)
         built = []

@@ -7,14 +7,24 @@ from webassets import Environment as AssetsEnvironment
 class AssetRegistry(object):
     """
     Index all knowed files from registered bundles
+
+    Attributes:
+        map_dest_to_bundle (dict): Registry of asset paths associated to
+            their asset bundle keyname.
+        logger (logging.Logger): Optimus logger.
     """
-    #def __init__(self, elements={}):
     def __init__(self):
-        #self.elements = {}
         self.map_dest_to_bundle = {}
         self.logger = logging.getLogger('optimus')
 
     def add_bundle(self, name, bundle):
+        """
+        Add a bundle to the registry
+
+        Arguments:
+            name (string): Bundle name as defined in the assets map.
+            bundle (webassets.Bundle): Bundle to associate to given name.
+        """
         # Little trick because a Bundle does not know its name in the
         # webassets environment
         bundle._internal_env_name = name
@@ -22,27 +32,16 @@ class AssetRegistry(object):
         for item in bundle.contents:
             self.map_dest_to_bundle[item] = name
 
-    #def get_bundle_from_dependency(self, asset_name):
-        #"""
-        #Return the bundles object list that are dependent of the given template name
-
-        #This method is not safe out of the context of scanned bundles, because it use
-        #an internal map builded from the scan use by the add_bundle method. In short, it
-        #will raise a KeyError exception for every destination that is doesn't known from
-        #the internal map.
-
-        #NOTE: Not used anymore
-        #"""
-        #if asset_name not in self.elements:
-            #self.logger.warning("Given asset name is not in the bundle registry: %s", asset_name)
-            #return []
-        #dependancies = self.elements[asset_name]
-        #return [self.map_dest_to_bundle[item] for item in dependancies]
-
 
 def register_assets(settings):
     """
-    Initialize webassets environment and its bundles
+    Initialize webassets environment and its bundles.
+
+    Arguments:
+        settings (conf.model.SettingsModel): Settings registry instance.
+
+    Returns:
+        webassets.Environment: New configured Webasset environment.
     """
     logger = logging.getLogger('optimus')
     if not settings.ENABLED_BUNDLES:

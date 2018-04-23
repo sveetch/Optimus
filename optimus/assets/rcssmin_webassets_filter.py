@@ -6,11 +6,14 @@ __all__ = ('RCSSMin',)
 
 
 class RCSSMin(Filter):
-    """Minifies CSS.
+    """
+    Minifies CSS using 'rcssmin' library.
 
     Requires the ``rcssmin`` package (https://github.com/ndparker/rcssmin).
-    Alike 'cssmin' it is a port of the YUI CSS compression algorithm but aiming
-    for speed instead of maximum compression.
+
+    This is a simple webassets filter that has been merged but not
+    released yet, so we ship it until new package release since 'cssmin' is
+    totally outdated and doesn't work with Python 3.
     """
 
     name = 'rcssmin'

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Settings model
+**************
+
 """
 import logging
 import os
@@ -15,21 +17,21 @@ class SettingsModel(object):
     Basically empty on init, you'll have to fill it either from kwargs or a
     module (or an object).
 
-    You may not define settings from mixed kwargs and module or else disable
-    defaults filling from 'load_from_***' method then call 'apply_defaults'
-    afterwards. This is required since 'apply_defaults' won't override allready
-    defined attributes but often use 'PROJECT_DIR' attribute that can change
-    between your kwargs/module.
+    Be aware that on default behavior settings loading methods execute
+    ``apply_defaults`` method that will apply default values for some settings
+    but related settings are not updated, you need to take care of them
+    yourself or disabled default values pratice.
+
+    Attributes:
+        _excluded_names (list): Setting names to exclude from loading methods.
+        _required_settings (list): Settings names required to be defined from
+            loading methods.
     """
-    _PROJECT_DIR = None
     _excluded_names = []
     _required_settings = (
         'PROJECT_DIR', 'DEBUG', 'SITE_NAME', 'SITE_DOMAIN', 'SOURCES_DIR',
         'TEMPLATES_DIR', 'PUBLISH_DIR', 'STATIC_DIR', 'STATIC_URL',
     )
-
-    def __init__(self, *args, **kwargs):
-        pass
 
     def validate_name(self, name):
         """
@@ -37,13 +39,19 @@ class SettingsModel(object):
 
         Name must be uppercase, not starting with a '_' character and not
         registred in exluded names.
+
+        Arguments:
+            name (string): Setting name.
+
+        Returns:
+            bool: True if name is valid, else False.
         """
         return (name not in self._excluded_names and not name.startswith('_')
                 and name.isupper())
 
     def check(self):
         """
-        Check for required settings
+        Check every required settings are defined
         """
         missing_settings = []
 
@@ -56,46 +64,9 @@ class SettingsModel(object):
                   "defined: {0}").format(", ".join(missing_settings))
             raise InvalidSettings(msg)
 
-    def load_from_kwargs(self, check=True, defaults=True, **kwargs):
-        """
-        Set setting attribute from given named arguments
-        """
-        setted = []
-
-        for name in kwargs:
-            if self.validate_name(name):
-                setattr(self, name, kwargs.get(name))
-                setted.append(name)
-
-        if check:
-            self.check()
-        if defaults:
-            self.apply_defaults()
-
-        return setted
-
-
-    def load_from_module(self, settings_module, check=True, defaults=True):
-        """
-        Set setting attribute from given module variables
-        """
-        setted = []
-
-        for name in dir(settings_module):
-            if self.validate_name(name):
-                setattr(self, name, getattr(settings_module, name))
-                setted.append(name)
-
-        if check:
-            self.check()
-        if defaults:
-            self.apply_defaults()
-
-        return setted
-
     def _default_jinja(self):
         """
-        Default needed settings around Jinja
+        Set default attributes for required settings around Jinja
         """
         # Python paths for each extensions to use with Jinja2
         if not hasattr(self, "JINJA_EXTENSIONS"):
@@ -105,7 +76,7 @@ class SettingsModel(object):
 
     def _default_watchdog(self):
         """
-        Default needed settings around Watchdog
+        Set default attributes for required settings Watchdog
         """
         # Templates watcher settings
         if not hasattr(self, "WATCHER_TEMPLATES_PATTERNS"):
@@ -126,7 +97,7 @@ class SettingsModel(object):
 
     def _default_webassets(self):
         """
-        Default needed settings around Webassets
+        Set default attributes for required settings around Webassets
         """
         # The directory where webassets will store his cache
         if not hasattr(self, "WEBASSETS_CACHE"):
@@ -145,7 +116,7 @@ class SettingsModel(object):
 
     def _default_babel(self):
         """
-        Default needed settings around Babel
+        Set default attributes for required settings around Babel
         """
         # Default directory for translation catalog
         if not hasattr(self, "LOCALES_DIR"):
@@ -180,7 +151,7 @@ class SettingsModel(object):
 
     def _default_rst(self):
         """
-        Default needed settings around ReSTructuredText
+        Set default attributes for required settings ReSTructuredText
         """
         # ReSTructuredText parser settings to use when building a RST document
         if not hasattr(self, "RST_PARSER_SETTINGS"):
@@ -194,12 +165,8 @@ class SettingsModel(object):
 
     def apply_defaults(self):
         """
-        Define needed settings that are not defined yet
+        Apply default attributes for needed but not required settings.
         """
-        ## Directory where webassets will store its cache
-        #if not hasattr(self, "PROJECT_DIR"):
-            #self.PROJECT_DIR = os.path.abspath(os.path.dirname(self.__file__))
-
         # Python path to the file that contains pages map, this is relative to
         # project directory
         if not hasattr(self, "PAGES_MAP"):
@@ -215,3 +182,57 @@ class SettingsModel(object):
         self._default_webassets()
         self._default_babel()
         self._default_rst()
+
+    def load_from_kwargs(self, check=True, defaults=True, **kwargs):
+        """
+        Set setting attribute from given named arguments.
+
+        Keyword Arguments:
+            check (bool): True to perform required settings check. Default is
+                True.
+            defaults (bool): True to set default needed settings.
+            kwargs: Named arguments to load as settings.
+
+        Returns:
+            list: List of loaded setting names from given arguments.
+        """
+        setted = []
+
+        for name in kwargs:
+            if self.validate_name(name):
+                setattr(self, name, kwargs.get(name))
+                setted.append(name)
+
+        if check:
+            self.check()
+        if defaults:
+            self.apply_defaults()
+
+        return setted
+
+    def load_from_module(self, settings_module, check=True, defaults=True):
+        """
+        Set setting attribute from given module variables.
+
+        Keyword Arguments:
+            settings_module (object): Object to find attributes to load as
+                settings. Every valid attribute names will be used.
+            defaults (bool): True to set default needed settings.
+            kwargs: Named arguments to load as settings.
+
+        Returns:
+            list: List of loaded setting names from given module.
+        """
+        setted = []
+
+        for name in dir(settings_module):
+            if self.validate_name(name):
+                setattr(self, name, getattr(settings_module, name))
+                setted.append(name)
+
+        if check:
+            self.check()
+        if defaults:
+            self.apply_defaults()
+
+        return setted
