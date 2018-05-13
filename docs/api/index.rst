@@ -17,3 +17,4 @@ Modules
    assets.rst
    watchers.rst
    start_project.rst
+   i18n.rst

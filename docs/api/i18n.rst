@@ -1,0 +1,9 @@
+.. automodule:: optimus.i18n
+    :members:
+
+.. automodule:: optimus.i18n.lang
+    :members:
+
+.. automodule:: optimus.i18n.manager
+    :members:
+

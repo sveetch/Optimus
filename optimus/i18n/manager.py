@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-I18n management support within Optimus environnment
+I18n management
+***************
 
-We only manage "messages.*" files for POT and PO files and no other catalog
+I18n management support for Optimus environnment.
+
+Only "messages.*" files for POT and PO files are managed and no other catalog
 type.
 
 TODO:
@@ -25,13 +28,25 @@ class I18NManager(object):
     """
     I18n manager for translation catalogs
 
-    Maked to work simply within Optimus environnment, so not all of babel
+    Made to work simply within Optimus environnment, so not all of babel
     options are used. This way the manager can work cleanly and is more easy
     to use.
+
+    Attributes:
+        catalog_name (string): Catalog filename template.
+        catalog_path (string): Catalog language directory template.
+        header_comment (string): Header comment to prepend to catalog files.
+        settings (conf.model.SettingsModel): Settings registry instance.
+        logger (logging.Logger): Optimus logger.
+
+    Arguments:
+        settings (conf.model.SettingsModel): Settings registry instance.
+
     """
     catalog_name = "messages.{0}"
     catalog_path = "{0}/LC_MESSAGES"
-    header_comment = "# Translations template for PROJECT project\n# Created by Optimus"
+    header_comment = ("# Translations template for PROJECT project\n# Created "
+                      "by Optimus")
 
     def __init__(self, settings):
         self.settings = settings
@@ -39,45 +54,107 @@ class I18NManager(object):
         self.logger = logging.getLogger('optimus')
 
     def get_template_path(self):
-        """Return the full path to the catalog template file"""
-        return os.path.join(self.settings.LOCALES_DIR, self.catalog_name.format("pot"))
+        """
+        Return the full path to the catalog template file
+
+        Returns:
+            string: Catalog template file path.
+        """
+        return os.path.join(self.settings.LOCALES_DIR,
+                            self.catalog_name.format("pot"))
 
     def get_catalog_dir(self, locale):
-        """Return the full path to a translations catalog directory"""
-        return os.path.join(self.settings.LOCALES_DIR, self.catalog_path.format(locale))
+        """
+        Return the full path to a translations catalog directory
+
+        Arguments:
+            locale (string): Language identifier.
+
+        Returns:
+            string: Catalog directory path.
+        """
+        return os.path.join(self.settings.LOCALES_DIR,
+                            self.catalog_path.format(locale))
 
     def get_po_filepath(self, locale):
-        """Return the full path to a translations catalog file"""
-        return os.path.join(self.get_catalog_dir(locale), self.catalog_name.format("po"))
+        """
+        Return the full path to a translations catalog file
+
+        Arguments:
+            locale (string): Language identifier.
+
+        Returns:
+            string: Catalog file path.
+        """
+        return os.path.join(self.get_catalog_dir(locale),
+                            self.catalog_name.format("po"))
 
     def get_mo_filepath(self, locale):
-        """Return the full path to a compiled translations catalog file"""
-        return os.path.join(self.get_catalog_dir(locale), self.catalog_name.format("mo"))
+        """
+        Return the full path to a compiled translations catalog file
+
+        Arguments:
+            locale (string): Language identifier.
+
+        Returns:
+            string: Compiled catalog file path.
+        """
+        return os.path.join(self.get_catalog_dir(locale),
+                            self.catalog_name.format("mo"))
 
     def check_locales_dir(self):
-        """Check if LOCALES_DIR directory exists"""
+        """
+        Check if LOCALES_DIR directory exists
+
+        Returns:
+            boolean: True if base catalog directory exists.
+        """
         return os.path.exists(self.settings.LOCALES_DIR)
 
     def check_template_path(self):
-        """Check if the catalog template exists"""
+        """
+        Check if the catalog template exists
+
+        Returns:
+            boolean: True if catalog template file exists.
+        """
         return os.path.exists(self.get_template_path())
 
     def check_catalog_path(self, locale):
-        """Check if a translations catalog exists"""
+        """
+        Check if a translations catalog exists
+
+        Arguments:
+            locale (string): Language identifier.
+
+        Returns:
+            boolean: True if catalog file exists.
+        """
         return os.path.exists(self.get_po_filepath(locale))
 
     def parse_languages(self, languages):
         """
-        Allways return a list of locale name from languages even if items are simple
-        string or tuples. If tuple, assume its first item is the locale name to use.
+        Allways return a list of locale name from languages even if items are
+        simple string or tuples. If tuple, assume its first item is the locale
+        name to use.
+
+        Arguments:
+            languages (list): List of languages identifiers.
+
+        Returns:
+            dict: Dictionnary of languages identifiers.
         """
         _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x
         return map(_f, languages)
 
     def init_locales_dir(self):
-        """Create LOCALES_DIR directory if not allready exists"""
+        """
+        Create catalog base directory defined from ``LOCALES_DIR`` settings
+        if it does not allready exists.
+        """
         if not self.check_locales_dir():
-            self.logger.warning('Locale directory does not exists, creating it')
+            self.logger.warning(("Locale directory does not exists, "
+                                 "creating it"))
             os.makedirs(self.settings.LOCALES_DIR)
 
     def build_pot(self, force=False):
@@ -85,19 +162,26 @@ class I18NManager(object):
         Extract translation strings and create Portable Object Template (POT)
         from enabled source directories using defined extract rules.
 
-        Default behavior is to proceed only if POT file does not allready
-        exists except if ``force`` is used.
+        Note:
+            May only work on internal '_pot' to return without touching
+            'self._pot'.
 
-        NOTE: May only work on internal '_pot' to return without touching
-              'self._pot'.
+        Keyword Arguments:
+            force (boolean): Default behavior is to proceed only if POT file
+                does not allready exists except if this argument is ``True``.
+
+        Returns:
+            babel.messages.catalog.Catalog: Catalog template object.
         """
         if force or not self.check_template_path():
-            self.logger.info('Proceeding to extraction to update the template catalog (POT)')
+            self.logger.info(("Proceeding to extraction to update the "
+                              "template catalog (POT)"))
             self._pot = Catalog(project=self.settings.SITE_NAME,
-                                             header_comment=self.header_comment)
+                                header_comment=self.header_comment)
             # Follow all paths to search for pattern to extract
             for extract_path in self.settings.I18N_EXTRACT_SOURCES:
-                self.logger.debug('Searching for pattern to extract in : {0}'.format(extract_path))
+                msg = "Searching for pattern to extract in : {0}"
+                self.logger.debug(msg.format(extract_path))
                 extracted = extract_from_dir(
                     dirname=extract_path,
                     method_map=self.settings.I18N_EXTRACT_MAP,
@@ -105,8 +189,14 @@ class I18NManager(object):
                 )
                 # Proceed to extract from given path
                 for filename, lineno, message, comments, context in extracted:
-                    filepath = os.path.normpath(os.path.join(os.path.basename(self.settings.SOURCES_DIR), filename))
-                    self._pot.add(message, None, [(filepath, lineno)], auto_comments=comments, context=context)
+                    filepath = os.path.normpath(
+                        os.path.join(
+                            os.path.basename(self.settings.SOURCES_DIR),
+                            filename
+                        )
+                    )
+                    self._pot.add(message, None, [(filepath, lineno)],
+                                  auto_comments=comments, context=context)
 
             with io.open(self.get_template_path(), 'wb') as fp:
                 write_po(fp, self._pot)
@@ -118,8 +208,11 @@ class I18NManager(object):
         """
         Return the catalog template
 
-        Get it in memory if allready opened, else if exists open it, else
-        extract it and create it.
+        Get it from memory if allready opened, if allready exists then open
+        it, else extract it and create it.
+
+        Returns:
+            babel.messages.catalog.Catalog: Catalog template object.
         """
         if self._pot is not None:
             return self._pot
@@ -146,6 +239,17 @@ class I18NManager(object):
         is not overwrited when operation has failed.
 
         Original code comes from ``babel.messages.frontend``.
+
+        Arguments:
+            catalog (babel.messages.catalog.Catalog): Catalog object to write.
+            filepath (string): Catalog file path destination.
+
+        Keyword Arguments:
+            kwargs: Additional arguments to pass to ``write_po()`` babel
+                function.
+
+        Returns:
+            babel.messages.catalog.Catalog: Catalog template object.
         """
         tmpname = os.path.join(os.path.dirname(filepath),
                                tempfile.gettempprefix() +
@@ -175,6 +279,9 @@ class I18NManager(object):
         """
         Helper to clone POT catalog from writed file (not the one in memory)
         without to touch to ``_pot`` attribute.
+
+        Returns:
+            babel.messages.catalog.Catalog: Clone catalog template object.
         """
         self.logger.debug("Opening template catalog (POT)")
         with io.open(self.get_template_path(), "rb") as fp:
@@ -185,6 +292,13 @@ class I18NManager(object):
     def init_catalogs(self, languages=None):
         """
         Create PO catalogs from POT if they dont allready exists
+
+        Keyword Arguments:
+            languages (list): List of languages to process. Default is
+                ``None`` so languages are taken from ``LANGUAGES`` settings.
+
+        Returns:
+            list: List of language identifiers for created catalogs.
         """
         catalog_template = self.clone_pot()
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
@@ -195,7 +309,8 @@ class I18NManager(object):
             catalog_path = self.get_po_filepath(locale)
 
             if not self.check_catalog_path(locale):
-                self.logger.debug("Init catalog (PO) for language '{0}' to {1}".format(locale, catalog_path))
+                msg = "Init catalog (PO) for language '{0}' to {1}"
+                self.logger.debug(msg.format(locale, catalog_path))
                 # write po from POT
                 catalog_template.locale = Locale.parse(locale)
                 catalog_template.revision_date = datetime.datetime.now(LOCALTZ)
@@ -214,13 +329,21 @@ class I18NManager(object):
     def update_catalogs(self, languages=None):
         """
         Update PO catalogs from POT
+
+        Keyword Arguments:
+            languages (list): List of languages to process. Default is
+                ``None`` so languages are taken from ``LANGUAGES`` settings.
+
+        Returns:
+            list: List of language identifiers for updated catalogs.
         """
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
         updated = []
 
         for locale in languages:
             catalog_path = self.get_po_filepath(locale)
-            self.logger.info("Updating catalog (PO) for language '{0}' to {1}".format(locale, catalog_path))
+            msg = "Updating catalog (PO) for language '{0}' to {1}"
+            self.logger.info(msg.format(locale, catalog_path))
 
             # Open PO file
             with io.open(catalog_path, 'U') as fp:
@@ -239,15 +362,23 @@ class I18NManager(object):
         Compile PO catalogs to MO files
 
         Note:
-            Errors are not test covered since ``read_po`` pass them through
+            Errors have no test coverage since ``read_po()`` pass them through
             warnings print to stdout and this is not blocking or detectable.
             And so the code continue to the compile part.
+
+        Keyword Arguments:
+            languages (list): List of languages to process. Default is
+                ``None`` so languages are taken from ``LANGUAGES`` settings.
+
+        Returns:
+            list: List of language identifiers for compiled catalogs.
         """
         languages = self.parse_languages(languages or self.settings.LANGUAGES)
         compiled = []
 
         for locale in languages:
-            self.logger.info("Compiling catalog (MO) for language '{0}' to {1}".format(locale, self.get_mo_filepath(locale)))
+            msg = "Compiling catalog (MO) for language '{0}' to {1}"
+            self.logger.info(msg.format(locale, self.get_mo_filepath(locale)))
             with io.open(self.get_po_filepath(locale), 'rb') as fp:
                 #
                 catalog = read_po(fp, locale)
@@ -257,11 +388,15 @@ class I18NManager(object):
             for message, errors in catalog.check():
                 for error in errors:
                     errs = True
-                    self.logger.warning('Error at line {0}: {1}'.format(message.lineno, error))
+                    self.logger.warning('Error at line {0}: {1}'.format(
+                        message.lineno,
+                        error
+                    ))
             # Don't overwrite previous MO file if there have been error
             # TODO: Raise exception instead of logging error
             if errs:
-                self.logger.error('There has been errors within the catalog, compilation has been aborted')
+                self.logger.error(("There has been errors within the "
+                                   "catalog, compilation has been aborted"))
                 break
 
             with io.open(self.get_mo_filepath(locale), 'wb') as fp:
