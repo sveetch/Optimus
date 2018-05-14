@@ -32,16 +32,15 @@ class I18NManager(object):
     options are used. This way the manager can work cleanly and is more easy
     to use.
 
+    Arguments:
+        settings (conf.model.SettingsModel): Settings registry instance.
+
     Attributes:
         catalog_name (string): Catalog filename template.
         catalog_path (string): Catalog language directory template.
         header_comment (string): Header comment to prepend to catalog files.
         settings (conf.model.SettingsModel): Settings registry instance.
         logger (logging.Logger): Optimus logger.
-
-    Arguments:
-        settings (conf.model.SettingsModel): Settings registry instance.
-
     """
     catalog_name = "messages.{0}"
     catalog_path = "{0}/LC_MESSAGES"
@@ -243,10 +242,8 @@ class I18NManager(object):
         Arguments:
             catalog (babel.messages.catalog.Catalog): Catalog object to write.
             filepath (string): Catalog file path destination.
-
-        Keyword Arguments:
-            kwargs: Additional arguments to pass to ``write_po()`` babel
-                function.
+            **kwargs: Additional arbitrary keyword argumentsto pass to
+                ``write_po()`` babel function.
 
         Returns:
             babel.messages.catalog.Catalog: Catalog template object.

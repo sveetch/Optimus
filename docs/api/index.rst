@@ -16,5 +16,6 @@ Modules
    conf.rst
    assets.rst
    watchers.rst
-   start_project.rst
+   pages.rst
    i18n.rst
+   start_project.rst

@@ -23,6 +23,8 @@ class RstPageView(PageViewBase):
 
     * page_doc_html: the HTML produced by the parser from the rst document
     * page_doc_source: the unparsed source from the rst document
+
+    This is almost deprecated and has not test coverage.
     """
     source_filepath = None
     parser_settings = {}

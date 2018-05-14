@@ -34,6 +34,10 @@ class LangBase(UnicodeMixin):
 
         lang = LangBase(code="zh_CN", label="Chinese")
 
+    Keyword Arguments:
+        code (string): Language identifier.
+        label (string): Language label like "Français" for ``fr``.
+
     Attributes:
         label (string): Default language label if not given in kwargs.
         code (string): Default language identifier if not given in kwargs.
@@ -41,10 +45,6 @@ class LangBase(UnicodeMixin):
             set.
         external_code (string): External code for some external apps, will be
             equal to ``alt_code`` if not set.
-
-    Keyword Arguments:
-        code (string): Language identifier.
-        label (string): Language label like "Français" for ``fr``.
     """
     label = None
     code = None
