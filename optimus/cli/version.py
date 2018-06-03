@@ -29,7 +29,7 @@ def version_command(context):
         ("cherrypy", cherrypy_version),
     )
 
-    for i,data in enumerate(versions, start=1):
+    for i, data in enumerate(versions, start=1):
         name, version = data
         if i == 1:
             click.echo("{} {}".format(name, version))

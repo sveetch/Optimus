@@ -19,14 +19,15 @@ DIRECTORY_STRUCTURE = [
 # The directory name that contains 'sources' (assets, templates, images, etc..)
 # in the template project
 SOURCES_FROM = 'sources'
+
 # The directory name that will contains 'sources' in the new created projects
 SOURCES_TO = SOURCES_FROM
 
-# Default sources files or directory to synchronize within the new project 
+# Default sources files or directory to synchronize within the new project
 # sources directory
 # The sync task is performed before the writing task
 FILES_TO_SYNC = (
-    #(SOURCE, DESTINATION)
+    # (SOURCE, DESTINATION)
     ('js', 'js'),
     ('css', 'css'),
     ('scss', 'scss'),
@@ -37,9 +38,9 @@ FILES_TO_SYNC = (
 LOCALE_DIR = "locale"
 
 # Script template files
-# NOTE: Files are rendered with the ``String.format()`` method, so remember to double 
-#       all your '{' and '}', else they will be interpreted as format variable, and 
-#       probably raise a Key error
+# NOTE: Files are rendered with the ``String.format()`` method, so remember
+#       to double all your '{' and '}', else they will be interpreted as
+#       format variable, and probably raise a Key error
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],
     # Default scripts

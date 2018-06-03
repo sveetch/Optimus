@@ -12,9 +12,13 @@ TODO:
     * Use exceptions instead of logger.error;
     * Avoid to directly use object attributes, prefer to give needed vars as
       method args;
-    * Doctrings;
 """
-import datetime, io, logging, os, tempfile
+import datetime
+import io
+import logging
+import os
+import shutil
+import tempfile
 
 from babel import Locale
 from babel.util import LOCALTZ
@@ -143,7 +147,7 @@ class I18NManager(object):
         Returns:
             dict: Dictionnary of languages identifiers.
         """
-        _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x
+        _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x # noqa
         return map(_f, languages)
 
     def init_locales_dir(self):
@@ -255,7 +259,7 @@ class I18NManager(object):
         try:
             with io.open(tmpname, 'wb') as tmpfile:
                 write_po(tmpfile, catalog, **kwargs)
-        except:
+        except: # noqa
             os.remove(tmpname)
             raise
 

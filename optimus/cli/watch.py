@@ -28,21 +28,25 @@ from optimus.watchers.assets import AssetsWatchEventHandler
 @click.pass_context
 def watch_command(context, basedir, settings_name):
     """
-    Watch for changes in project sources to automatically build project ressources
+    Watch for changes in project sources to automatically build project
+    ressources
     """
     logger = logging.getLogger("optimus")
 
     # Set required environment variables to load settings
-    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+    if PROJECT_DIR_ENVVAR not in os.environ \
+       or not os.environ[PROJECT_DIR_ENVVAR]:
         os.environ[PROJECT_DIR_ENVVAR] = basedir
-    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+    if SETTINGS_NAME_ENVVAR not in os.environ or \
+       not os.environ[SETTINGS_NAME_ENVVAR]:
         os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
     # Load current project settings
     from optimus.conf.registry import settings
 
     # Debug output
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
+                                'TEMPLATES_DIR', 'LOCALES_DIR'))
 
     initialize(settings)
 
@@ -53,20 +57,39 @@ def watch_command(context, basedir, settings_name):
 
     # Proceed to page building from registered pages
     logger.debug('Trigger pages build to start')
-    buildeds = builder.build_bulk(pages_map.PAGES)
+    builder.build_bulk(pages_map.PAGES)
 
     builder.scan_bulk(pages_map.PAGES)
 
     observer = Observer()
 
     # Init templates and assets event watchers
-    templates_event_handler = TemplatesWatchEventHandler(settings, builder, **settings.WATCHER_TEMPLATES_PATTERNS)
+    templates_event_handler = TemplatesWatchEventHandler(
+        settings,
+        builder,
+        **settings.WATCHER_TEMPLATES_PATTERNS
+    )
+
     if assets_env is not None:
-        assets_event_handler = AssetsWatchEventHandler(settings, assets_env, builder, **settings.WATCHER_ASSETS_PATTERNS)
+        assets_event_handler = AssetsWatchEventHandler(
+            settings,
+            assets_env,
+            builder,
+            **settings.WATCHER_ASSETS_PATTERNS
+        )
+
     # Registering event watchers and start to watch
-    observer.schedule(templates_event_handler, settings.TEMPLATES_DIR, recursive=True)
+    observer.schedule(
+        templates_event_handler,
+        settings.TEMPLATES_DIR,
+        recursive=True
+    )
     if assets_env is not None:
-        observer.schedule(assets_event_handler, settings.SOURCES_DIR, recursive=True)
+        observer.schedule(
+            assets_event_handler,
+            settings.SOURCES_DIR,
+            recursive=True
+        )
 
     logger.warning('Starting to watch sources, use CTRL+C to stop it')
     observer.start()

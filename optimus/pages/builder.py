@@ -21,9 +21,6 @@ class PageBuilder(object):
     """
     Builder class to init Jinja2 environment and build given pages.
 
-    TODO:
-        Old Python string template (%) to change to Format string (format()).
-
     Arguments:
         settings (conf.model.SettingsModel): Settings registry instance.
 
@@ -290,6 +287,6 @@ class PageBuilder(object):
 
         builded = []
         for page in page_list:
-            builded.append( self.build_item(page) )
+            builded.append(self.build_item(page))
 
         return builded

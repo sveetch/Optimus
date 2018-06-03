@@ -77,7 +77,7 @@ class PageRegistry(object):
         Returns:
             list: List of all page destinations.
         """
-        return [dest for dest,page in self.map_dest_to_page.items()]
+        return [dest for dest, page in self.map_dest_to_page.items()]
 
     def get_all_pages(self):
         """
@@ -86,4 +86,4 @@ class PageRegistry(object):
         Returns:
             list: List of all page instances.
         """
-        return [page for dest,page in self.map_dest_to_page.items()]
+        return [page for dest, page in self.map_dest_to_page.items()]

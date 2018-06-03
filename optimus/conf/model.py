@@ -4,7 +4,6 @@ Settings model
 **************
 
 """
-import logging
 import os
 
 from optimus.exceptions import InvalidSettings
@@ -61,7 +60,7 @@ class SettingsModel(object):
 
         if len(missing_settings) > 0:
             msg = ("The following settings are required but not "
-                  "defined: {0}").format(", ".join(missing_settings))
+                   "defined: {0}").format(", ".join(missing_settings))
             raise InvalidSettings(msg)
 
     def _default_jinja(self):
@@ -101,7 +100,8 @@ class SettingsModel(object):
         """
         # The directory where webassets will store his cache
         if not hasattr(self, "WEBASSETS_CACHE"):
-            self.WEBASSETS_CACHE = os.path.join(self.PROJECT_DIR, '.webassets-cache')
+            self.WEBASSETS_CACHE = os.path.join(self.PROJECT_DIR,
+                                                '.webassets-cache')
 
         # Asset version appended through url querystring behavior
         if not hasattr(self, "WEBASSETS_URLEXPIRE"):

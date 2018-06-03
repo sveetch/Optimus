@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import copy, logging
+import logging
 
 from webassets import Environment as AssetsEnvironment
 
@@ -45,7 +45,8 @@ def register_assets(settings):
     """
     logger = logging.getLogger('optimus')
     if not settings.ENABLED_BUNDLES:
-        logger.warning("Asset registering skipped as there are no enabled bundle")
+        logger.warning(("Asset registering skipped as there are no enabled "
+                        "bundle"))
         return None
     logger.info("Starting asset registering")
 
@@ -69,7 +70,8 @@ def register_assets(settings):
         logger.debug("Registering bundle: {}".format(bundle_name))
 
         assets_env.register(bundle_name, AVAILABLE_BUNDLES[bundle_name])
-        assets_env.optimus_registry.add_bundle(bundle_name, AVAILABLE_BUNDLES[bundle_name])
+        assets_env.optimus_registry.add_bundle(bundle_name,
+                                               AVAILABLE_BUNDLES[bundle_name])
 
     # When after bundle has been registered we can resolve it
     for bundle_name in settings.ENABLED_BUNDLES:

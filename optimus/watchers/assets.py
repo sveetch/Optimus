@@ -54,12 +54,15 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         """
         rel_path = self.get_relative_asset_path(path)
         built = []
-        self.logger.warning("--- Changes detected on: %s ---", rel_path)
+        self.logger.warning("--- Changes detected on: {} ---".format(rel_path))
 
         # Search in the registry if the file is a knowed asset from a bundle
         if rel_path in self.assets_env.optimus_registry.map_dest_to_bundle:
-            bundle_name = self.assets_env.optimus_registry.map_dest_to_bundle[rel_path]
-            self.logger.debug("Build required for bundle: %s", bundle_name)
+            bundle_name = self.assets_env.optimus_registry\
+                          .map_dest_to_bundle[rel_path] # noqa
+
+            msg = "Build required for bundle: {}"
+            self.logger.debug(msg.format(bundle_name))
 
             # Trigger webassets update on bundle (wont do nothing when
             # 'settings.DEBUG' is True)
@@ -72,7 +75,8 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             )
             built.extend(builds)
         else:
-            self.logger.warning("Path are not registered from any assets bundle: %s", rel_path)
+            msg = "Path are not registered from any assets bundle: {}"
+            self.logger.warning(msg.format(rel_path))
 
         return built
 
@@ -89,10 +93,11 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         """
         # We are only interested for destination
         if match_path(event.dest_path,
-                included_patterns=self.patterns,
-                excluded_patterns=self.ignore_patterns,
-                case_sensitive=self.case_sensitive):
-            self.logger.debug("Change detected from a move on: %s", event.dest_path)
+                      included_patterns=self.patterns,
+                      excluded_patterns=self.ignore_patterns,
+                      case_sensitive=self.case_sensitive):
+            msg = "Change detected from a move on: {}"
+            self.logger.debug(msg.format(event.dest_path))
 
             return self.build_for_item(event.dest_path)
 
@@ -106,7 +111,8 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             event: Watchdog event, either ``watchdog.events.DirCreatedEvent``
                 or ``watchdog.events.FileCreatedEvent``.
         """
-        self.logger.debug("Change detected from a create on: %s", event.src_path)
+        msg = "Change detected from a create on: {}"
+        self.logger.debug(msg.format(event.src_path))
 
         return self.build_for_item(event.src_path)
 
@@ -118,6 +124,7 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             event: Watchdog event, ``watchdog.events.DirModifiedEvent`` or
                 ``watchdog.events.FileModifiedEvent``.
         """
-        self.logger.debug("Change detected from an edit on: %s", event.src_path)
+        msg = "Change detected from an edit on: {}"
+        self.logger.debug(msg.format(event.src_path))
 
         return self.build_for_item(event.src_path)

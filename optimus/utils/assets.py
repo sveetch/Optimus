@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import logging, os, shutil
+import logging
+import os
+import shutil
 
 
 def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):

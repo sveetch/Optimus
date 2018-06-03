@@ -16,7 +16,6 @@ else:
     CHERRYPY_AVAILABLE = True
 
 
-
 @click.command('runserver', short_help=("Launch a simple HTTP server on "
                                         "built project"))
 @click.argument('hostname', default="127.0.0.1:80")
@@ -41,7 +40,8 @@ def runserver_command(context, basedir, settings_name, index, hostname):
     '80'. You may give another host to bind to as argument 'HOSTNAME'.
 
     'HOSTNAME' can be either a simple address like '0.0.0.0' or an address and
-    port like '0.0.0.0:8001'. If no custom port is given, '80' is used as default.
+    port like '0.0.0.0:8001'. If no custom port is given, '80' is used as
+    default.
     """
     logger = logging.getLogger("optimus")
 
@@ -51,9 +51,11 @@ def runserver_command(context, basedir, settings_name, index, hostname):
         raise click.Abort()
 
     # Set required environment variables to load settings
-    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+    if PROJECT_DIR_ENVVAR not in os.environ \
+       or not os.environ[PROJECT_DIR_ENVVAR]:
         os.environ[PROJECT_DIR_ENVVAR] = basedir
-    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+    if SETTINGS_NAME_ENVVAR not in os.environ \
+       or not os.environ[SETTINGS_NAME_ENVVAR]:
         os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
     # Load current project settings

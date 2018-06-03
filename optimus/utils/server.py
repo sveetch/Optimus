@@ -23,9 +23,9 @@ def get_host_parts(hostname, default_name='127.0.0.1', default_port=80):
     port = None
     hostparts = hostname.split(':')
 
-    if len(hostparts)>2:
+    if len(hostparts) > 2:
         raise InvalidHostname("Invalid hostname format, too many ':'")
-    elif len(hostparts)==2:
+    elif len(hostparts) == 2:
         name, port = hostparts
         if not port or not name:
             raise InvalidHostname(("Invalid hostname format, address or port "

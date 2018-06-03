@@ -56,10 +56,14 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         built = []
         # Search in the registry if the file is a knowed template dependancy
         if rel_path in self.pages_builder.registry.elements:
-            self.logger.warning("--- Changes detected on: %s ---", rel_path)
+            msg = "--- Changes detected on: {} ---"
+            self.logger.warning(msg.format(rel_path))
 
-            requires = self.pages_builder.registry.get_pages_from_dependency(rel_path)
-            self.logger.debug("Requires for rebuild: %s", requires)
+            requires = self.pages_builder.registry\
+                       .get_pages_from_dependency(rel_path) # noqa
+
+            self.logger.debug("Requires for rebuild: {}".format(requires))
+
             builds = self.pages_builder.build_bulk(requires)
             built.extend(builds)
 
@@ -78,10 +82,11 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         """
         # We are only interested for the destination
         if match_path(event.dest_path,
-                included_patterns=self.patterns,
-                excluded_patterns=self.ignore_patterns,
-                case_sensitive=self.case_sensitive):
-            self.logger.debug("Change detected from a move on: %s", event.dest_path)
+                      included_patterns=self.patterns,
+                      excluded_patterns=self.ignore_patterns,
+                      case_sensitive=self.case_sensitive):
+            msg = "Change detected from a move on: {}"
+            self.logger.debug(msg.format(event.dest_path))
 
             return self.build_for_item(event.dest_path)
 
@@ -95,7 +100,8 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             event: Watchdog event, either ``watchdog.events.DirCreatedEvent``
                 or ``watchdog.events.FileCreatedEvent``.
         """
-        self.logger.debug("Change detected from a create on: %s", event.src_path)
+        msg = "Change detected from a create on: {}"
+        self.logger.debug(msg.format(event.src_path))
 
         return self.build_for_item(event.src_path)
 
@@ -107,6 +113,7 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             event: Watchdog event, ``watchdog.events.DirModifiedEvent`` or
                 ``watchdog.events.FileModifiedEvent``.
         """
-        self.logger.debug("Change detected from an edit on: %s", event.src_path)
+        msg = "Change detected from an edit on: {}"
+        self.logger.debug(msg.format(event.src_path))
 
         return self.build_for_item(event.src_path)

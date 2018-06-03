@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging, os
+import logging
+import os
 
 from optimus.utils.assets import synchronize_assets_sources
 
@@ -67,7 +68,7 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
     logger = logging.getLogger('optimus')
 
     for item in tree:
-        if len(item)>0:
+        if len(item) > 0:
             new_dir = item[0]
             path_dir = os.path.join(project_directory, new_dir)
             if not os.path.exists(path_dir):
@@ -78,7 +79,7 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
                 logger.warning(('* Following path allready exist : '
                                 '{}').format(path_dir))
         # Follow children directories to create them
-        if len(item)>1:
+        if len(item) > 1:
             recursive_directories_create(path_dir, item[1], dry_run=dry_run)
 
 

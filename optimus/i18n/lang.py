@@ -60,7 +60,7 @@ class LangBase(UnicodeMixin):
                    """attribute.""")
             raise InvalidLanguageIdentifier(msg)
 
-        if len(self.code.split('-'))>1:
+        if len(self.code.split('-')) > 1:
             msg = ("""Invalid language identifier : Language name and """
                    """region name must be joined by a '_' not a '-'""")
             raise InvalidLanguageIdentifier(msg)
@@ -102,7 +102,7 @@ class LangBase(UnicodeMixin):
         language_name = items[0]
         region_name = None
 
-        if len(items)>1:
+        if len(items) > 1:
             region_name = items[1]
 
         return language_name, region_name

@@ -17,13 +17,13 @@ class PageViewBase(UnicodeMixin):
 
     You can set class attributes at the init if needed
 
-    The render method is responsible to rendering the HTML from the template and
-    his context. Actually this is the only used method directly
+    The render method is responsible to rendering the HTML from the template
+    and his context. Actually this is the only used method directly.
 
-    Only ``lang`` and ``context`` attributes are optional, so take care to set all the
-    required ones because their default value is ``None``. You should not use
-    directly ``PageViewBase``, inherit it in a common object with all attributes setted
-    by default.
+    Only ``lang`` and ``context`` attributes are optional, so take care to set
+    all the required ones because their default value is ``None``. You should
+    not use directly ``PageViewBase``, inherit it in a common object with all
+    attributes setted by default.
 
     Template context will have the following variables :
 
@@ -36,12 +36,12 @@ class PageViewBase(UnicodeMixin):
     page_template_name
         Template name used to compile the page HTML
 
-    But you can add new variable if needed. The default context variables can not be
-    overriden from the ``context`` class attribute, only from the ``get_context`` class
-    method.
+    But you can add new variable if needed. The default context variables can
+    not be overriden from the ``context`` class attribute, only from the
+    ``get_context`` class method.
 
-    View need settings to be defined either as argument on instance init or later
-    through attribute setter.
+    View need settings to be defined either as argument on instance init or
+    later through attribute setter.
 
     Attributes:
         title (string): Page title.
@@ -110,7 +110,7 @@ class PageViewBase(UnicodeMixin):
                 err.append(item)
 
         if len(err) > 0:
-            msg = ("""These attributes are required: {}""".format(", ".join(err)))
+            msg = ("These attributes are required: {}".format(", ".join(err)))
             raise ViewImproperlyConfigured(msg)
 
         return True
@@ -221,7 +221,7 @@ class PageViewBase(UnicodeMixin):
             'page_template_name': self.get_template_name(),
         })
 
-        self.logger.debug(" - Initial context: %s", self.context)
+        self.logger.debug(" - Initial context: {}".format(self.context))
 
         return self.context
 
@@ -266,8 +266,8 @@ class PageViewBase(UnicodeMixin):
 
     def introspect(self, env):
         """
-        Take the Jinja2 environment as required argument to find every templates
-        dependancies from page.
+        Take the Jinja2 environment as required argument to find every
+        templates dependancies from page.
 
         Arguments:
             env (jinja2.Jinja2Environment): Jinja environment.
@@ -278,10 +278,15 @@ class PageViewBase(UnicodeMixin):
         if self._used_templates is None:
             self.env = env
 
-            found = self._recurse_template_search(env,
-                                                   self.get_template_name())
+            found = self._recurse_template_search(
+                env,
+                self.get_template_name()
+            )
+
             self._used_templates = [self.get_template_name()] + found
 
-            self.logger.debug(" - Used templates: %s", self._used_templates)
+            self.logger.debug(" - Used templates: {}".format(
+                self._used_templates
+            ))
 
         return self._used_templates

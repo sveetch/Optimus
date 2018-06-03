@@ -16,7 +16,11 @@ Project template can be either an embedded one from Optimus or an external
 one available as a Python package, its Python path will be used to reach it.
 
 """
-import logging, io, os, shutil
+import logging
+import io
+import os
+import shutil
+
 from string import Template
 from importlib import import_module
 

@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Original code is from 'Bradley Wright' on Github :
 

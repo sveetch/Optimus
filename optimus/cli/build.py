@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import logging
 
 import click
 
@@ -25,19 +24,20 @@ def build_command(context, basedir, settings_name):
     """
     Build project pages
     """
-    logger = logging.getLogger("optimus")
-
     # Set required environment variables to load settings
-    if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
+    if PROJECT_DIR_ENVVAR not in os.environ \
+       or not os.environ[PROJECT_DIR_ENVVAR]:
         os.environ[PROJECT_DIR_ENVVAR] = basedir
-    if SETTINGS_NAME_ENVVAR not in os.environ or not os.environ[SETTINGS_NAME_ENVVAR]:
+    if SETTINGS_NAME_ENVVAR not in os.environ \
+       or not os.environ[SETTINGS_NAME_ENVVAR]:
         os.environ[SETTINGS_NAME_ENVVAR] = settings_name
 
     # Load current project settings
     from optimus.conf.registry import settings
 
     # Debug output
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR','SOURCES_DIR','TEMPLATES_DIR','LOCALES_DIR'))
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
+                                'TEMPLATES_DIR', 'LOCALES_DIR'))
 
     initialize(settings)
 
@@ -47,4 +47,4 @@ def build_command(context, basedir, settings_name):
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
 
     # Proceed to page building from registered pages
-    buildeds = builder.build_bulk(pages_map.PAGES)
+    builder.build_bulk(pages_map.PAGES)
