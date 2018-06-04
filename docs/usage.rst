@@ -38,16 +38,10 @@ It will create project directory and fill it with basic content. But Optimus can
 
 * ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
 * ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
-* ``optimus_foundation`` : `Optimus-foundation`_ that create a new project including all `Foundation`_ **3** stuff, you will have to install it before;
-* ``optimus_foundation_5`` : `Optimus-foundation-5`_ that create a new project including all `Foundation`_ **5** stuff, you will have to install it before;
 
 To create a new project with the I18n sample, you will have to do something like : ::
 
     optimus-cli init my_project -t i18n
-
-To create a new Foundation project with `Optimus-foundation-5`_ plugin : ::
-
-    optimus-cli init my_project -t optimus_foundation_5
 
 .. _usage-building-label:
 

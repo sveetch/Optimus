@@ -38,12 +38,10 @@ FILES_TO_SYNC = (
 LOCALE_DIR = "locale"
 
 # Script template files
-# NOTE: Files are rendered with the ``String.format()`` method, so remember
-#       to double all your '{' and '}', else they will be interpreted as
-#       format variable, and probably raise a Key error
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],
     # Default scripts
+    ['scripts/Makefile.tpl', 'Makefile'],
     ['scripts/babel.cfg.tpl', 'babel.cfg'],
     ['scripts/config.rb.tpl', 'config.rb'],
     ['scripts/gitignore.tpl', '.gitignore'],

@@ -5,6 +5,11 @@ Settings file for $PROJECT_NAME
 import os
 from webassets import Bundle
 
+# Register custom webasset filter for RCssMin minifier
+from webassets.filter import register_filter
+from project.utils.rcssmin_webassets_filter import RCSSMin
+register_filter(RCSSMin)
+
 DEBUG = True
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -31,17 +36,17 @@ STATIC_URL = 'static/'
 BUNDLES = {
     'modernizr_js': Bundle(
         "js/modernizr.src.js",
-        filters=None,
+        filters='rjsmin',
         output='js/modernizr.min.js'
     ),
     'app_css': Bundle(
         'css/app.css',
-        filters=None,
+        filters='rcssmin',
         output='css/app.min.css'
     ),
     'app_js': Bundle(
         "js/app.js",
-        filters=None,
+        filters='rjsmin',
         output='js/app.min.js'
     ),
 }

@@ -35,13 +35,11 @@ FILES_TO_SYNC = (
 )
 
 # Script template files
-# NOTE: Files are rendered with the ``String.format()`` method, so remember
-#       to double all your '{' and '}', else they will be interpreted as
-#       format variable, and probably raise a Key error
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],
     # Default scripts
     ['scripts/gitignore.tpl', '.gitignore'],
+    ['scripts/requirements.txt.tpl', 'requirements.txt'],
     ['scripts/config.rb.tpl', 'config.rb'],
     ['scripts/__init__.py.tpl', '__init__.py'],
     ['scripts/settings.py.tpl', 'settings.py'],
