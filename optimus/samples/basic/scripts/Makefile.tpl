@@ -13,6 +13,8 @@ help:
 	@echo "  delpyc              -- to remove all *.pyc files, this is recursive from current directory"
 	@echo "  clean               -- to clean local repository from all stuff created during development"
 	@echo
+	@echo "  build               -- to build project in default environnement"
+	@echo
 
 delpyc:
 	find . -name "*\.pyc"|xargs rm -f
@@ -22,10 +24,13 @@ clean: delpyc
 	rm -Rf venv
 
 venv:
-	virtualenv -p $(PYTHON) venv
+	virtualenv -p $$(PYTHON) venv
 	# This is required for those ones using ubuntu<16.04
-	$(PIP) install --upgrade pip
-	$(PIP) install --upgrade setuptools
+	$$(PIP) install --upgrade pip
+	$$(PIP) install --upgrade setuptools
 
 install: venv
-	$(PIP) install -r requirements.txt
+	$$(PIP) install -r requirements.txt
+
+build: venv
+	$$(OPTIMUS) build

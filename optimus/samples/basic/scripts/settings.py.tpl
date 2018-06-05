@@ -7,7 +7,7 @@ from webassets import Bundle
 
 # Register custom webasset filter for RCssMin minifier
 from webassets.filter import register_filter
-from project.utils.rcssmin_webassets_filter import RCSSMin
+from optimus.assets.rcssmin_webassets_filter import RCSSMin
 register_filter(RCSSMin)
 
 DEBUG = True

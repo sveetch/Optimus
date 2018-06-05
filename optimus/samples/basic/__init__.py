@@ -38,9 +38,10 @@ FILES_TO_SYNC = (
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],
     # Default scripts
-    ['scripts/gitignore.tpl', '.gitignore'],
+    ['scripts/Makefile.tpl', 'Makefile'],
     ['scripts/requirements.txt.tpl', 'requirements.txt'],
-    ['scripts/config.rb.tpl', 'config.rb'],
+    ['scripts/gitignore.tpl', '.gitignore'],
+    ['scripts/settings.json.tpl', 'settings.json'],
     ['scripts/__init__.py.tpl', '__init__.py'],
     ['scripts/settings.py.tpl', 'settings.py'],
     ['scripts/prod_settings.py.tpl', 'prod_settings.py'],
