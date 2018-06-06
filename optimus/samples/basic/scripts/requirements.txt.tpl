@@ -1,4 +1,4 @@
-Optimus
+Optimus>=1.0.0
 rcssmin
 jsmin
-cherrypy
+CherryPy==15.0.0

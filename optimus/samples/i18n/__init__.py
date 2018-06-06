@@ -41,8 +41,10 @@ LOCALE_DIR = "locale"
 SCRIPT_FILES = [
     ['README.rst', 'README.rst'],
     # Default scripts
+    ['scripts/Makefile.tpl', 'Makefile'],
+    ['scripts/requirements.txt.tpl', 'requirements.txt'],
     ['scripts/babel.cfg.tpl', 'babel.cfg'],
-    ['scripts/config.rb.tpl', 'config.rb'],
+    ['scripts/settings.json.tpl', 'settings.json'],
     ['scripts/gitignore.tpl', '.gitignore'],
     ['scripts/__init__.py.tpl', '__init__.py'],
     ['scripts/settings.py.tpl', 'settings.py'],
