@@ -8,13 +8,22 @@
 Changelog
 =========
 
-Version 0.9.0 - Unreleased
+Version 1.0.1 - 2018/06/07
+--------------------------
+
+* Fixed documentation;
+* Fixed project templates Makefile;
+
+Version 1.0.0 - 2018/06/07
 --------------------------
 
 Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage using pytest and tox.
 
-* Drop 'argh' in favor of 'click' for commandline scripts, close #23;
+* Drop 'argh' in favor of 'click' for commandline scripts, this involve commandline has a minor changes on command options usage, close #23;
 * Big cleaning for sanity and update for Python3 support, close #22;
+* Support of rcssmin filter for assets;
+* ReStructuredText view has been dropped;
+* Your old projects should still be compatible minus some specific settings details;
 
 Version 0.8.2 - 2017/01/15
 --------------------------

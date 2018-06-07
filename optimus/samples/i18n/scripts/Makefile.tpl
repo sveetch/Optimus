@@ -15,8 +15,10 @@ help:
 	@echo ""
 	@echo "  build               -- to build project with default environnement"
 	@echo "  watch               -- to launch project watcher with default environnement"
+	@echo "  server              -- to launch local server on 0.0.0.0:8001 with default environnement"
 	@echo ""
 	@echo "  build-prod          -- to build project with production environnement"
+	@echo "  server-projd        -- to launch local server on 0.0.0.0:8001 with production environnement"
 	@echo
 
 delpyc:
@@ -40,5 +42,11 @@ build:
 watch:
 	$$(OPTIMUS) watch
 
+server:
+	$$(OPTIMUS) runserver 0.0.0.0:8001
+
 build-prod:
-	$$(OPTIMUS) build --settings prod_settings
+	$$(OPTIMUS) build --settings-name prod_settings
+
+server-prod:
+	$$(OPTIMUS) runserver 0.0.0.0:8001 --settings-name prod_settings

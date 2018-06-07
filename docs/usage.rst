@@ -34,10 +34,12 @@ At least you will give a name for the new project. Be aware that it must a valid
 
     optimus-cli init my_project
 
-It will create project directory and fill it with basic content. But Optimus can use project templates to create project more useful :
+It will create project directory and fill it with basic content. There is some sample project templates:
 
-* ``basic`` : This is the default one, included in Optimus, you don't have to specify anything to use it;
-* ``i18n`` : The i18n sample, included in Optimus. All needed stuff to enable i18n support are installed;
+* ``basic`` : Default template, you don't have to specify anything to use it;
+* ``i18n`` : An i18n sample template. All needed stuff to enable i18n support are installed;
+
+All project template includes a ``Makefile`` to ease install and usage, CherryPy is installed by default and Assets settings use ``rcssmin`` and ``jsmin``.
 
 To create a new project with the I18n sample, you will have to do something like : ::
 
