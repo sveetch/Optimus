@@ -17,13 +17,13 @@ Usage
 
 You can use Optimus from the command line tool ``optimus-cli``. A global help is available with : ::
 
-    optimus-cli help
+    optimus-cli -h
 
 Or specific command action help with : ::
 
-    optimus-cli help action_name
+    optimus-cli COMMAND -h
 
-There is also a common command argument ``--settings`` (apart from the ``init`` command) that is useful to define the settings files to use. It appends a Python path to the settings file. For common usage you just have to give the filename without the ``.py`` extension, otherwise you will get an error message.
+There is also a common command argument ``--settings-name`` that is useful to define the settings files to use. It appends a Python path to the settings file. For common usage you just have to give the filename without the ``.py`` extension, otherwise you will get an error message.
 
 .. _usage-project-label:
 
@@ -147,7 +147,7 @@ To launch the webserver binded on your local IP on port 8001 to publish your pro
 
 Also you can bind it on localhost on port 8080 with the production settings : ::
 
-    optimus-cli runserver localhost:8080 --settings=prod_settings
+    optimus-cli runserver localhost:8080 --settings-name=prod_settings
 
 The settings are used to know the publish directory to expose.
 

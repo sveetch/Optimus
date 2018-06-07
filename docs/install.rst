@@ -22,13 +22,13 @@ It is recommended to install it in a `virtualenv`_ environment like this : ::
     virtualenv --no-site-packages my_optimus_projects
     cd my_optimus_projects
     source bin/activate
-    pip install optimus
+    pip install Optimus
 
 This way you can work safely on your projects within this environment without any change to your system.
 
 Also you can install it directly on your system without `virtualenv`_, just use `pip`_ : ::
 
-    sudo pip install optimus
+    sudo pip install Optimus
 
 Operating system
 ================
@@ -51,7 +51,7 @@ Webserver for development
 
 You can install `cherrypy`_, a simple Web server, to see your builded pages : ::
 
-    pip install cherrypy
+    pip install CherryPy
 
 Read :ref:`usage-webserver-label` to see how to use it.
 

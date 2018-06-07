@@ -26,9 +26,9 @@ This is where your environment configuration resides, generally the ``settings.p
 
 `Optimus`_ command line actions always accept a ``settings`` option to specify a settings file, by default this is the ``settings.py`` that is used but if you want to use another settings file like ``prod_settings.py`` you have to specify it in command line like a Python path : ::
 
-    optimus-cli [ACTION] --settings=prod_settings
+    optimus-cli [ACTION] --settings-name=prod_settings
 
-If you just want to use the default settings, you don't need to specify it with ``settings`` option.
+If you just want to use the default settings, you don't need to specify it with ``settings-name`` option.
 
 Below is a list of all available settings, but not all are created in the settings file when you create a new project with Optimus, only the useful ones. Optionnal settings that are undefined will be set with a default value. When the default value is not defined in the list, you can assume than they are empty.
 
