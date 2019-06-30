@@ -175,6 +175,8 @@ For each template the default context variables are :
   * ``web_url`` : the value from ``settings.SITE_DOMAIN`` prefixed by *http://*;
 
 * ``STATIC_URL`` : A string, containing the value from ``settings.STATIC_URL``;
+* ``OPTIMUS`` : Optimus version;
+* ``_SETTINGS`` : A copy of settings. Only uppercase names are allowed, every other will be ignored. Think about to renamed modules you import in your settings to not be fully uppercase so they won't be passed to context;
 
 Read the `Jinja2 documentation`_ for more details on the available template markups.
 

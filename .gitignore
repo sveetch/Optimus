@@ -1,16 +1,36 @@
 # virtualenv
-/venv
+.venv
 
-#egg's specific
+# Packaging
+build
+dist
 *.egg-info
 
-#defaults
-/dist
-*.py[cod]
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
 
-#tests
-.tox
+# Unit test / coverage reports
+htmlcov/
+.coverage
 .cache
-__pycache__
 .pytest_cache
+nosetests.xml
+coverage.xml
+.tox/
+
+# VS Code
+.vscode
+
+# Mac Os
+.DS_Store
+
+# Temp files
+*~
+.~lock*
+
+# Swap files
+*.sw[po]
+
+# SASS
+.sass-cache

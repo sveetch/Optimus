@@ -6,7 +6,8 @@
 .. _Compass: http://compass-style.org/
 .. _rvm: http://rvm.io/
 .. _cherrypy: http://cherrypy.org/
-.. _yui-compressor: http://developer.yahoo.com/yui/compressor/
+.. _rcssmin: https://github.com/ndparker/rcssmin
+.. _jsmin: https://github.com/tikitu/jsmin/
 .. _webassets: https://github.com/miracle2k/webassets
 
 *******
@@ -22,18 +23,20 @@ It is recommended to install it in a `virtualenv`_ environment like this : ::
     virtualenv --no-site-packages my_optimus_projects
     cd my_optimus_projects
     source bin/activate
-    pip install Optimus
+    pip install Optimus[runserver]
 
 This way you can work safely on your projects within this environment without any change to your system.
 
 Also you can install it directly on your system without `virtualenv`_, just use `pip`_ : ::
 
-    sudo pip install Optimus
+    sudo pip install Optimus[runserver]
+
+If you plan to use a specific web server you may remove ``[runserver]`` from these samples.
 
 Operating system
 ================
 
-Optimus has been developed for Linux systems, it works also on Windows and MacOSX but you should have some tasks that will differs from the present documentation.
+Optimus has been developed for Linux systems, it works also on Windows and MacOSX but you may have some tasks that will differs from the present documentation.
 
 
 Asset filters
@@ -41,15 +44,17 @@ Asset filters
 
 Asset filters are used to process assets, mostly to compress them.
 
-Default install comes without any compressor requirement. It is up to you to choose, install and use assets compressors in your asset bundles.
+Default install comes with `rcssmin`_ and `jsmin`_ compressors which are lightweight and efficient.
 
-See `webassets filters documentation <https://webassets.readthedocs.io/en/latest/builtin_filters.html>`_ for more details.
+You may find another available compressors in `webassets filters documentation <https://webassets.readthedocs.io/en/latest/builtin_filters.html>`_.
 
 
 Webserver for development
 =========================
 
-You can install `cherrypy`_, a simple Web server, to see your builded pages : ::
+`cherrypy`_, is a simple Web server which is plugged to Optimus to see your builded pages in live.
+
+Present install document recommends to install it, if you avoided it on your first install, you may install it afterwards: ::
 
     pip install CherryPy
 

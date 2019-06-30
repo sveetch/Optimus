@@ -15,7 +15,7 @@ def test_fail_basedir(monkeypatch, caplog, fixtures_settings):
     message = ("Settings cannot be imported, because environment variable "
                "{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
-    with pytest.raises(ImportError, message=message):
+    with pytest.raises(ImportError, match=message):
         from optimus.conf.registry import settings
 
 
@@ -28,7 +28,7 @@ def test_fail_name(monkeypatch, caplog, fixtures_settings):
     message = ("Settings cannot be imported, because environment variable "
                "{} is undefined.".format(SETTINGS_NAME_ENVVAR))
 
-    with pytest.raises(ImportError, message=message):
+    with pytest.raises(ImportError, match=message):
         from optimus.conf.registry import settings
 
 

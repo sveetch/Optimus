@@ -1,48 +1,59 @@
-PYTHON=python3
-
-PIP=venv/bin/python -m pip
-FLAKE=venv/bin/flake8
-PYTEST=venv/bin/py.test
-
-.PHONY: help clean delpyc install install-dev tests flake quality
+PYTHON_INTERPRETER=python3
+VENV_PATH=.venv
+PIP=$(VENV_PATH)/bin/pip
+FLAKE=$(VENV_PATH)/bin/flake8
+PYTEST=$(VENV_PATH)/bin/pytest
+PACKAGE_NAME=Optimus
+MODULE_NAME=optimus
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo
-	@echo "  install             -- to install project into a virtual environnement with python-venv"
-	@echo "  install-dev         -- to install everything for development"
-	@echo
-	@echo "  delpyc              -- to remove all *.pyc files, this is recursive from the current directory"
-	@echo "  clean               -- to clean local repository from all stuff created during development"
-	@echo
-	@echo "  flake               -- to launch Flake8 checking on code"
+	@echo "  clean               -- to clean EVERYTHING (Warning)"
+	@echo "  clean-pycache       -- to remove all __pycache__, this is recursive from current directory"
+	@echo "  clean-install       -- to clean Python side installation"
+	@echo ""
+	@echo "  install             -- to install this project with virtualenv and Pip with everything for development"
+	@echo ""
+	@echo "  flake               -- to launch Flake8 checking on code (not the tests)"
 	@echo "  tests               -- to launch tests using py.test"
 	@echo "  quality             -- to launch Flake8 checking and tests with py.test"
 	@echo
 
-delpyc:
-	find . -name "*\.pyc"|xargs rm -f
+clean-pycache:
+	rm -Rf .pytest_cache
 	find . -type d -name "__pycache__"|xargs rm -Rf
+	find . -name "*\.pyc"|xargs rm -f
+.PHONY: clean-pycache
 
-clean: delpyc
-	rm -Rf venv dist .tox Optimus.egg-info .cache docs/_build .pytest_cache
+clean-install:
+	rm -Rf $(VENV_PATH)
+	rm -Rf dist
+	rm -Rf .tox
+	rm -Rf $(PACKAGE_NAME).egg-info
+.PHONY: clean-install
+
+clean: clean-install clean-pycache
+.PHONY: clean
 
 venv:
-	$(PYTHON) -m venv venv
+	virtualenv -p $(PYTHON_INTERPRETER) $(VENV_PATH)
 	# This is required for those ones using ubuntu<16.04
 	$(PIP) install --upgrade pip
 	$(PIP) install --upgrade setuptools
+.PHONY: venv
 
 install: venv
-	$(PIP) install -e .
-
-install-dev: install
-	$(PIP) install -r requirements/dev.txt
+	$(PIP) install -e .[dev,runserver]
+.PHONY: install
 
 flake:
-	$(FLAKE) --show-source optimus
+	$(FLAKE) --show-source $(MODULE_NAME)
+.PHONY: flake
 
 tests:
-	$(PYTEST) -vv tests/
+	$(PYTEST) -vv tests
+.PHONY: tests
 
 quality: tests flake
+.PHONY: quality

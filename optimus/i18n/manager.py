@@ -347,7 +347,7 @@ class I18NManager(object):
             self.logger.info(msg.format(locale, catalog_path))
 
             # Open PO file
-            with io.open(catalog_path, 'U') as fp:
+            with io.open(catalog_path) as fp:
                 catalog = read_po(fp, locale=locale)
 
             # Update it from the template
@@ -394,10 +394,9 @@ class I18NManager(object):
                         error
                     ))
             # Don't overwrite previous MO file if there have been error
-            # TODO: Raise exception instead of logging error
             if errs:
-                self.logger.error(("There has been errors within the "
-                                   "catalog, compilation has been aborted"))
+                self.logger.critical(("There has been errors within the "
+                                      "catalog, compilation has been aborted"))
                 break
 
             with io.open(self.get_mo_filepath(locale), 'wb') as fp:

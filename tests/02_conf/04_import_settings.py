@@ -68,7 +68,7 @@ def test_missing_required_settings(caplog, fixtures_settings):
                      'PROJECT_DIR, SOURCES_DIR, TEMPLATES_DIR, PUBLISH_DIR, '
                      'STATIC_DIR')
 
-    with pytest.raises(InvalidSettings, message=exception_msg):
+    with pytest.raises(InvalidSettings, match=exception_msg):
         import_settings(name=module_name, basedir=basedir)
 
     assert caplog.record_tuples == [

@@ -13,6 +13,7 @@ try:
 except ImportError:
     babel_support = None
 
+from optimus import __version__
 from optimus.pages.registry import PageRegistry
 from optimus.exceptions import ViewImproperlyConfigured
 
@@ -111,12 +112,31 @@ class PageBuilder(object):
 
         return env
 
-    def get_globals(self):
+    def serialize_settings(self):
         """
-        Get global context variables from settings.
+        Get and return valid settings variables.
+
+        Valid settings means only variable names full uppercase.
 
         Returns:
-            dict: Context variables.
+            dict: Settings variables.
+        """
+        items = {}
+
+        for item in dir(self.settings):
+            if not item.startswith("_") and item.isupper():
+                items[item] = getattr(self.settings, item)
+
+        return items
+
+    def get_globals(self):
+        """
+        Get global context variables.
+
+        Returns:
+            dict: Shortcuts to some common settings like ``SITE`` options,
+            static urls, Optimus version and finally all settings contained
+            in ``_SETTINGS``.
         """
         return {
             'debug': self.settings.DEBUG,
@@ -126,6 +146,8 @@ class PageBuilder(object):
                 'web_url': "http://{}".format(self.settings.SITE_DOMAIN),
             },
             'STATIC_URL': self.settings.STATIC_URL,
+            '_SETTINGS': self.serialize_settings(),
+            'OPTIMUS': __version__,
         }
 
     def get_translation_for_item(self, page_item):

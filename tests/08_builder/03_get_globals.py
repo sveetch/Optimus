@@ -10,8 +10,8 @@ from optimus.pages.builder import PageBuilder
 
 def test_get_globals(minimal_basic_settings, fixtures_settings, caplog):
     """
-    Start with default env then use 'get_environnement' to get another one
-    with only one dummy extension
+    Context should be correclty filled with context globals (SITE shortcut,
+    settings, optimus version)
     """
     projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
     settings = minimal_basic_settings(projectdir)
@@ -30,3 +30,6 @@ def test_get_globals(minimal_basic_settings, fixtures_settings, caplog):
     assert context['SITE']['name'] == 'Foobar'
     assert context['debug'] == False
 
+    assert 'OPTIMUS' in context
+    assert '_SETTINGS' in context
+    assert context['_SETTINGS']['LANGUAGE_CODE'] == 'en_US'

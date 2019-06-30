@@ -97,6 +97,7 @@ def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
     dummy_template = os.path.join(templates_dir, "dummy.html")
     base_template = os.path.join(templates_dir, "hip/base.html")
     hiphop_template = os.path.join(templates_dir, "hip/hop.html")
+    inclusion_template = os.path.join(templates_dir, "_inclusion.html")
     with io.open(skeleton_template, filedescriptor) as fp:
         fp.write(("""<html><body>"""
                   """{% block content %}Nope{% endblock %}"""
@@ -112,7 +113,9 @@ def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
                   """{% block content %}Base{% endblock %}"""))
     with io.open(hiphop_template, filedescriptor) as fp:
         fp.write(("""{% extends "hip/base.html" %}"""
-                  """{% block content %}Base{% endblock %}"""))
+                  """{% block content %}Base {% include '_inclusion.html' %}{% endblock %}"""))
+    with io.open(inclusion_template, filedescriptor) as fp:
+        fp.write(("""I'm an inclusion"""))
 
     # Dummy settings and registry
     settings = DummySettings()
@@ -181,6 +184,10 @@ def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
             'localized/fr.html',
             'localized/en.html',
         ]),
+        '_inclusion.html': set([
+            'localized/fr.html',
+            'localized/en.html',
+        ]),
         'hip/hop.html': set([
             'localized/fr.html',
             'localized/en.html',
@@ -213,6 +220,14 @@ def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
 
     # Checking hip base usage from pages
     results = sorted(reg.get_pages_from_dependency('hip/base.html'),
+                     key=lambda obj: obj.destination)
+    attempted = sorted([
+        english_view,
+        french_view,
+    ], key=lambda obj: obj.destination)
+
+    # Checking inclusion usage from pages
+    results = sorted(reg.get_pages_from_dependency('_inclusion.html'),
                      key=lambda obj: obj.destination)
     attempted = sorted([
         english_view,

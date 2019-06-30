@@ -8,6 +8,16 @@
 Changelog
 =========
 
+Version 1.1.0 - 2019/07/01
+--------------------------
+
+* Moved package configuration to everything in ``setup.cfg``;
+* Updated Makefile;
+* Removed ``docutils`` requirement and commented code for unused modules for rst support until it has been updated;
+* Added some tests to cover template inclusion;
+* Updated to ``watchdog`` to ``==0.9.0``;
+* Added settings copy into context item ``_SETTINGS``, close #26.
+
 Version 1.0.1 - 2018/06/07
 --------------------------
 

@@ -1,6 +1,0 @@
- -r tests.txt
- -r runserver.txt
-flake8
-sphinx
-sphinx-rtd-theme
-sphinx-autobuild

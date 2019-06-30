@@ -399,7 +399,7 @@ def test_introspect(filedescriptor, temp_builds_dir):
     """
     Exploit template introspection
 
-    Note: Introspection test lack of recursive template inheritance
+    NOTE: This test lacks of recursive template inheritance
     """
     basepath = temp_builds_dir.join('views_base_introspect')
 
@@ -442,4 +442,58 @@ def test_introspect(filedescriptor, temp_builds_dir):
     assert view.introspect(jinja_env) == [
         'sample.html',
         'skeleton.html'
+    ]
+
+
+def test_introspect_inclusion(filedescriptor, temp_builds_dir):
+    """
+    Template introspection to cover includes
+    """
+    basepath = temp_builds_dir.join('views_base_introspect_inclusion')
+
+    # Create directory structure
+    templates_dir = os.path.join(basepath.strpath, 'templates')
+    os.makedirs(templates_dir)
+
+    # Create dummy templates
+    skeleton_template = os.path.join(templates_dir, "skeleton.html")
+    sample_template = os.path.join(templates_dir, "sample.html")
+    include_template = os.path.join(templates_dir, "inclusion.html")
+    with io.open(skeleton_template, filedescriptor) as fp:
+        fp.write(("""<html><body>"""
+                  """{% block content %}Nope{% endblock %}"""
+                  """</body></html>"""))
+    with io.open(sample_template, filedescriptor) as fp:
+        fp.write(("""{% extends "skeleton.html" %}"""
+                  """{% block content %}Hello World! {% include 'inclusion.html' %}{% endblock %}"""))
+
+    with io.open(include_template, filedescriptor) as fp:
+        fp.write(("""I'm an inclusion"""))
+
+    # Dummy settings
+    settings = DummySettings()
+
+    # Init Jinja environment
+    jinja_env = Jinja2Environment(
+        loader=FileSystemLoader(templates_dir),
+    )
+
+    # Make a view to render
+    view = PageViewBase(
+        title='Dummy',
+        destination='{language_code}/sample.html',
+        template_name='sample.html',
+        lang='fr',
+        settings=settings,
+    )
+
+    assert view._recurse_template_search(jinja_env, 'sample.html') == [
+        'skeleton.html',
+        'inclusion.html'
+    ]
+
+    assert view.introspect(jinja_env) == [
+        'sample.html',
+        'skeleton.html',
+        'inclusion.html'
     ]

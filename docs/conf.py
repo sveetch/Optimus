@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Optimus'
-copyright = u'2013-2018, David THENON'
+copyright = u'2012-2019, David THENON'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

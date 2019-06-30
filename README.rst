@@ -1,10 +1,6 @@
-.. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _webassets: https://github.com/miracle2k/webassets
-.. _virtualenv: http://www.virtualenv.org/
 .. _Jinja2: http://jinja.pocoo.org/
-.. _watchdog: https://github.com/gorakhargosh/watchdog
 .. _Babel: https://pypi.python.org/pypi/Babel
-.. _Optimus-foundation: https://github.com/sveetch/Optimus-foundation
 
 Introduction
 ============
