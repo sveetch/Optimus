@@ -8,6 +8,11 @@
 Changelog
 =========
 
+Version 1.1.1 - 2019/07/01
+--------------------------
+
+Fix invalid package classifiers in ``setup.cfg`` which blocked package release on Pypi.
+
 Version 1.1.0 - 2019/07/01
 --------------------------
 
