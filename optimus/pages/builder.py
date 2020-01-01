@@ -107,6 +107,10 @@ class PageBuilder(object):
             extensions=exts
         )
 
+        # Enable Jinja filters
+        for name, module in self.settings.JINJA_FILTERS.items():
+            env.filters[name] = module
+
         if assets_env:
             env.assets_environment = assets_env
 

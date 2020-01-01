@@ -73,6 +73,10 @@ class SettingsModel(object):
                 'jinja2.ext.i18n',
             )
 
+        # Template filters to use with Jinja2
+        if not hasattr(self, "JINJA_FILTERS"):
+            self.JINJA_FILTERS = {}
+
     def _default_watchdog(self):
         """
         Set default attributes for required settings Watchdog

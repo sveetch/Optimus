@@ -8,6 +8,11 @@
 Changelog
 =========
 
+Version 1.1.2 - 2020/01/01
+--------------------------
+
+Add new setting ``JINJA_FILTERS`` to register additional template filters.
+
 Version 1.1.1 - 2019/07/01
 --------------------------
 

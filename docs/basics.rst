@@ -113,7 +113,7 @@ Below is a list of all available settings, but not all are created in the settin
 
     Note that you should be carefull to not conflict with files targeted by webassets bundles.
 **JINJA_EXTENSIONS**
-    Comment, uncomment or add new extension path to use with Jinja here.
+    Add new `template extension <https://jinja.palletsprojects.com/en/2.10.x/extensions/#module-jinja2.ext>`_ paths to enable in Jinja.
 
     Default value is : ::
 
@@ -122,6 +122,25 @@ Below is a list of all available settings, but not all are created in the settin
         )
 
     Note that you don't need to manually define the webassets extension if you use it, it is automatically appended within the build process if it detects bundles.
+**JINJA_FILTERS**
+    Register additional `template filters <https://jinja.palletsprojects.com/en/2.10.x/api/#custom-filters>`_.
+    Default value is an empty dictionnary.
+
+    Each item name is the filter name as it will be available from template and item value is the filter function.
+
+    Sample : ::
+
+        def foo(content):
+            return "Foobar: {}".format(content)
+
+        JINJA_FILTERS = {
+            "foobar": foo,
+        }
+
+    Then in template you will be able to do: ::
+
+        {{ "plop"|foobar }}
+
 **PAGES_MAP**
     Python path to the file that contains pages map, this is relative to your project, default value is ``pages``, meaning this will search for ``pages.py`` file in your project directory.
 **I18N_EXTRACT_MAP**

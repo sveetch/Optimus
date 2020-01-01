@@ -132,6 +132,8 @@ def test_apply_defaults():
         'jinja2.ext.i18n',
     )
 
+    assert settings.JINJA_FILTERS == {}
+
     assert settings.WEBASSETS_CACHE == os.path.join(projectdir,
                                                     '.webassets-cache')
 

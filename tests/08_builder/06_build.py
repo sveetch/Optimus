@@ -10,6 +10,10 @@ from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
 
 
+def DummyFilter(content):
+    return "DummyFilter: {}".format(content)
+
+
 @pytest.mark.parametrize('sample_fixture_name,attempted_destinations', [
     (
         'basic_template',
@@ -65,6 +69,9 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     settings.DEBUG = False
     settings.WEBASSETS_CACHE = cache_dir
     settings.WEBASSETS_URLEXPIRE = False
+
+    # Define a dummy filter to test filter registration and usage
+    settings.JINJA_FILTERS = {"dummy_filter": DummyFilter}
 
     # Init webassets and builder
     assets_env = register_assets(settings)
@@ -146,6 +153,9 @@ def test_build_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
 
     # Get basic sample settings
     settings = minimal_basic_settings(projectdir)
+
+    # Define a dummy filter to test filter registration and usage
+    settings.JINJA_FILTERS = {"dummy_filter": DummyFilter}
 
     # Init webassets and builder
     assets_env = register_assets(settings)
