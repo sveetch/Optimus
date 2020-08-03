@@ -8,6 +8,12 @@
 Changelog
 =========
 
+Version 1.2.0 - Unreleased
+--------------------------
+
+* Add new setting ``HTTPS_ENABLED`` to enabled HTTPS protocol instead of
+  default HTTP in template context variable ``SITE.web_url``;
+
 Version 1.1.2 - 2020/01/01
 --------------------------
 

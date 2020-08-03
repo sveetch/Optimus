@@ -180,6 +180,10 @@ class SettingsModel(object):
         if not hasattr(self, "FILES_TO_SYNC"):
             self.FILES_TO_SYNC = ()
 
+        # Use https protocol instead of http if enabled
+        if not hasattr(self, "HTTPS_ENABLED"):
+            self.HTTPS_ENABLED = False
+
         # Default settings for dependancies
         self._default_watchdog()
         self._default_jinja()

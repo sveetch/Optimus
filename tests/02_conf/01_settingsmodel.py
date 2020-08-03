@@ -158,9 +158,12 @@ def test_complete():
                                        SOURCES_DIR=os.path.join(projectdir, 'sources'),
                                        TEMPLATES_DIR=os.path.join(projectdir, 'templates'),
                                        PUBLISH_DIR=os.path.join(projectdir, 'publish'),
+                                       HTTPS_ENABLED=True,
                                        STATIC_DIR=os.path.join(projectdir, 'static'),
                                        STATIC_URL='static/')
 
     assert settings.SOURCES_DIR == os.path.join(projectdir, 'sources')
 
     assert settings.LOCALES_DIR == os.path.join(projectdir, 'locale')
+
+    assert settings.HTTPS_ENABLED == True
