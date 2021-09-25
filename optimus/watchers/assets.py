@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from pathtools.patterns import match_path
-
 from watchdog.events import PatternMatchingEventHandler
+from watchdog.utils.patterns import match_any_paths
 
 from optimus.watchers import BaseHandler
 
@@ -92,10 +91,10 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
                 ``watchdog.events.FileModifiedEvent``.
         """
         # We are only interested for destination
-        if match_path(event.dest_path,
-                      included_patterns=self.patterns,
-                      excluded_patterns=self.ignore_patterns,
-                      case_sensitive=self.case_sensitive):
+        if match_any_paths([event.dest_path],
+                           included_patterns=self.patterns,
+                           excluded_patterns=self.ignore_patterns,
+                           case_sensitive=self.case_sensitive):
             msg = "Change detected from a move on: {}"
             self.logger.debug(msg.format(event.dest_path))
 
