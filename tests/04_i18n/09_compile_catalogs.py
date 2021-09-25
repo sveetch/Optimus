@@ -206,4 +206,4 @@ def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
 
     out, err = capsys.readouterr()
     assert out == ("""WARNING: msg has more translations than num_plurals """
-                   """of catalog\nWARNING: Problem on line 7: \n""")
+                   """of catalog\nWARNING: Problem on line 7: ''\n""")
