@@ -1,4 +1,3 @@
-import io
 import os
 
 import pytest
@@ -13,7 +12,7 @@ from optimus.pages.views.base import PageViewBase
 from optimus.pages.registry import PageRegistry
 
 
-class DummySettings(object):
+class DummySettings:
     """
     Dummy object with needed settings
     """
@@ -79,7 +78,7 @@ def test_add_page_basic(caplog):
     assert set(results) == set(attempted)
 
 
-def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
+def test_add_page_advanced(temp_builds_dir, caplog):
     """
     Add pages to registry with introspection and all
     """
@@ -98,23 +97,23 @@ def test_add_page_advanced(temp_builds_dir, filedescriptor, caplog):
     base_template = os.path.join(templates_dir, "hip/base.html")
     hiphop_template = os.path.join(templates_dir, "hip/hop.html")
     inclusion_template = os.path.join(templates_dir, "_inclusion.html")
-    with io.open(skeleton_template, filedescriptor) as fp:
+    with open(skeleton_template, "w") as fp:
         fp.write(("""<html><body>"""
                   """{% block content %}Nope{% endblock %}"""
                   """</body></html>"""))
-    with io.open(index_template, filedescriptor) as fp:
+    with open(index_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Index{% endblock %}"""))
-    with io.open(dummy_template, filedescriptor) as fp:
+    with open(dummy_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Hello World!{% endblock %}"""))
-    with io.open(base_template, filedescriptor) as fp:
+    with open(base_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Base{% endblock %}"""))
-    with io.open(hiphop_template, filedescriptor) as fp:
+    with open(hiphop_template, "w") as fp:
         fp.write(("""{% extends "hip/base.html" %}"""
                   """{% block content %}Base {% include '_inclusion.html' %}{% endblock %}"""))
-    with io.open(inclusion_template, filedescriptor) as fp:
+    with open(inclusion_template, "w") as fp:
         fp.write(("""I'm an inclusion"""))
 
     # Dummy settings and registry

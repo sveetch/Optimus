@@ -1,14 +1,25 @@
-import io
 import os
 import logging
 import shutil
-
-import six
 
 import pytest
 
 from optimus.i18n.manager import I18NManager
 
+
+ERRONEOUS_PO = """# Invalid PO
+
+#: project/file1.py:8
+msgid "bar"
+msgstr ""
+#: project/file2.py:9
+msgid "foobar"
+msgid_plural "foobars"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+"""
 
 def test_compile_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,
                               fixtures_settings):
@@ -35,12 +46,16 @@ def test_compile_catalogs_all(minimal_i18n_settings, caplog, temp_builds_dir,
         (
             'optimus',
             logging.INFO,
-            "Compiling catalog (MO) for language 'en_US' to {}".format(manager.get_mo_filepath("en_US"))
+            "Compiling catalog (MO) for language 'en_US' to {}".format(
+                manager.get_mo_filepath("en_US"),
+            )
         ),
         (
             'optimus',
             logging.INFO,
-            "Compiling catalog (MO) for language 'fr_FR' to {}".format(manager.get_mo_filepath("fr_FR"))
+            "Compiling catalog (MO) for language 'fr_FR' to {}".format(
+                manager.get_mo_filepath("fr_FR"),
+            )
         ),
     ]
 
@@ -68,13 +83,15 @@ def test_compile_catalogs_one(minimal_i18n_settings, caplog, temp_builds_dir,
 
     assert os.path.exists(
         manager.get_mo_filepath(settings.LANGUAGE_CODE)
-    ) == True
+    ) is True
 
     assert caplog.record_tuples == [
         (
             'optimus',
             logging.INFO,
-            "Compiling catalog (MO) for language 'en_US' to {}".format(manager.get_mo_filepath("en_US"))
+            "Compiling catalog (MO) for language 'en_US' to {}".format(
+                manager.get_mo_filepath("en_US")
+            ),
         ),
     ]
 
@@ -112,54 +129,7 @@ def test_compile_catalogs_filenotfounderror(minimal_i18n_settings, caplog,
         updated = manager.compile_catalogs([erroneous_local])
 
 
-#def test_compile_catalogs_warning(minimal_i18n_settings, caplog,
-                                   #temp_builds_dir, fixtures_settings):
-    #"""
-    #Almost empty PO doesnt raise error but warnings, keep this for history
-    #"""
-    #basepath = temp_builds_dir.join('i18n_compile_catalogs_invalid_catalog')
-
-    ## Copy sample project to temporary dir
-    #samplename = 'minimal_i18n'
-    #samplepath = os.path.join(fixtures_settings.fixtures_path, samplename)
-    #destination = os.path.join(basepath.strpath, samplename)
-    #shutil.copytree(samplepath, destination)
-
-    ## Get manager with settings
-    #settings = minimal_i18n_settings(destination)
-    #manager = I18NManager(settings)
-
-    ## Create erroneous catalog to compile
-    #erroneous_local = "es_ES"
-    #os.makedirs(manager.get_catalog_dir(erroneous_local))
-    #with io.open(manager.get_po_filepath(erroneous_local), "w") as fp:
-        #fp.write("Bing")
-
-    #updated = manager.compile_catalogs([erroneous_local])
-
-    #assert updated == []
-
-    #assert os.path.exists(
-        #manager.get_mo_filepath(erroneous_local)
-    #) == True
-
-
-erroneous_po = """# Invalid PO
-
-#: project/file1.py:8
-msgid "bar"
-msgstr ""
-#: project/file2.py:9
-msgid "foobar"
-msgid_plural "foobars"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-"""
-
-def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
-                                          filedescriptor, capsys, caplog,
+def test_compile_catalogs_invalid_catalog(minimal_i18n_settings, capsys, caplog,
                                           temp_builds_dir, fixtures_settings):
     """
     Try compile an erroneous catalog
@@ -183,8 +153,8 @@ def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
     erroneous_local = "bg"
     os.makedirs(manager.get_catalog_dir(erroneous_local))
 
-    with io.open(manager.get_po_filepath(erroneous_local), filedescriptor) as fp:
-        fp.write(erroneous_po)
+    with open(manager.get_po_filepath(erroneous_local), "w") as fp:
+        fp.write(ERRONEOUS_PO)
 
     updated = manager.compile_catalogs([erroneous_local])
 
@@ -192,7 +162,10 @@ def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
         (
             'optimus',
             logging.INFO,
-            "Compiling catalog (MO) for language '{}' to {}".format(erroneous_local, manager.get_mo_filepath(erroneous_local))
+            "Compiling catalog (MO) for language '{}' to {}".format(
+                erroneous_local,
+                manager.get_mo_filepath(erroneous_local)
+            )
         ),
     ]
 
@@ -202,8 +175,10 @@ def test_compile_catalogs_invalid_catalog(minimal_i18n_settings,
 
     assert os.path.exists(
         manager.get_mo_filepath(erroneous_local)
-    ) == True
+    ) is True
 
     out, err = capsys.readouterr()
-    assert out == ("""WARNING: msg has more translations than num_plurals """
-                   """of catalog\nWARNING: Problem on line 7: ''\n""")
+    assert out == (
+        """WARNING: msg has more translations than num_plurals """
+        """of catalog\nWARNING: Problem on line 7: ''\n"""
+    )

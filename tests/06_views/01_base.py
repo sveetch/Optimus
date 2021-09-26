@@ -1,4 +1,3 @@
-import io
 import os
 
 import pytest
@@ -14,7 +13,7 @@ from optimus.pages.views.base import PageViewBase
 from optimus.i18n.lang import LangBase
 
 
-class DummySettings(object):
+class DummySettings:
     """
     Dummy object with needed settings
     """
@@ -355,7 +354,7 @@ def test_get_context_nonempty():
     }
 
 
-def test_render(filedescriptor, temp_builds_dir):
+def test_render(temp_builds_dir):
     """
     Render a basic page
     """
@@ -368,11 +367,11 @@ def test_render(filedescriptor, temp_builds_dir):
     # Create dummy templates
     skeleton_template = os.path.join(templates_dir, "skeleton.html")
     sample_template = os.path.join(templates_dir, "sample.html")
-    with io.open(skeleton_template, filedescriptor) as fp:
+    with open(skeleton_template, "w") as fp:
         fp.write(("""<html><body>"""
                   """{% block content %}Nope{% endblock %}"""
                   """</body></html>"""))
-    with io.open(sample_template, filedescriptor) as fp:
+    with open(sample_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Hello World!{% endblock %}"""))
 
@@ -395,7 +394,7 @@ def test_render(filedescriptor, temp_builds_dir):
     assert view.render(jinja_env) == '<html><body>Hello World!</body></html>'
 
 
-def test_introspect(filedescriptor, temp_builds_dir):
+def test_introspect(temp_builds_dir):
     """
     Exploit template introspection
 
@@ -410,11 +409,11 @@ def test_introspect(filedescriptor, temp_builds_dir):
     # Create dummy templates
     skeleton_template = os.path.join(templates_dir, "skeleton.html")
     sample_template = os.path.join(templates_dir, "sample.html")
-    with io.open(skeleton_template, filedescriptor) as fp:
+    with open(skeleton_template, "w") as fp:
         fp.write(("""<html><body>"""
                   """{% block content %}Nope{% endblock %}"""
                   """</body></html>"""))
-    with io.open(sample_template, filedescriptor) as fp:
+    with open(sample_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Hello World!{% endblock %}"""))
 
@@ -445,7 +444,7 @@ def test_introspect(filedescriptor, temp_builds_dir):
     ]
 
 
-def test_introspect_inclusion(filedescriptor, temp_builds_dir):
+def test_introspect_inclusion(temp_builds_dir):
     """
     Template introspection to cover includes
     """
@@ -459,15 +458,15 @@ def test_introspect_inclusion(filedescriptor, temp_builds_dir):
     skeleton_template = os.path.join(templates_dir, "skeleton.html")
     sample_template = os.path.join(templates_dir, "sample.html")
     include_template = os.path.join(templates_dir, "inclusion.html")
-    with io.open(skeleton_template, filedescriptor) as fp:
+    with open(skeleton_template, "w") as fp:
         fp.write(("""<html><body>"""
                   """{% block content %}Nope{% endblock %}"""
                   """</body></html>"""))
-    with io.open(sample_template, filedescriptor) as fp:
+    with open(sample_template, "w") as fp:
         fp.write(("""{% extends "skeleton.html" %}"""
                   """{% block content %}Hello World! {% include 'inclusion.html' %}{% endblock %}"""))
 
-    with io.open(include_template, filedescriptor) as fp:
+    with open(include_template, "w") as fp:
         fp.write(("""I'm an inclusion"""))
 
     # Dummy settings

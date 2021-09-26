@@ -1,8 +1,5 @@
 import os
-import io
 import logging
-
-import six
 
 import pytest
 
@@ -11,7 +8,7 @@ from webassets import Bundle
 from optimus.assets.registry import register_assets
 
 
-class DummySettings(object):
+class DummySettings:
     """
     Dummy object with required settings for asset environment
     """
@@ -67,7 +64,7 @@ def test_bundle_keyerror(caplog):
     ]
 
 
-def test_basic(filedescriptor, caplog, temp_builds_dir):
+def test_basic(caplog, temp_builds_dir):
     """
     Registering with basic settings and webassets validating defined assets
     """
@@ -83,11 +80,11 @@ def test_basic(filedescriptor, caplog, temp_builds_dir):
     os.makedirs(cache_dir)
 
     # Create some required files for defined assets in bundles
-    with io.open(os.path.join(sources_dir, "js", "unused.src.js"), filedescriptor) as fp:
+    with open(os.path.join(sources_dir, "js", "unused.src.js"), "w") as fp:
         fp.write("""var dummy = 'foo';""")
-    with io.open(os.path.join(sources_dir, "js", "app.js"), filedescriptor) as fp:
+    with open(os.path.join(sources_dir, "js", "app.js"), "w") as fp:
         fp.write("""var dummy = 'bar';""")
-    with io.open(os.path.join(sources_dir, "css", "app.css"), filedescriptor) as fp:
+    with open(os.path.join(sources_dir, "css", "app.css"), "w") as fp:
         fp.write(""".dummy{ color: black; }""")
 
     # Set some settings according to created dir and some bundles
@@ -161,7 +158,7 @@ def test_basic(filedescriptor, caplog, temp_builds_dir):
     ]
 
 
-def test_nodebug(filedescriptor, caplog, temp_builds_dir):
+def test_nodebug(caplog, temp_builds_dir):
     """
     Check bundle is not forced to resolve when not in debug mode
     """
@@ -176,7 +173,7 @@ def test_nodebug(filedescriptor, caplog, temp_builds_dir):
     os.makedirs(cache_dir)
 
     # Create some required files for defined assets in bundles
-    with io.open(os.path.join(sources_dir, "css", "app.css"), filedescriptor) as fp:
+    with open(os.path.join(sources_dir, "css", "app.css"), "w") as fp:
         fp.write(""".dummy{ color: black; }""")
 
     # Set some settings according to created dir and some bundles

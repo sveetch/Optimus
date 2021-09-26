@@ -23,6 +23,7 @@ Version 2.0.0 - Unreleased
 * Drop sphinx-autoreload in profit of livereload;
 * Add new setting ``HTTPS_ENABLED`` to enabled HTTPS protocol instead of
   default HTTP in template context variable ``SITE.web_url``;
+* Removed requirement and usage of ``six`` since this is a Python3 from some time;
 
 Version 1.1.2 - 2020/01/01
 --------------------------

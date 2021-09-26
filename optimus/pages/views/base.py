@@ -2,8 +2,6 @@
 import logging
 import os
 
-import six
-
 from jinja2 import meta as Jinja2Meta
 
 from optimus.exceptions import ViewImproperlyConfigured
@@ -166,7 +164,7 @@ class PageViewBase(UnicodeMixin):
             self.lang = LangBase(code=self.settings.LANGUAGE_CODE)
         # If the lang attribute contains a string, assume this is the language
         # identifier
-        elif isinstance(getattr(self, "lang"), six.string_types):
+        elif isinstance(getattr(self, "lang"), str):
             self.lang = LangBase(code=getattr(self, "lang"))
 
         return self.lang

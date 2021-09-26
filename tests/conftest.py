@@ -6,8 +6,6 @@ import sys
 
 import pytest
 
-import six
-
 import optimus
 from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 
@@ -48,17 +46,6 @@ def fixtures_settings():
     """Initialize and return settings (mostly paths) for fixtures (scope at module level)"""
     return FixturesSettingsTestMixin()
 
-
-@pytest.fixture(scope="function")
-def filedescriptor():
-    """
-    Return a fileobject descriptor compatible for Python2 and Python3 with
-    'io' since 'write' fileobject attempt unicode in python2 but a byte in
-    python3
-    """
-    if six.PY2:
-        return "wb"
-    return "w"
 
 @pytest.fixture(scope="function")
 def prepend_items():
