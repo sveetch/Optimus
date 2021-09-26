@@ -1,5 +1,4 @@
 .. _cherrypy: http://cherrypy.org/
-.. _yui-compressor: http://developer.yahoo.com/yui/compressor/
 .. _ClosureJS: https://developers.google.com/closure/compiler/
 .. _Babel: https://pypi.python.org/pypi/Babel
 .. _Argh: http://argh.readthedocs.org
@@ -8,25 +7,45 @@
 Changelog
 =========
 
+
+Version 2.0.0 - Unreleased
+--------------------------
+
+* Fix a test for recent Babel version;
+* Upgrade dependancies to recent versions and pin some other ones;
+* Fix event watcher to use ported 'match_any_path' instead of 'match_path' from
+  deprecated 'pathtools';
+* Add frozen requirement file and freezer script;
+* Update package config;
+* Add tox to dev requirements;
+* Improve Makefile;
+* Update sphinx config;
+* Drop sphinx-autoreload in profit of livereload;
+
+
 Version 1.1.2 - 2020/01/01
 --------------------------
 
 Add new setting ``JINJA_FILTERS`` to register additional template filters.
+
 
 Version 1.1.1 - 2019/07/01
 --------------------------
 
 Fix invalid package classifiers in ``setup.cfg`` which blocked package release on Pypi.
 
+
 Version 1.1.0 - 2019/07/01
 --------------------------
 
 * Moved package configuration to everything in ``setup.cfg``;
 * Updated Makefile;
-* Removed ``docutils`` requirement and commented code for unused modules for rst support until it has been updated;
+* Removed ``docutils`` requirement and commented code for unused modules for rst
+  support until it has been updated;
 * Added some tests to cover template inclusion;
 * Updated to ``watchdog`` to ``==0.9.0``;
 * Added settings copy into context item ``_SETTINGS``, close #26.
+
 
 Version 1.0.1 - 2018/06/07
 --------------------------
@@ -34,30 +53,40 @@ Version 1.0.1 - 2018/06/07
 * Fixed documentation;
 * Fixed project templates Makefile;
 
+
 Version 1.0.0 - 2018/06/07
 --------------------------
 
-Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage using pytest and tox.
+Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage
+using pytest and tox.
 
-* Drop 'argh' in favor of 'click' for commandline scripts, this involve commandline has a minor changes on command options usage, close #23;
+* Drop 'argh' in favor of 'click' for commandline scripts, this involve commandline has
+  a minor changes on command options usage, close #23;
 * Big cleaning for sanity and update for Python3 support, close #22;
 * Support of rcssmin filter for assets;
 * ReStructuredText view has been dropped;
 * Your old projects should still be compatible minus some specific settings details;
 
+
 Version 0.8.2 - 2017/01/15
 --------------------------
 
-* Relaxed ``webassets`` version requirement since the last one (0.12.1) has been validated;
-* Removed ``yuicompressor`` requirement. `ClosureJS`_ is recommended for Javascript compression since YUI is not maintained anymore. But finally Optimus do not require anymore any compressor library. It's up to the user choice;
+* Relaxed ``webassets`` version requirement since the last one (0.12.1) has been
+  validated;
+* Removed ``yuicompressor`` requirement. ``ClosureJS`` is recommended for Javascript
+  compression since YUI is not maintained anymore. But finally Optimus do not require
+  anymore any compressor library. It's up to the user choice;
 * Removed ``EXTRA_BUNDLES`` occurrences since it was deprecated long time ago;
 * Updated documentation;
+
 
 Version 0.8.1 - 2017/01/01
 --------------------------
 
-* Validated working with ``CherryPy==8.7.0``, so remove every occurences about 3.x.x version;
+* Validated working with ``CherryPy==8.7.0``, so remove every occurences about 3.x.x
+  version;
 * Better README/Doc index/Package short description;
+
 
 Version 0.8.0 - 2016/12/31
 --------------------------
@@ -68,15 +97,18 @@ Version 0.8.0 - 2016/12/31
 * Improved watcher logging output a little bit so it reveals changed file when detected without to use the debug level;
 * Do not enable anymore ``runserver`` command to installed CherryPy, instead raise a better error message explanation;
 
+
 Version 0.7.2 - 2016/05/05
 --------------------------
 
 Minor update that modify 'settings' and 'pages' modules import so exception is raised to ease debugging.
 
+
 Version 0.7.1 - 2015/06/14
 --------------------------
 
 Dummy release just to update documentation about forgotted changelog.
+
 
 Version 0.7.0 - 2015/06/14
 --------------------------
@@ -86,26 +118,31 @@ Version 0.7.0 - 2015/06/14
 * Changed module imports to have distinct error name for page and settings import errors;
 * Changed message error for module loading to be more helpful;
 
+
 Version 0.6.9
 -------------
 
 * Fix a bug with bad signature for ``po`` command;
 * Moving script name from **optimus** to **optimus-cli** because this was causing issues with ``setup.entry_points`` usage and buildout;
 
+
 Version 0.6.8.1
 ---------------
 
 Update `Argh`_ dependancy to ``>= 0.24.1``.
+
 
 Version 0.6.8
 -------------
 
 Re-use a fixed version for **argh** because the 0.24 version has incompatible backward issues.
 
+
 Version 0.6.7.1
 ---------------
 
 Fix dependancies syntax in setup.py that was causing issues during installation.
+
 
 Version 0.6.7
 -------------
@@ -113,15 +150,18 @@ Version 0.6.7
 * Remove CherryPy dependancy from setup.py, add an install note about this;
 * Update documentation;
 
+
 Version 0.6.6
 -------------
 
 Upgrade to yuicompressor 2.4.8
 
+
 Version 0.6.5
 -------------
 
 Updating doc, in setup.py use 'entry_points' instead of 'scripts'
+
 
 Version 0.6.4
 -------------
@@ -169,7 +209,7 @@ Version 0.6 - 2013/12/16
 * Add better error messages for some command line options;
 * Add a required settings list that is checked when loading settings file to avoid error on missing settings;
 * Add default values to un-required settings so the settings file is more clean and short with only needed settings;
-* Now `Babel`_, `cherrypy`_ and `yui-compressor`_ are required dependancies;
+* Now `Babel`_, `cherrypy`_ and 'yui-compressor' are required dependancies;
 * The previous commande line tool name ``optimus-cli`` has been chaned to a more shorter name ``optimus``;
 * New settings have been added to manage languages and translations with the new command ``po``;
 * Settings files have been simplified, making some settings optionnal to have a more clean and short settings files;
