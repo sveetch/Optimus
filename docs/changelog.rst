@@ -21,7 +21,8 @@ Version 2.0.0 - Unreleased
 * Improve Makefile;
 * Update sphinx config;
 * Drop sphinx-autoreload in profit of livereload;
-
+* Add new setting ``HTTPS_ENABLED`` to enabled HTTPS protocol instead of
+  default HTTP in template context variable ``SITE.web_url``;
 
 Version 1.1.2 - 2020/01/01
 --------------------------

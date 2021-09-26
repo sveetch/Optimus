@@ -35,12 +35,14 @@ def test_load_from_kwargs_no_defaults():
     """
     settings = SettingsModel()
 
-    loaded = settings.load_from_kwargs(FOO=42,
-                                       BAR="Yep",
-                                       HELLO="world",
-                                       nope="ni",
-                                       check=False,
-                                       defaults=False)
+    loaded = settings.load_from_kwargs(
+        FOO=42,
+        BAR="Yep",
+        HELLO="world",
+        nope="ni",
+        check=False,
+        defaults=False,
+    )
 
     assert sorted(loaded) == sorted(['FOO', 'BAR', 'HELLO'])
 
@@ -96,8 +98,12 @@ def test_check_required_success():
     # Tamper required settings
     settings._required_settings = ('FOO', 'PLOP')
 
-    loaded = settings.load_from_kwargs(FOO=True, BAR=True, check=False,
-                                       defaults=False)
+    loaded = settings.load_from_kwargs(
+        FOO=True,
+        BAR=True,
+        check=False,
+        defaults=False,
+    )
 
     with pytest.raises(InvalidSettings):
         settings.check()
@@ -116,10 +122,12 @@ def test_apply_defaults():
     settings = SettingsModel()
 
     # Disable automatic defaults apply to test it separately
-    loaded = settings.load_from_kwargs(PROJECT_DIR=projectdir,
-                                       LANGUAGE_CODE='fr',
-                                       check=False,
-                                       defaults=False)
+    loaded = settings.load_from_kwargs(
+        PROJECT_DIR=projectdir,
+        LANGUAGE_CODE='fr',
+        check=False,
+        defaults=False,
+    )
 
     settings.apply_defaults()
 
@@ -134,8 +142,7 @@ def test_apply_defaults():
 
     assert settings.JINJA_FILTERS == {}
 
-    assert settings.WEBASSETS_CACHE == os.path.join(projectdir,
-                                                    '.webassets-cache')
+    assert settings.WEBASSETS_CACHE == os.path.join(projectdir, '.webassets-cache')
 
     assert settings.LOCALES_DIR == os.path.join(projectdir, 'locale')
 
@@ -151,16 +158,21 @@ def test_complete():
     settings = SettingsModel()
 
     # Disable defaults apply to test it separately
-    loaded = settings.load_from_kwargs(PROJECT_DIR=projectdir,
-                                       DEBUG=True,
-                                       SITE_NAME='Dummy project',
-                                       SITE_DOMAIN='www.localhost.com',
-                                       SOURCES_DIR=os.path.join(projectdir, 'sources'),
-                                       TEMPLATES_DIR=os.path.join(projectdir, 'templates'),
-                                       PUBLISH_DIR=os.path.join(projectdir, 'publish'),
-                                       STATIC_DIR=os.path.join(projectdir, 'static'),
-                                       STATIC_URL='static/')
+    loaded = settings.load_from_kwargs(
+        PROJECT_DIR=projectdir,
+        DEBUG=True,
+        SITE_NAME='Dummy project',
+        SITE_DOMAIN='www.localhost.com',
+        SOURCES_DIR=os.path.join(projectdir, 'sources'),
+        TEMPLATES_DIR=os.path.join(projectdir, 'templates'),
+        PUBLISH_DIR=os.path.join(projectdir, 'publish'),
+        HTTPS_ENABLED=True,
+        STATIC_DIR=os.path.join(projectdir, 'static'),
+        STATIC_URL='static/',
+    )
 
     assert settings.SOURCES_DIR == os.path.join(projectdir, 'sources')
 
     assert settings.LOCALES_DIR == os.path.join(projectdir, 'locale')
+
+    assert settings.HTTPS_ENABLED == True

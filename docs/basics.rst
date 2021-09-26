@@ -74,18 +74,6 @@ Below is a list of all available settings, but not all are created in the settin
 
 **STATIC_URL**
     The static url to use in templates and with webassets. This can be a full URL like ``http://``, a relative path or an absolute path.
-**RST_PARSER_SETTINGS**
-    ReSTructuredText parser settings to use when building a RST document. This is only useful if you use RST documents in your pages.
-
-    Default value is : ::
-
-        RST_PARSER_SETTINGS = {
-            'initial_header_level': 3,
-            'file_insertion_enabled': True,
-            'raw_enabled': False,
-            'footnote_references': 'superscript',
-            'doctitle_xform': False,
-        }
 **BUNDLES**
     Custom bundles to use for managing assets.
 
@@ -122,6 +110,8 @@ Below is a list of all available settings, but not all are created in the settin
         )
 
     Note that you don't need to manually define the webassets extension if you use it, it is automatically appended within the build process if it detects bundles.
+**HTTPS_ENABLED**
+    Enabled usage of HTTPS protocol instead of HTTP in template context variable ``SITE.web_url``. Disabled by default.
 **JINJA_FILTERS**
     Register additional `template filters <https://jinja.palletsprojects.com/en/2.10.x/api/#custom-filters>`_.
     Default value is an empty dictionnary.
@@ -191,7 +181,8 @@ For each template the default context variables are :
 
   * ``name`` : the value from ``settings.SITE_NAME``;
   * ``domain`` : the value from ``settings.SITE_DOMAIN``;
-  * ``web_url`` : the value from ``settings.SITE_DOMAIN`` prefixed by *http://*;
+  * ``web_url`` : the value from ``settings.SITE_DOMAIN`` prefixed by ``http://`` or
+    ``https://`` depending setting value for ``HTTPS_ENABLED``;
 
 * ``STATIC_URL`` : A string, containing the value from ``settings.STATIC_URL``;
 * ``OPTIMUS`` : Optimus version;

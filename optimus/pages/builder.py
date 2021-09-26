@@ -142,12 +142,16 @@ class PageBuilder(object):
             static urls, Optimus version and finally all settings contained
             in ``_SETTINGS``.
         """
+        domain_prefix = "http://{}"
+        if self.settings.HTTPS_ENABLED:
+            domain_prefix = "https://{}"
+
         return {
             'debug': self.settings.DEBUG,
             'SITE': {
                 'name': self.settings.SITE_NAME,
                 'domain': self.settings.SITE_DOMAIN,
-                'web_url': "http://{}".format(self.settings.SITE_DOMAIN),
+                'web_url': domain_prefix.format(self.settings.SITE_DOMAIN),
             },
             'STATIC_URL': self.settings.STATIC_URL,
             '_SETTINGS': self.serialize_settings(),
