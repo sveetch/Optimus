@@ -16,7 +16,7 @@ try:
     if not basedir:
         raise KeyError
 except KeyError:
-    raise ImportError(("Settings cannot be imported, because "
+    raise ImportError(("Project cannot be imported, because "
                        "environment variable {} is "
                        "undefined.").format(PROJECT_DIR_ENVVAR))
 

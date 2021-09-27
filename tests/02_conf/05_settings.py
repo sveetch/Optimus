@@ -12,7 +12,7 @@ def test_fail_basedir(monkeypatch, caplog, fixtures_settings):
     """
     Fail because project base dir env var is not set
     """
-    message = ("Settings cannot be imported, because environment variable "
+    message = ("Project cannot be imported, because environment variable "
                "{} is undefined.".format(PROJECT_DIR_ENVVAR))
 
     with pytest.raises(ImportError, match=message):

@@ -11,6 +11,8 @@ Changelog
 Version 2.0.0 - Unreleased
 --------------------------
 
+* Remove support for Python3.5;
+* Add support for Python 3.6 to 3.8;
 * Fix a test for recent Babel version;
 * Upgrade dependancies to recent versions and pin some other ones;
 * Fix event watcher to use ported 'match_any_path' instead of 'match_path' from

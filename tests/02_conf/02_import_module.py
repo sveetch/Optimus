@@ -6,7 +6,7 @@ import pytest
 from optimus.conf.loader import import_project_module
 
 
-def test_dummy_valid(caplog, temp_builds_dir, fixtures_settings):
+def test_dummy_valid(caplog, fixtures_settings):
     """
     Import valid module from sample dummy package
     """
@@ -31,7 +31,7 @@ def test_dummy_valid(caplog, temp_builds_dir, fixtures_settings):
     assert mod.SOME_VAR == "Yep"
 
 
-def test_dummy_invalid_import(caplog, temp_builds_dir, fixtures_settings):
+def test_dummy_invalid_import(caplog, fixtures_settings):
     """
     Import invalid (bad import) module from sample dummy package
     """
@@ -60,7 +60,7 @@ def test_dummy_invalid_import(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_dummy_invalid_syntax(caplog, temp_builds_dir, fixtures_settings):
+def test_dummy_invalid_syntax(caplog, fixtures_settings):
     """
     Import invalid (invalid syntax) module from sample dummy package
     """
@@ -89,7 +89,7 @@ def test_dummy_invalid_syntax(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_dummy_invalid_namevar(caplog, temp_builds_dir, fixtures_settings):
+def test_dummy_invalid_namevar(caplog, fixtures_settings):
     """
     Import invalid (name error) module from sample dummy package
     """
@@ -118,7 +118,7 @@ def test_dummy_invalid_namevar(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_dummy_unfinded(caplog, temp_builds_dir, fixtures_settings):
+def test_dummy_unfinded(caplog, fixtures_settings):
     """
     Unfindable module from sample dummy package
     """
@@ -147,7 +147,7 @@ def test_dummy_unfinded(caplog, temp_builds_dir, fixtures_settings):
     ]
 
 
-def test_unknowed_project(caplog, temp_builds_dir, fixtures_settings):
+def test_unknowed_project(caplog, fixtures_settings):
     """
     Unfindable package
     """

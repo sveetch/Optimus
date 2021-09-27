@@ -47,17 +47,17 @@ def import_project_module(name, basedir=None,
     logger.info('Loading "%s" module', name)
     logger.info('Module searched in: %s', basedir)
 
-    # Add the project to the sys.path
+    # Check project can be import with temporary changing sys.path
+    # NOTE: Is it really needed anymore since new technic with importlib ?
     project_name = os.path.basename(os.path.abspath(basedir))
     sys.path.append(os.path.normpath(os.path.join(basedir, '..')))
-    # Sys.path is ok, we can import the project
     try:
         __import__(project_name, '', '', [''])
     except ImportError:
         msg = "Unable to load project named: {0}"
         logger.critical(msg.format(project_name))
         raise
-    # Cleanup the sys.path of the project path
+    # Cleanup the sys.path from the project path
     sys.path.pop()
 
     fp = pathname = description = None

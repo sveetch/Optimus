@@ -22,6 +22,13 @@ class DestinationExists(OptimusBaseException):
     pass
 
 
+class SettingsImportError(OptimusBaseException):
+    """
+    Exception to be raised when a settings module import fails.
+    """
+    pass
+
+
 class TemplateImportError(OptimusBaseException):
     """
     Exception to be raised when a template module import fails.
