@@ -2,7 +2,7 @@
 import os
 import click
 
-from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.i18n.manager import I18NManager
 from optimus.utils import display_settings
 

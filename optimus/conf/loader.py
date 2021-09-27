@@ -15,11 +15,6 @@ import sys
 from optimus.conf.model import SettingsModel
 
 
-PROJECT_DIR_ENVVAR = "OPTIMUS_PROJECT_DIR"
-
-SETTINGS_NAME_ENVVAR = "OPTIMUS_SETTINGS_MODULE"
-
-
 def import_project_module(name, basedir=None,
                           finding_module_err='Unable to find module: {0}',
                           import_module_err='Unable to load module: {0}'):

@@ -7,8 +7,8 @@ This is the entry point to reach settings from project page module.
 """
 import os
 
-from optimus.conf.loader import (PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR,
-                                 import_settings)
+from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus.conf.loader import import_settings
 
 try:
     basedir = os.environ[PROJECT_DIR_ENVVAR]

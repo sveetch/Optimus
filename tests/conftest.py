@@ -6,8 +6,7 @@ import sys
 
 import pytest
 
-import optimus
-from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus import __version__, PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 
 
 class FixturesSettingsTestMixin(object):

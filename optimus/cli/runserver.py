@@ -3,7 +3,7 @@ import os
 import logging
 import click
 
-from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.exceptions import InvalidHostname
 from optimus.utils import display_settings, get_host_parts
 

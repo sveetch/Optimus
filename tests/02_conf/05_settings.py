@@ -4,8 +4,8 @@ import logging
 import pytest
 
 import optimus
-from optimus.conf.loader import (PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR,
-                                 import_project_module)
+from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus.conf.loader import import_project_module
 
 
 def test_fail_basedir(monkeypatch, caplog, fixtures_settings):

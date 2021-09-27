@@ -3,7 +3,7 @@ import os
 
 import click
 
-from optimus.conf.loader import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.utils import initialize, display_settings
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
