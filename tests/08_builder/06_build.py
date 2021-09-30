@@ -1,10 +1,12 @@
 import io
-import os
+import importlib
 import logging
+import os
 import shutil
 
 import pytest
 
+from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
@@ -38,8 +40,8 @@ def DummyFilter(content):
         ],
     ),
 ])
-def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
-                    sample_fixture_name, attempted_destinations):
+def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
+                    temp_builds_dir, sample_fixture_name, attempted_destinations):
     """
     Build each page
 
@@ -53,11 +55,18 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     basepath = temp_builds_dir.join('builder_build_item_{}'.format(sample_fixture_name))
     projectdir = os.path.join(basepath.strpath, sample_fixture_name)
 
-    attempts_dir = os.path.join(fixtures_settings.fixtures_path, 'builds', sample_fixture_name)
+    attempts_dir = os.path.join(
+        fixtures_settings.fixtures_path,
+        'builds',
+        sample_fixture_name
+    )
 
     # Copy sample from fixtures dir
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
     shutil.copytree(templatedir, projectdir)
+
+    # Setup project
+    setup_project(projectdir, "dummy_value")
 
     # Get basic sample settings
     settings = minimal_basic_settings(projectdir)
@@ -77,6 +86,9 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     assets_env = register_assets(settings)
     builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
+    # NOTE: We need to force reloading importation else the previous import settings
+    #       with different values, is still re-used
+    pages_map = importlib.reload(pages_map)
 
     # Collect finded templates for each defined page view
     buildeds = []
@@ -109,6 +121,9 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
 
         assert built == attempted
 
+    # Cleanup sys.path for next tests
+    reset_syspath(projectdir)
+
 
 @pytest.mark.parametrize('sample_fixture_name,attempted_destinations', [
     (
@@ -134,8 +149,8 @@ def test_build_item(minimal_basic_settings, fixtures_settings, temp_builds_dir,
         ],
     ),
 ])
-def test_build_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
-                    sample_fixture_name, attempted_destinations):
+def test_build_bulk(minimal_basic_settings, fixtures_settings, reset_syspath,
+                    temp_builds_dir, sample_fixture_name, attempted_destinations):
     """
     Build all pages in one bulk action
 
@@ -145,11 +160,18 @@ def test_build_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     basepath = temp_builds_dir.join('builder_build_bulk_{}'.format(sample_fixture_name))
     projectdir = os.path.join(basepath.strpath, sample_fixture_name)
 
-    attempts_dir = os.path.join(fixtures_settings.fixtures_path, 'builds', sample_fixture_name)
+    attempts_dir = os.path.join(
+        fixtures_settings.fixtures_path,
+        'builds',
+        sample_fixture_name
+    )
 
     # Copy sample from fixtures dir
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
     shutil.copytree(templatedir, projectdir)
+
+    # Setup project
+    setup_project(projectdir, "dummy_value")
 
     # Get basic sample settings
     settings = minimal_basic_settings(projectdir)
@@ -161,6 +183,9 @@ def test_build_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     assets_env = register_assets(settings)
     builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
+    # NOTE: We need to force reloading importation else the previous import settings
+    #       with different values, is still re-used
+    pages_map = importlib.reload(pages_map)
 
     # Collect finded templates for each defined page view
     buildeds = builder.build_bulk(pages_map.PAGES)
@@ -173,3 +198,6 @@ def test_build_bulk(minimal_basic_settings, fixtures_settings, temp_builds_dir,
     for dest in attempted_destinations:
         absdest = os.path.join(settings.PUBLISH_DIR, dest)
         assert os.path.exists(absdest) == True
+
+    # Cleanup sys.path for next tests
+    reset_syspath(projectdir)

@@ -2,7 +2,6 @@ import os
 import importlib
 import logging
 import shutil
-import sys
 
 import pytest
 
@@ -127,13 +126,6 @@ def test_scan_bulk(minimal_basic_settings, fixtures_settings, reset_syspath,
 
     # Collect finded templates for each defined page view
     knowed = builder.scan_bulk(pages_map.PAGES)
-    print()
-    print(pages_map.PAGES)
-    print()
-    print(knowed)
-    print()
-    print(sys.meta_path)
-    print()
 
     assert sorted(list(knowed)) == attempted_templates
 

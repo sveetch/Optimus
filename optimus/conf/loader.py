@@ -102,6 +102,15 @@ def import_project_module(
         * This move an ImportError emitted when checking basedir but it have been moved
           to the "setup_project.setup_project".
 
+    Note that if you use this function to import successively the same module path,
+    you will need to reload importation with something like this: ::
+
+        mod = import_project_module(name)
+        mod = importlib.reload(mod)
+
+    Else you will get unexpected behaviors like the second module returning content
+    from a previously imported similar path module. However, this is a particular case
+    that you may not encounter, this is mostly useful inside unittesting.
 
     Arguments:
         name (str): Module name to retrieve and import.
