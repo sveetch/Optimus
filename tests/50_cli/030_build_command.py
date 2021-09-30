@@ -31,8 +31,8 @@ def test_build_basic(caplog, flush_settings):
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created
-        assert os.path.exists(os.path.join(builddir_path))
-        assert os.path.exists(os.path.join(builddir_path, "index.html"))
+        assert os.path.exists(os.path.join(builddir_path)) is True
+        assert os.path.exists(os.path.join(builddir_path, "index.html")) is True
 
         assert result.exit_code == 0
 
@@ -59,8 +59,8 @@ def test_build_i18n(caplog, flush_settings):
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created
-        assert os.path.exists(os.path.join(builddir_path, "index.html"))
-        assert os.path.exists(os.path.join(builddir_path, "index_fr_FR.html"))
-        assert os.path.exists(os.path.join(builddir_path, "static/css/app.css"))
+        assert os.path.exists(os.path.join(builddir_path, "index.html")) is True
+        assert os.path.exists(os.path.join(builddir_path, "index_fr_FR.html")) is True
+        assert os.path.exists(os.path.join(builddir_path, "static/css/app.css")) is True
 
         assert result.exit_code == 0

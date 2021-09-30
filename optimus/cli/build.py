@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import importlib
 
 import click
 
@@ -40,6 +41,12 @@ def build_command(context, basedir, settings_name):
     assets_env = register_assets(settings)
     builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
+    # TODO: This fix some test but it should not be used in common usage, find a way
+    #       to enable it only for tests. And it should be done on every other CLI which
+    #       use import_project_module (and related methods)
+    # NOTE: We could use hidden option "@click.option(..., hidden=True)" but it's only
+    #       in recent click version (2019, probably 7.0) so we need to upgrade click..
+    pages_map = importlib.reload(pages_map)
 
     # Proceed to page building from registered pages
     builder.build_bulk(pages_map.PAGES)

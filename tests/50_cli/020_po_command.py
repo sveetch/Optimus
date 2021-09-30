@@ -35,8 +35,8 @@ def test_po_init(caplog, flush_settings):
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created
-        assert os.path.exists(project_localedir)
-        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.po"))
+        assert os.path.exists(project_localedir) is True
+        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.po")) is True
 
         assert result.exit_code == 0
 
@@ -69,8 +69,8 @@ def test_po_update(caplog, flush_settings):
                                               "--basedir={}".format(project_path)])
 
         # Check i18n structure has been created
-        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.po"))
-        assert os.path.exists(os.path.join(project_localedir, "fr_FR/LC_MESSAGES/messages.po"))
+        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.po")) is True
+        assert os.path.exists(os.path.join(project_localedir, "fr_FR/LC_MESSAGES/messages.po")) is True
 
         assert result.exit_code == 0
 
@@ -101,7 +101,7 @@ def test_po_compile(caplog, flush_settings):
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created
-        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.mo"))
-        assert os.path.exists(os.path.join(project_localedir, "fr_FR/LC_MESSAGES/messages.mo"))
+        assert os.path.exists(os.path.join(project_localedir, "en_US/LC_MESSAGES/messages.mo")) is True
+        assert os.path.exists(os.path.join(project_localedir, "fr_FR/LC_MESSAGES/messages.mo")) is True
 
         assert result.exit_code == 0

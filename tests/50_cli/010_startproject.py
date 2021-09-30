@@ -36,15 +36,15 @@ def test_start_basic_sample(caplog):
             ),
         ]
         for msg in attempted_outputs:
-            assert (msg in result.output) == True
+            assert (msg in result.output) is True
 
         # Check project files and dirs
-        assert os.path.exists(project_path)
-        assert os.path.exists(os.path.join(project_path, "settings.py"))
-        assert os.path.exists(os.path.join(project_path, "pages.py"))
+        assert os.path.exists(project_path) is True
+        assert os.path.exists(os.path.join(project_path, "settings.py")) is True
+        assert os.path.exists(os.path.join(project_path, "pages.py")) is True
         assert os.path.exists(os.path.join(project_path, "sources",
                                            "templates",
-                                           "skeleton.html"))
+                                           "skeleton.html")) is True
 
         assert result.exit_code == 0
 
@@ -77,16 +77,16 @@ def test_start_i18n_sample(caplog):
             ),
         ]
         for msg in attempted_outputs:
-            assert (msg in result.output) == True
+            assert (msg in result.output) is True
 
         # Check project files and dirs
-        assert os.path.exists(project_path)
-        assert os.path.exists(os.path.join(project_path, "settings.py"))
-        assert os.path.exists(os.path.join(project_path, "babel.cfg"))
-        assert os.path.exists(os.path.join(project_path, "pages.py"))
+        assert os.path.exists(project_path) is True
+        assert os.path.exists(os.path.join(project_path, "settings.py")) is True
+        assert os.path.exists(os.path.join(project_path, "babel.cfg")) is True
+        assert os.path.exists(os.path.join(project_path, "pages.py")) is True
         assert os.path.exists(os.path.join(project_path, "sources",
                                                          "templates",
-                                                         "skeleton.html"))
+                                                         "skeleton.html")) is True
 
         assert result.exit_code == 0
 
@@ -119,9 +119,9 @@ def test_start_dryrun(caplog):
             ),
         ]
         for msg in attempted_outputs:
-            assert (msg in result.output) == True
+            assert (msg in result.output) is True
 
         # Check nothing has been created
-        assert os.path.exists(project_path) == False
+        assert os.path.exists(project_path) is False
 
         assert result.exit_code == 0
