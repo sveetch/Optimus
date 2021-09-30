@@ -23,11 +23,11 @@ def test_build_basic(caplog, flush_settings):
         builddir_path = os.path.join(project_path, "_build", "dev")
 
         # Make basic sample project
-        result = runner.invoke(cli_frontend, ["init", projet_name,
+        result = runner.invoke(cli_frontend, ["--test-env", "init", projet_name,
                                               "--template=basic"])
 
         # Start catalog
-        result = runner.invoke(cli_frontend, ["build",
+        result = runner.invoke(cli_frontend, ["--test-env", "build",
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created
@@ -51,11 +51,11 @@ def test_build_i18n(caplog, flush_settings):
         builddir_path = os.path.join(project_path, "_build", "dev")
 
         # Make basic sample project
-        result = runner.invoke(cli_frontend, ["init", projet_name,
+        result = runner.invoke(cli_frontend, ["--test-env", "init", projet_name,
                                               "--template=i18n"])
 
         # Start catalog
-        result = runner.invoke(cli_frontend, ["build",
+        result = runner.invoke(cli_frontend, ["--test-env", "build",
                                               "--basedir={}".format(project_path)])
 
         # Check i&8n structure has been created

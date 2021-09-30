@@ -46,7 +46,8 @@ def build_command(context, basedir, settings_name):
     #       use import_project_module (and related methods)
     # NOTE: We could use hidden option "@click.option(..., hidden=True)" but it's only
     #       in recent click version (2019, probably 7.0) so we need to upgrade click..
-    pages_map = importlib.reload(pages_map)
+    if context.obj["test_env"]:
+        pages_map = importlib.reload(pages_map)
 
     # Proceed to page building from registered pages
     builder.build_bulk(pages_map.PAGES)
