@@ -1,9 +1,11 @@
 import os
+import importlib
 import logging
 import shutil
 
 import pytest
 
+from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
@@ -21,7 +23,7 @@ class Event(object):
 
 def handler_ready_shortcut(sample_fixture_name, tempdir_name,
                            minimal_basic_settings, fixtures_settings,
-                           temp_builds_dir):
+                           temp_builds_dir, reset_fixture):
     """
     Get everything ready to return a fully usable handler and settings
     """
@@ -32,11 +34,17 @@ def handler_ready_shortcut(sample_fixture_name, tempdir_name,
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
     shutil.copytree(templatedir, projectdir)
 
+    # Setup project
+    setup_project(projectdir, "dummy_value")
+
     # Get basic sample settings, builder, assets environment and page views
     settings = minimal_basic_settings(projectdir)
     assets_env = register_assets(settings)
     pages_builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
+    # NOTE: We need to force reloading importation else the previous import settings
+    #       with different values, is still re-used
+    pages_map = importlib.reload(pages_map)
 
     # Fill registry
     pages_builder.scan_bulk(pages_map.PAGES)
@@ -44,20 +52,26 @@ def handler_ready_shortcut(sample_fixture_name, tempdir_name,
     handler = TemplatesWatchEventHandler(settings, pages_builder,
                                          **settings.WATCHER_TEMPLATES_PATTERNS)
 
-    return settings, handler
+    # Tricks to return the "reset function" which needs "projectdir" path that is only
+    # available from "handler_ready_shortcut" but not in the test itself
+    def resetter():
+        reset_fixture(projectdir)
+
+    return settings, handler, resetter
 
 
-def test_build_for_item(minimal_basic_settings, fixtures_settings,
+def test_build_for_item(minimal_basic_settings, fixtures_settings, reset_syspath,
                         temp_builds_dir):
     """
     Check 'build_for_item'
     """
-    settings, handler = handler_ready_shortcut(
+    settings, handler, resetter = handler_ready_shortcut(
         'basic2_template',
         'watchers_templates_build_for_item',
         minimal_basic_settings,
         fixtures_settings,
-        temp_builds_dir
+        temp_builds_dir,
+        reset_syspath,
     )
 
     assert handler.build_for_item('nope.html') == []
@@ -72,19 +86,22 @@ def test_build_for_item(minimal_basic_settings, fixtures_settings,
         os.path.join(settings.PUBLISH_DIR, 'sub', 'bar.html'),
     ])
 
+    # Cleanup sys.path for next tests
+    resetter()
 
 
-def test_events(minimal_basic_settings, fixtures_settings, temp_builds_dir,
-                prepend_items):
+def test_events(minimal_basic_settings, fixtures_settings, reset_syspath,
+                temp_builds_dir, prepend_items):
     """
     Check events, 'on_created' first then every other since they works the same
     """
-    settings, handler = handler_ready_shortcut(
+    settings, handler, resetter = handler_ready_shortcut(
         'basic2_template',
         'watchers_templates_events',
         minimal_basic_settings,
         fixtures_settings,
-        temp_builds_dir
+        temp_builds_dir,
+        reset_syspath,
     )
 
 
@@ -135,3 +152,6 @@ def test_events(minimal_basic_settings, fixtures_settings, temp_builds_dir,
         'sub/bar.html',
         'sub/foo.html',
     ]))
+
+    # Cleanup sys.path for next tests
+    resetter()

@@ -1,9 +1,11 @@
 import os
+import importlib
 import logging
 import shutil
 
 import pytest
 
+from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
