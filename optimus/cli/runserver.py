@@ -3,8 +3,8 @@ import os
 import logging
 import click
 
-from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.exceptions import InvalidHostname
+from optimus.setup_project import setup_project
 from optimus.utils import display_settings, get_host_parts
 
 
@@ -15,7 +15,7 @@ except ImportError:
 else:
     CHERRYPY_AVAILABLE = True
 
-
+# TODO: Change settings-name to settings ?
 @click.command('runserver', short_help=("Launch a simple HTTP server on "
                                         "built project"))
 @click.argument('hostname', default="127.0.0.1:80")
@@ -50,13 +50,8 @@ def runserver_command(context, basedir, settings_name, index, hostname):
                       "with 'pip install cherrypy'"))
         raise click.Abort()
 
-    # Set required environment variables to load settings
-    if PROJECT_DIR_ENVVAR not in os.environ \
-       or not os.environ[PROJECT_DIR_ENVVAR]:
-        os.environ[PROJECT_DIR_ENVVAR] = basedir
-    if SETTINGS_NAME_ENVVAR not in os.environ \
-       or not os.environ[SETTINGS_NAME_ENVVAR]:
-        os.environ[SETTINGS_NAME_ENVVAR] = settings_name
+    # Set project before to be able to load its modules
+    setup_project(basedir, settings_name)
 
     # Load current project settings
     from optimus.conf.registry import settings

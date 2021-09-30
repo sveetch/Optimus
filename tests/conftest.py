@@ -10,7 +10,9 @@ from optimus import __version__, PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 
 
 class FixturesSettingsTestMixin(object):
-    """Mixin containing some basic settings"""
+    """
+    Mixin containing some basic settings
+    """
     def __init__(self):
         # Use getcwd and package name since abspath on package __file__ won't
         # play nice with tox (because tests/ dir is not deployed in
@@ -35,14 +37,18 @@ class FixturesSettingsTestMixin(object):
 
 @pytest.fixture(scope='session')
 def temp_builds_dir(tmpdir_factory):
-    """Prepare a temporary build directory"""
+    """
+    Prepare a temporary build directory
+    """
     fn = tmpdir_factory.mktemp('optimus-tests')
     return fn
 
 
 @pytest.fixture(scope="module")
 def fixtures_settings():
-    """Initialize and return settings (mostly paths) for fixtures (scope at module level)"""
+    """
+    Initialize and return settings (mostly paths) for fixtures (scope at module level)
+    """
     return FixturesSettingsTestMixin()
 
 
@@ -55,6 +61,22 @@ def prepend_items():
         return [os.path.join(prefix, item) for item in paths]
 
     return prepend_func
+
+
+@pytest.fixture(scope="function")
+def reset_syspath():
+    """
+    Return a function to remove given path from sys.path.
+
+    This is to use at the end (after all assertions) of test which
+    use ``setup_project.setup_project`` to add base directory to sys.path
+    and avoid clash with next tests doing the same.
+    """
+    def reset_func(path):
+        if path in sys.path:
+            del sys.path[sys.path.index(path)]
+
+    return reset_func
 
 
 @pytest.fixture(scope="function")

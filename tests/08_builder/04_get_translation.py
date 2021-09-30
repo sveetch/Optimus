@@ -4,11 +4,12 @@ import shutil
 
 import pytest
 
+from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 
 
-def test_get_translation(i18n_template_settings, fixtures_settings,
+def test_get_translation(i18n_template_settings, fixtures_settings, reset_syspath,
                          temp_builds_dir, caplog):
     """
     Start with default env then use 'get_environnement' to get another one
@@ -36,6 +37,8 @@ def test_get_translation(i18n_template_settings, fixtures_settings,
             'jinja2.ext.InternationalizationExtension',
         ]
 
+        setup_project(projectdir, "dummy_value", set_envvar=False)
+
         # Define settings to view afterwards
         assert hasattr(settings, 'PAGES_MAP') == True
         pages_map = import_pages_module(settings.PAGES_MAP, basedir=projectdir)
@@ -54,3 +57,5 @@ def test_get_translation(i18n_template_settings, fixtures_settings,
             'fr_FR <LL@li.org>',
         ]
 
+    # Cleanup sys.path for next tests
+    reset_syspath(projectdir)
