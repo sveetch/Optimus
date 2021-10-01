@@ -3,83 +3,13 @@
 Module loader helpers
 *********************
 
-.. Todo::
-    * 'imp' is deprecated since python 3.4, To remove in favor of importlib
-      or make a switch depending of python version;
 """
 import os
-#import imp
 import importlib
 import logging
 import sys
 
 from optimus.conf.model import SettingsModel
-
-
-def old_import_project_module(name, basedir=None,
-                          finding_module_err='Unable to find module: {0}',
-                          import_module_err='Unable to load module: {0}'):
-    """
-    DEPRECATED
-    Load given module name.
-
-    Arguments:
-        name (str): Module name to retrieve from ``basedir``. This is Python path to
-            the module from project base directory as loaded from project setup.
-
-    Keyword Arguments:
-        basedir (str): Base directory from where to find module name. If no
-            base directory is given ``os.getcwd()`` is used. Default is
-            ``None``.
-        finding_module_err (str): Message to output when the given module name
-            is not reachable from ``basedir``.
-        import_module_err (str): Message to output when the given module name
-            raise exception when loaded.
-
-    Returns:
-        object: Finded and loaded module.
-    """
-    basedir = basedir or os.getcwd()
-
-    logger = logging.getLogger('optimus')
-    logger.info('Loading "%s" module', name)
-    logger.info('Module searched in: %s', basedir)
-
-    # Check project can be import with temporary changing sys.path
-    # NOTE: Is it really needed anymore since new technic with importlib ?
-    project_name = os.path.basename(os.path.abspath(basedir))
-    sys.path.append(os.path.normpath(os.path.join(basedir, '..')))
-    try:
-        __import__(project_name, '', '', [''])
-    except ImportError:
-        msg = "Unable to load project named: {0}"
-        logger.critical(msg.format(project_name))
-        raise
-    # Cleanup the sys.path from the project path
-    sys.path.pop()
-
-    fp = pathname = description = None
-    try:
-        fp, pathname, description = imp.find_module(name, [basedir])
-    except ImportError:
-        logger.critical(finding_module_err.format(name))
-        # dont raising exception that is not really helping since it point out
-        # to 'imp.find_module' line
-        sys.exit()
-    else:
-        try:
-            mod = imp.load_module(name, fp, pathname, description)
-        except: # noqa
-            logger.critical(import_module_err.format(name))
-            # Print out the exception because it is very useful to debug
-            raise
-            sys.exit()
-    finally:
-        # Close fp explicitly.
-        if fp:
-            fp.close()
-
-    return mod
 
 
 def import_project_module(

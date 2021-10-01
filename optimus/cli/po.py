@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+
 import click
 
 from optimus.setup_project import setup_project

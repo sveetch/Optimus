@@ -28,7 +28,7 @@ from babel.messages.pofile import read_po, write_po
 from babel.messages.mofile import write_mo
 
 
-class I18NManager(object):
+class I18NManager:
     """
     I18n manager for translation catalogs
 

@@ -10,11 +10,6 @@ from click.testing import CliRunner
 from optimus.cli.console_script import cli_frontend
 
 
-"""
-TODO:
-    Test does not fails but they also need migration stuff to the new importation system
-"""
-
 def test_po_init(caplog, flush_settings):
     """
     Testing i18n project stuff install using i18n sample

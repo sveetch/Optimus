@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import os
 import logging
-import click
-
+import os
 from string import ascii_letters, digits
+
+import click
 
 from optimus.start_project import ProjectStarter
 

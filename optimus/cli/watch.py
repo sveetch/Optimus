@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
+import importlib
 import logging
+import os
 import time
 
 import click
@@ -49,6 +50,12 @@ def watch_command(context, basedir, settings_name):
     assets_env = register_assets(settings)
     builder = PageBuilder(settings, assets_env=assets_env)
     pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
+
+    # NOTE: Required hack for tests only to reload imported module and ensure multiple
+    #       consecutive tests does not use the same module even they explicitely asked
+    #       for another one (but with the same Python path inside setuped basedir)
+    if context.obj["test_env"]:
+        pages_map = importlib.reload(pages_map)
 
     # Proceed to page building from registered pages
     logger.debug('Trigger pages build to start')
