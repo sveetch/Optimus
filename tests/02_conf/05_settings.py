@@ -9,7 +9,7 @@ from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.conf.loader import import_project_module
 
 
-def test_fail_basedir(monkeypatch, caplog, fixtures_settings):
+def test_fail_basedir(monkeypatch, caplog, fixtures_settings, flush_settings):
     """
     Fail because project base dir env var is not set
     """
@@ -20,7 +20,7 @@ def test_fail_basedir(monkeypatch, caplog, fixtures_settings):
         from optimus.conf.registry import settings
 
 
-def test_fail_name(monkeypatch, caplog, fixtures_settings):
+def test_fail_name(monkeypatch, caplog, fixtures_settings, flush_settings):
     """
     Fail because project settings name env var is not set
     """
@@ -34,7 +34,7 @@ def test_fail_name(monkeypatch, caplog, fixtures_settings):
 
 
 @pytest.mark.skip(reason="this is very tricky")
-def test_success(monkeypatch, caplog, fixtures_settings, reset_syspath):
+def test_success(monkeypatch, caplog, fixtures_settings, flush_settings, reset_syspath):
     """
     Check automatic settings loading from registry is working
 

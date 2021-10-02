@@ -1,7 +1,3 @@
-import os
-
-import pytest
-
 from optimus.utils import display_settings
 
 

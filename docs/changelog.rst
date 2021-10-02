@@ -27,7 +27,7 @@ Version 2.0.0 - Unreleased
   default HTTP in template context variable ``SITE.web_url``;
 * Removed requirement and usage of ``six`` since this is a Python3 from some time;
 * Upgrade click to ``>=7.1,<8.0``;
-* TODO: Replace usage ``imp`` usage with a new system with ``importlib``;
+* Replace usage ``imp`` usage with a new system with ``importlib``;
 
 
 Version 1.1.2 - 2020/01/01

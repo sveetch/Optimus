@@ -36,7 +36,6 @@ def test_valid_hostname(hostname, ip, port):
     """
     Testing hostname arg validation on correct value
     """
-
     assert get_host_parts(hostname) == (ip, port)
 
 
@@ -51,6 +50,5 @@ def test_invalid_hostname(hostname):
     """
     Testing hostname arg validation on correct value
     """
-
     with pytest.raises(InvalidHostname):
         get_host_parts(hostname)
