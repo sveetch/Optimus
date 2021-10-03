@@ -1,19 +1,24 @@
 """
-Default template project to use to create a new project
+Manifest for i18n template project
 """
 # Directory structure to create
 DIRECTORY_STRUCTURE = [
     # list(dir_name[, children_dir_list])
     [
-        'sources',
+        'project',
         [
-            ['js'],
-            ['css'],
-            ['scss'],
-            ['images'],
-            ['templates'],
+            [
+                'sources',
+                [
+                    ['js'],
+                    ['css'],
+                    ['scss'],
+                    ['images'],
+                    ['templates'],
+                ],
+            ],
         ]
-    ]
+    ],
 ]
 
 # The directory name that contains 'sources' (assets, templates, images, etc..)
@@ -21,7 +26,7 @@ DIRECTORY_STRUCTURE = [
 SOURCES_FROM = 'sources'
 
 # The directory name that will contains 'sources' in the new created projects
-SOURCES_TO = SOURCES_FROM
+SOURCES_TO = "project/sources"
 
 # Default sources files or directory to synchronize within the new project
 # sources directory
@@ -36,6 +41,9 @@ FILES_TO_SYNC = (
 
 # Directory that contain message catalog file structure to copy to the project
 LOCALE_DIR = "locale"
+# Directory where to copy the locale directory, will be copied to the root if variable
+# is not set or empty.
+LOCALE_DST = "project"
 
 # Script template files
 SCRIPT_FILES = [
@@ -46,8 +54,9 @@ SCRIPT_FILES = [
     ['scripts/babel.cfg.tpl', 'babel.cfg'],
     ['scripts/settings.json.tpl', 'settings.json'],
     ['scripts/gitignore.tpl', '.gitignore'],
-    ['scripts/__init__.py.tpl', '__init__.py'],
-    ['scripts/settings.py.tpl', 'settings.py'],
-    ['scripts/prod_settings.py.tpl', 'prod_settings.py'],
-    ['scripts/pages.py.tpl', 'pages.py'],
+    ['scripts/__init__.py.tpl', 'project/__init__.py'],
+    ['scripts/settings__init__.py.tpl', 'project/settings/__init__.py'],
+    ['scripts/pages.py.tpl', 'project/pages.py'],
+    ['scripts/settings.py.tpl', 'project/settings/base.py'],
+    ['scripts/prod_settings.py.tpl', 'project/settings/production.py'],
 ]

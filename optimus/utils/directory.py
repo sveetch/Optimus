@@ -31,7 +31,7 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
         project_directory (str): Directory where to create directory
             tree.
         tree (list): Directory tree to create, each item is either a
-            string or a list. If an item is a list it is assumed to be a
+            string or a list. If an item is a string it is assumed to be a
             directory name to create. If an item is a list, it is assumed to be
             a list of sub directories to create.
 

@@ -1,19 +1,24 @@
 """
-Manifest for default template project to use to create a new project
+Manifest for basic template project
 """
 # Directory structure to create
 DIRECTORY_STRUCTURE = [
     # list(dir_name[, children_dir_list])
     [
-        'sources',
+        'project',
         [
-            ['js'],
-            ['css'],
-            ['scss'],
-            ['images'],
-            ['templates'],
+            [
+                'sources',
+                [
+                    ['js'],
+                    ['css'],
+                    ['scss'],
+                    ['images'],
+                    ['templates'],
+                ],
+            ],
         ]
-    ]
+    ],
 ]
 
 # The directory name that contains 'sources' (assets, templates, images, etc..)
@@ -21,7 +26,7 @@ DIRECTORY_STRUCTURE = [
 SOURCES_FROM = 'sources'
 
 # The directory name that will contains 'sources' in the new created projects
-SOURCES_TO = SOURCES_FROM
+SOURCES_TO = "project/sources"
 
 # Default sources files or directory to copy within the new project
 # sources directory
@@ -42,8 +47,9 @@ SCRIPT_FILES = [
     ['scripts/requirements.txt.tpl', 'requirements.txt'],
     ['scripts/gitignore.tpl', '.gitignore'],
     ['scripts/settings.json.tpl', 'settings.json'],
-    ['scripts/__init__.py.tpl', '__init__.py'],
-    ['scripts/settings.py.tpl', 'settings.py'],
-    ['scripts/prod_settings.py.tpl', 'prod_settings.py'],
-    ['scripts/pages.py.tpl', 'pages.py'],
+    ['scripts/__init__.py.tpl', 'project/__init__.py'],
+    ['scripts/settings__init__.py.tpl', 'project/settings/__init__.py'],
+    ['scripts/pages.py.tpl', 'project/pages.py'],
+    ['scripts/settings.py.tpl', 'project/settings/base.py'],
+    ['scripts/prod_settings.py.tpl', 'project/settings/production.py'],
 ]

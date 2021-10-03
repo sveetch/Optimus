@@ -151,13 +151,20 @@ class ProjectStarter(object):
             manifest (object): Template manifest object.
             template_fspath (str): Template path where to get the locale
                 directory.
-            destination (str): Destination path (the created project
-                directory).
+            destination (str): Destination path to create for locale directory.
         """
         locale_src = os.path.join(template_fspath, manifest.LOCALE_DIR)
-        locale_dst = os.path.join(destination, manifest.LOCALE_DIR)
 
         self.logger.info("Installing messages catalogs")
+
+        if getattr(manifest, "LOCALE_DST"):
+            locale_dir_container = os.path.join(destination, manifest.LOCALE_DST)
+            if not os.path.exists(locale_dir_container):
+                os.makedirs(locale_dir_container)
+            locale_dst = os.path.join(destination, manifest.LOCALE_DST,
+                                      manifest.LOCALE_DIR)
+        else:
+            locale_dst = os.path.join(destination, manifest.LOCALE_DIR)
 
         if not os.path.exists(locale_src):
             msg = "Message catalog directory does not exists: {}"

@@ -11,12 +11,15 @@ Changelog
 Version 2.0.0 - Unreleased
 --------------------------
 
+**A major update with backward compatible issues, modern requirements and full
+compatibility for recent Python version**
+
 * Remove support for Python3.5;
 * Add support for Python 3.6 to 3.8;
 * Fix a test for recent Babel version;
 * Upgrade dependancies to recent versions and pin some other ones;
-* Fix event watcher to use ported 'match_any_path' instead of 'match_path' from
-  deprecated 'pathtools';
+* Fix event watcher to use ported ``match_any_path`` instead of ``match_path`` from
+  deprecated ``pathtools``;
 * Add frozen requirement file and freezer script;
 * Update package config;
 * Add tox to dev requirements;
@@ -28,6 +31,7 @@ Version 2.0.0 - Unreleased
 * Removed requirement and usage of ``six`` since this is a Python3 from some time;
 * Upgrade click to ``>=7.1,<8.0``;
 * Replace usage ``imp`` usage with a new system with ``importlib``;
+* Updated project templates ``basic`` and ``i18n`` with a new structure and makefile;
 
 
 Version 1.1.2 - 2020/01/01

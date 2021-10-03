@@ -7,7 +7,14 @@ from webassets import Bundle
 
 DEBUG = True
 
-PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_DIR = os.path.normpath(
+    os.path.join(
+        os.path.abspath(
+            os.path.dirname(__file__)
+        ),
+        "..",
+    )
+)
 
 # Common site name and domain to use available in templates
 SITE_NAME = '$PROJECT_NAME'

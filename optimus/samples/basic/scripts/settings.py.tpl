@@ -5,14 +5,16 @@ Settings file for $PROJECT_NAME
 import os
 from webassets import Bundle
 
-# Register custom webasset filter for RCssMin minifier
-from webassets.filter import register_filter
-from optimus.assets.rcssmin_webassets_filter import RCSSMin
-register_filter(RCSSMin)
-
 DEBUG = True
 
-PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_DIR = os.path.normpath(
+    os.path.join(
+        os.path.abspath(
+            os.path.dirname(__file__)
+        ),
+        "..",
+    )
+)
 
 # Common site name and domain to use available in templates
 SITE_NAME = '$PROJECT_NAME'

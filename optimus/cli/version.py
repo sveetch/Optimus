@@ -22,18 +22,22 @@ def version_command(context):
     """
     versions = (
         ("Optimus", optimus_version),
-        ("Jinja2", jinja2_version),
         ("Babel", babel_version),
-        ("webassets", ".".join([str(i) for i in webassets_version])),
-        ("watchdog", watchdog_version),
         ("cherrypy", cherrypy_version),
+        ("click", click.__version__),
+        ("Jinja2", jinja2_version),
+        ("watchdog", watchdog_version),
+        ("webassets", ".".join([str(i) for i in webassets_version])),
     )
 
     for i, data in enumerate(versions, start=1):
         name, version = data
+        # First version is Optimus displayed as root
         if i == 1:
             click.echo("{} {}".format(name, version))
+        # Display termination character for the last version
         elif i == len(versions):
             click.echo("└── {} {}".format(name, version))
+        # Every other versions
         else:
             click.echo("├── {} {}".format(name, version))
