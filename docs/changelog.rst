@@ -11,8 +11,8 @@ Changelog
 Version 2.0.0 - Unreleased
 --------------------------
 
-**A major update with backward compatible issues, modern requirements and full
-compatibility for recent Python version**
+**A major update with some big refactoring, backward compatible issues, modern
+requirements and full compatibility for recent Python version**
 
 * Remove support for Python3.5;
 * Add support for Python 3.6 to 3.8;

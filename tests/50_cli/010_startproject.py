@@ -25,7 +25,7 @@ def test_start_basic_sample(caplog):
         result = runner.invoke(cli_frontend, ["init", projet_name])
 
         # Check output
-        attempted_outputs = [
+        expected_outputs = [
             "Loading project template from : optimus.samples.basic",
             "Creating new Optimus project '{name}' in : {cwd}".format(
                 name=projet_name,
@@ -35,14 +35,14 @@ def test_start_basic_sample(caplog):
                 path=project_path
             ),
         ]
-        for msg in attempted_outputs:
+        for msg in expected_outputs:
             assert (msg in result.output) is True
 
         # Check project files and dirs
         assert os.path.exists(project_path) is True
-        assert os.path.exists(os.path.join(project_path, "settings.py")) is True
-        assert os.path.exists(os.path.join(project_path, "pages.py")) is True
-        assert os.path.exists(os.path.join(project_path, "sources",
+        assert os.path.exists(os.path.join(project_path, 'project', 'settings', 'base.py')) is True
+        assert os.path.exists(os.path.join(project_path, 'project', "pages.py")) is True
+        assert os.path.exists(os.path.join(project_path, 'project', "sources",
                                            "templates",
                                            "skeleton.html")) is True
 
@@ -66,7 +66,7 @@ def test_start_i18n_sample(caplog):
                                               "--template=i18n"])
 
         # Check output
-        attempted_outputs = [
+        expected_outputs = [
             "Loading project template from : optimus.samples.i18n",
             "Creating new Optimus project '{name}' in : {cwd}".format(
                 name=projet_name,
@@ -76,15 +76,15 @@ def test_start_i18n_sample(caplog):
                 path=project_path
             ),
         ]
-        for msg in attempted_outputs:
+        for msg in expected_outputs:
             assert (msg in result.output) is True
 
         # Check project files and dirs
         assert os.path.exists(project_path) is True
-        assert os.path.exists(os.path.join(project_path, "settings.py")) is True
+        assert os.path.exists(os.path.join(project_path, 'project', 'settings', 'base.py')) is True
         assert os.path.exists(os.path.join(project_path, "babel.cfg")) is True
-        assert os.path.exists(os.path.join(project_path, "pages.py")) is True
-        assert os.path.exists(os.path.join(project_path, "sources",
+        assert os.path.exists(os.path.join(project_path, 'project', "pages.py")) is True
+        assert os.path.exists(os.path.join(project_path, 'project', "sources",
                                                          "templates",
                                                          "skeleton.html")) is True
 
@@ -104,11 +104,10 @@ def test_start_dryrun(caplog):
         project_path = os.path.join(test_cwd, projet_name)
 
         # Default verbosity
-        result = runner.invoke(cli_frontend, ["init", projet_name,
-                                              "--dry-run"])
+        result = runner.invoke(cli_frontend, ["init", projet_name, "--dry-run"])
 
         # Check output
-        attempted_outputs = [
+        expected_outputs = [
             "Loading project template from : optimus.samples.basic",
             "Creating new Optimus project '{name}' in : {cwd}".format(
                 name=projet_name,
@@ -118,7 +117,7 @@ def test_start_dryrun(caplog):
                 path=project_path
             ),
         ]
-        for msg in attempted_outputs:
+        for msg in expected_outputs:
             assert (msg in result.output) is True
 
         # Check nothing has been created

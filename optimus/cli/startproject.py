@@ -32,6 +32,9 @@ def startproject_command(context, name, template, dry_run):
     # identifier ::=  (letter|"_") (letter | digit | "_")*
     # This is not fully safe, user can create a project name using an installed
     # Python module that will override it and make some troubles in some case
+    # NOTE: This may not be useful yet since we don't import project container
+    # directly but only add its "project/" dir (or another custom one from arg)
+    # to sys.path to reach its modules (like settings.base).
     if name:
         if name[0] not in ascii_letters:
             logger.error("Project name must start with a letter")

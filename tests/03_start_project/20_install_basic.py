@@ -19,9 +19,9 @@ def test_basic_template(caplog, temp_builds_dir):
     starter.install(basepath.strpath, project_name, template_name)
 
     assert os.path.exists(destination) == True
-    assert os.path.exists(os.path.join(destination, 'settings.py')) == True
-    assert os.path.exists(os.path.join(destination, 'sources', 'templates', 'index.html')) == True
-    assert os.path.exists(os.path.join(destination, 'sources', 'css', 'app.css')) == True
+    assert os.path.exists(os.path.join(destination, 'project', 'settings', 'base.py')) == True
+    assert os.path.exists(os.path.join(destination, 'project', 'sources', 'templates', 'index.html')) == True
+    assert os.path.exists(os.path.join(destination, 'project', 'sources', 'css', 'app.css')) == True
 
     assert caplog.record_tuples[0] == (
         'optimus',

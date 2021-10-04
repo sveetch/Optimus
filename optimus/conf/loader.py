@@ -25,7 +25,7 @@ def import_project_module(
     ``sys.path`` with ``setup_project.setup_project`` before using it.
 
     NOTE:
-        * This keeps deprecated "basedir" arg until finished.
+        * This keeps deprecated "basedir" arg until migration ends and cleaning.
         * This remove a logging entry about basedir ("Module searched in:...") since
           it's something to emit from "setup_project.setup_project". Some tests will
           not appreciate, they will need a fix on expected logs.
@@ -58,29 +58,40 @@ def import_project_module(
     Returns:
         object: Finded and loaded module.
     """
-
     logger = logging.getLogger('optimus')
     logger.info('Loading "%s" module', name)
+    print("🥚 import_project_module")
 
+    print("🥚 try to find spec")
+    print(importlib.util.find_spec(name))
     # NOTE: Maybe we should raise better exception (with logged msg?), have to
     #       check
     # Try to locate module
     if importlib.util.find_spec(name):
+        print("🥚 found spec")
         # Try to import module
         try:
+            print("🥚 trying importlib.import_module")
             mod = importlib.import_module(name)
         # Module is invalid or unfound. Break, log and print out on any exception
         # during importation
         except Exception as error:
+            print("🥚 failure from importlib.import_module")
             logger.critical(import_module_err.format(name))
             # Print out useful exception
             raise error
-            sys.exit()
+            #sys.exit()
+        else:
+            print("🥚 succeed from importlib.import_module")
     # Unable to locate module, it's a critical failure
     else:
+        print("🥚 unable to found spec")
         logger.critical(finding_module_err.format(name))
-        # NOTE: dont raise exception, let it flow to a sys.exit.
-        #raise
+        # TODO: We must not use sys.exit and raise a clear Exception instead,
+        # higher layer level code will have to catch it and do the sys.exit/click.abort
+        # itself if this is the required behavior. Actually sys.exit usage is opaque
+        #msg = "Unable to found module: {}"
+        #raise ImportError(msg.format(name))
         sys.exit()
 
     return mod
@@ -146,7 +157,9 @@ def import_settings(name, basedir):
     Returns:
         object: Settings module.
     """
+    print("🏗️ import_settings")
     settings_module = import_settings_module(name, basedir)
+    print("🏗️ imported")
 
     _settings = SettingsModel()
     _settings.load_from_module(settings_module)

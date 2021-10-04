@@ -25,6 +25,8 @@ def setup_project(basedir, settings_name, set_envvar=True, set_syspath=True):
     logger = logging.getLogger("optimus")
     status = {}
 
+    print("🧪 setup_project")
+    print("🧪 basedir:", basedir)
     # Check given base directory
     if not os.path.exists(basedir):
         msg = "Given base directory path does not exists: {}"
@@ -32,6 +34,7 @@ def setup_project(basedir, settings_name, set_envvar=True, set_syspath=True):
     elif not os.path.isdir(basedir):
         msg = "Given base directory path is not a directory: {}"
         raise ImportError(msg.format(basedir))
+    print("🧪 basedir have been validated", os.path.exists(basedir), os.path.isdir(basedir))
 
     # Set required environment variables to load settings
     if set_envvar:

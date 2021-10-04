@@ -156,6 +156,8 @@ class SettingsModel(object):
     def _default_rst(self):
         """
         Set default attributes for required settings ReSTructuredText
+
+        DEPRECATED: We don't ship anymore RST features.
         """
         # ReSTructuredText parser settings to use when building a RST document
         if not hasattr(self, "RST_PARSER_SETTINGS"):

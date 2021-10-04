@@ -6,7 +6,7 @@ import click
 
 from optimus.setup_project import setup_project
 from optimus.utils import initialize, display_settings
-from optimus.conf.loader import import_pages_module
+from optimus.conf.loader import import_pages_module, import_settings_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
 
@@ -30,6 +30,10 @@ def build_command(context, basedir, settings_name):
 
     # Load current project settings
     from optimus.conf.registry import settings
+    #settings = import_settings_module(settings_name, basedir=basedir)
+    ## NOTE: is it needed and working ??
+    #if context.obj["test_env"]:
+        #settings = importlib.reload(settings)
 
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
