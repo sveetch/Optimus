@@ -1,6 +1,7 @@
 """
 Some fixture methods
 """
+import logging
 import os
 import sys
 
@@ -135,6 +136,22 @@ def reset_syspath():
             del sys.path[sys.path.index(path)]
 
     return reset_func
+
+
+@pytest.fixture(scope="function")
+def flush_settings():
+    """
+    Flush everything about previous imported settings so each test can import
+    its own settings without inheriting from import cache
+    """
+    if 'settings' in sys.modules:
+        del sys.modules['settings']
+    if 'optimus.conf.registry' in sys.modules:
+        del sys.modules['optimus.conf.registry']
+    if optimus.PROJECT_DIR_ENVVAR in os.environ:
+        del os.environ[optimus.PROJECT_DIR_ENVVAR]
+    if optimus.SETTINGS_NAME_ENVVAR in os.environ:
+        del os.environ[optimus.SETTINGS_NAME_ENVVAR]
 
 
 @pytest.fixture(scope="function")
@@ -274,16 +291,62 @@ def i18n_template_settings():
 
 
 @pytest.fixture(scope="function")
-def flush_settings():
+def starter_basic_settings():
     """
-    Flush everything about previous imported settings so each test can import
-    its own settings without inheriting from import cache
+    Settings duplicated from basic starter.
+
+    WARNING:
+        These settings must be identical to the ones from equivalent starter template.
     """
-    if 'settings' in sys.modules:
-        del sys.modules['settings']
-    if 'optimus.conf.registry' in sys.modules:
-        del sys.modules['optimus.conf.registry']
-    if optimus.PROJECT_DIR_ENVVAR in os.environ:
-        del os.environ[optimus.PROJECT_DIR_ENVVAR]
-    if optimus.SETTINGS_NAME_ENVVAR in os.environ:
-        del os.environ[optimus.SETTINGS_NAME_ENVVAR]
+    def settings_func(basedir):
+        """
+        Return settings according to the basedir given.
+        """
+        from optimus.conf.model import SettingsModel
+        from webassets import Bundle
+
+        sources_dir = os.path.join(basedir, "sources")
+        templates_dir = os.path.join(sources_dir, "templates")
+        publish_dir = os.path.join(basedir, "_build/dev")
+        static_dir = os.path.join(publish_dir, "static")
+        locales_dir = os.path.join(basedir, "locale")
+        default_language_code = "en_US"
+
+        settings = SettingsModel()
+        settings.load_from_kwargs(
+            DEBUG = True,
+            PROJECT_DIR = basedir,
+            SITE_NAME = "try_i18n",
+            SITE_DOMAIN = "localhost",
+            SOURCES_DIR = sources_dir,
+            TEMPLATES_DIR = templates_dir,
+            PUBLISH_DIR = publish_dir,
+            STATIC_DIR = static_dir,
+            LOCALES_DIR = locales_dir,
+            LANGUAGE_CODE = default_language_code,
+            LANGUAGES = (default_language_code, "fr_FR"),
+            STATIC_URL = "static/",
+            BUNDLES = {
+                "modernizr_js": Bundle(
+                    "js/modernizr.src.js",
+                    filters=None,
+                    output="js/modernizr.min.js"
+                ),
+                "app_css": Bundle(
+                    "css/app.css",
+                    filters=None,
+                    output="css/app.min.css"
+                ),
+                "app_js": Bundle(
+                    "js/app.js",
+                    filters=None,
+                    output="js/app.min.js"
+                ),
+            },
+            FILES_TO_SYNC = (
+                "css",
+            ),
+        )
+        return settings
+
+    return settings_func

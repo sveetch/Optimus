@@ -13,7 +13,7 @@ def test_starter_interface_basic(caplog, tmpdir, fixtures_settings):
     """
     Project starter with "basic" template should create expected structure.
     """
-    # Mute all other logger because of cookiecutter and its dependancies which are very
+    # Mute all other loggers because of cookiecutter and its dependancies which are very
     # verbose.
     caplog.set_level(logging.CRITICAL)
     # Then re enabled optimus logger

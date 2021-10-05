@@ -30,6 +30,11 @@ def test_startproject_basic(caplog, tmpdir, fixtures_settings):
 
     assert result.exit_code == 0
 
+    """
+    TODO:
+        We must check again logs to ensure the CLI mute the ones from cookiecutter.
+    """
+
     # Expected directories according to destination and template content
     assert os.path.exists(project_path) is True
     assert os.path.exists(sources_path) is True

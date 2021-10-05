@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
 from optimus.i18n.manager import I18NManager
-from optimus.utils import display_settings
 
 
 def po_interface(settings, init=False, update=False, compile_opt=False):
     """
     Manage project translation catalogs for all registred languages
     """
-    print("🌱 po_interface")
-    print("🌱 neat")
-
-    # Debug output
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
-                                'TEMPLATES_DIR', 'LOCALES_DIR'))
-    print("🌱 bouyakasha")
-
     # Proceed to operations
     i18n = I18NManager(settings)
 

@@ -1,6 +1,6 @@
 import pytest
 
-from optimus.exceptions import InvalidLanguageIdentifier
+from optimus.exceptions import InvalidLangageIdentifier
 from optimus.i18n.lang import LangBase
 
 
@@ -8,7 +8,7 @@ def test_missing_code():
     """
     LangBase requires to define a code value
     """
-    with pytest.raises(InvalidLanguageIdentifier):
+    with pytest.raises(InvalidLangageIdentifier):
         LangBase()
 
 
@@ -16,7 +16,7 @@ def test_define_code_region_with_underscore():
     """
     Language name and region must be join with an underscore
     """
-    with pytest.raises(InvalidLanguageIdentifier):
+    with pytest.raises(InvalidLangageIdentifier):
         LangBase(code="fr-BE")
 
 

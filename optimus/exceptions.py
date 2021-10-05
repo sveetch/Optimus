@@ -43,7 +43,7 @@ class TemplateSettingsInvalidError(OptimusBaseException):
     pass
 
 
-class InvalidLanguageIdentifier(OptimusBaseException):
+class InvalidLangageIdentifier(OptimusBaseException):
     """
     Exception to be raised from ``lang.LangBase`` when given language code is
     invalid.

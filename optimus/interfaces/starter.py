@@ -11,6 +11,8 @@ def starter_interface(template, project_name, output_dir):
     """
     Interface to create a new Optimus project from a cookiecutter template.
 
+    Be aware that cookiecutter emit a lot of logs, you may want to mute them.
+
     Raises:
         exceptions: Any possible exceptions from cookiecutter.
 

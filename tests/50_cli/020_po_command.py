@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 TODO:
-    These tests are too heavy, they should only execute the "po" command on temporary
-    structure without using "init" command before (like copying an existing structure
-    from fixtures).
+    Remember to test logs from CLI which must mute them for the cookiecutter's stack
+    which are too much verbose.
 
-    There is no reason to involve other command since they are already tested elsewhere.
+    ::
 
-NOTE:
-    I realize than invoke is not what i was thought. This does not invoke CLI in
-    isolation as if executing in another shell session. It just call the CLI
-    programmaticaly so in fact using "invoke" in five different test, it invokes the
-    CLI in the same Python session and so this leads to issues with importation.
+        caplog.set_level(logging.CRITICAL)
+        caplog.set_level(logging.DEBUG, logger="optimus")
+
 """
 import os
 import logging

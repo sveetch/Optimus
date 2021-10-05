@@ -5,35 +5,178 @@ import shutil
 
 import pytest
 
-import click
-from click.testing import CliRunner
-
-from optimus.cli.console_script import cli_frontend
 from optimus.interfaces.po import po_interface
 from optimus.interfaces.starter import starter_interface
 
 
-@pytest.mark.skip(reason="On hold until start have been migrated to cookiecutter")
-def test_po_interface_init(caplog, minimal_i18n_settings, flush_settings):
+def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_settings):
     """
-    Testing i18n project stuff install using i18n sample
+    Init mode should creates the POT file and the enabled langages structure with their
+    PO files.
     """
-    test_cwd = os.getcwd()
-    name = "i18n_sample"
-    basedir = os.path.join(test_cwd, name)
-    project_path = os.path.join(basedir, "project")
+    # Mute all other loggers because of cookiecutter and its dependancies which are very
+    # verbose.
+    caplog.set_level(logging.CRITICAL)
+    # Then re enabled optimus logger
+    caplog.set_level(logging.DEBUG, logger="optimus")
+
+    basedir = tmpdir
+    sample_name = "basic"
+    destination = os.path.join(basedir, sample_name)
+    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
+    project_path = os.path.join(destination, "project")
     localedir_path = os.path.join(project_path, "locale")
 
-    ## Make basic i18n project
-    #runner.invoke(cli_frontend, ["init", name, "--template=i18n"])
+    settings = starter_basic_settings(project_path)
 
-    ## Remove existing locale directory for test needs
-    #shutil.rmtree(localedir_path)
+    created = starter_interface(template_path, sample_name, basedir)
+
+    # Remove existing locale directory for test needs
+    shutil.rmtree(localedir_path)
 
     # Start catalog
-    """
-    Here lives an incredible bug.
-    Command is invoked but does not return any output (logs or print), NOTHING and
-    then return a exit_code 1
-    """
     po_interface(settings, init=True)
+
+    # Expected directories and files
+    assert os.path.exists(localedir_path) is True
+    assert os.path.exists(os.path.join(localedir_path, "messages.pot")) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
+    )) is False
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
+    )) is False
+
+
+def test_po_interface_update(caplog, tmpdir, fixtures_settings, starter_basic_settings):
+    """
+    Update mode should just updates (or create it again if missing) the PO files for
+    all enabled langages.
+    """
+    # Mute all other loggers because of cookiecutter and its dependancies which are very
+    # verbose.
+    caplog.set_level(logging.CRITICAL)
+    # Then re enabled optimus logger
+    caplog.set_level(logging.DEBUG, logger="optimus")
+
+    basedir = tmpdir
+    sample_name = "basic"
+    destination = os.path.join(basedir, sample_name)
+    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
+    project_path = os.path.join(destination, "project")
+    localedir_path = os.path.join(project_path, "locale")
+
+    settings = starter_basic_settings(project_path)
+
+    created = starter_interface(template_path, sample_name, basedir)
+
+    # Remove catalog files from sample
+    os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.po"))
+    os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo"))
+    os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.po"))
+    os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.mo"))
+
+    # Update catalog (it should create again PO files which will use for assertions)
+    po_interface(settings, update=True)
+
+    # Expected directories and files
+    assert os.path.exists(localedir_path) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
+    )) is True
+
+
+def test_po_interface_compile(caplog, tmpdir, fixtures_settings,
+                              starter_basic_settings):
+    """
+    Compile mode should compiles the PO files to MO files.
+    """
+    # Mute all other loggers because of cookiecutter and its dependancies which are very
+    # verbose.
+    caplog.set_level(logging.CRITICAL)
+    # Then re enabled optimus logger
+    caplog.set_level(logging.DEBUG, logger="optimus")
+
+    basedir = tmpdir
+    sample_name = "basic"
+    destination = os.path.join(basedir, sample_name)
+    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
+    project_path = os.path.join(destination, "project")
+    localedir_path = os.path.join(project_path, "locale")
+
+    settings = starter_basic_settings(project_path)
+
+    created = starter_interface(template_path, sample_name, basedir)
+
+    # Remove compiled files from sample
+    os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo"))
+    os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.mo"))
+
+    # Compile MO files
+    po_interface(settings, compile_opt=True)
+
+    # Expected directories and files
+    assert os.path.exists(localedir_path) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
+    )) is True
+
+
+def test_po_interface_all(caplog, tmpdir, fixtures_settings,
+                              starter_basic_settings):
+    """
+    All modes combined should create the POT and langages structure, then update it and
+    compile the MO files.
+
+    Note this is not really useful since the compile and update always involve
+    initialization first.
+    """
+    # Mute all other loggers because of cookiecutter and its dependancies which are very
+    # verbose.
+    caplog.set_level(logging.CRITICAL)
+    # Then re enabled optimus logger
+    caplog.set_level(logging.DEBUG, logger="optimus")
+
+    basedir = tmpdir
+    sample_name = "basic"
+    destination = os.path.join(basedir, sample_name)
+    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
+    project_path = os.path.join(destination, "project")
+    localedir_path = os.path.join(project_path, "locale")
+
+    settings = starter_basic_settings(project_path)
+
+    created = starter_interface(template_path, sample_name, basedir)
+
+    # Remove existing locale directory for test needs
+    shutil.rmtree(localedir_path)
+
+    # Compile MO files
+    po_interface(settings, init=True, update=True, compile_opt=True)
+
+    # Expected directories and files
+    assert os.path.exists(localedir_path) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
+    )) is True

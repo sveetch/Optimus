@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Language base object
+Langage base object
 ********************
 
 """
-from optimus.exceptions import InvalidLanguageIdentifier
+from optimus.exceptions import InvalidLangageIdentifier
 from optimus.utils import UnicodeMixin
 
 
 class LangBase(UnicodeMixin):
     """
-    Language base object to encapsulate the language label, code and other
+    Langage base object to encapsulate the language label, code and other
     details.
 
     Alternative and External code are not really used internally in optimus,
@@ -21,22 +21,25 @@ class LangBase(UnicodeMixin):
     "region_name" is ``None`` by default, as the region name is optional in
     language identifier.
 
+    Code and name is not validated, you are responsible to ensure they are
+    valid.
+
     See http://www.i18nguy.com/unicode/language-identifiers.html for more
     details on language identifiers.
 
-    Usage : ::
+    Example: ::
 
         class LangFr(LangBase):
             code = 'fr'
             label = 'France'
 
-    Or : ::
+    Or: ::
 
         lang = LangBase(code="zh_CN", label="Chinese")
 
     Keyword Arguments:
-        code (string): Language identifier.
-        label (string): Language label like "Français" for ``fr``.
+        code (string): Langage identifier.
+        label (string): Langage label like "Français" for ``fr``.
 
     Attributes:
         label (string): Default language label if not given in kwargs.
@@ -58,12 +61,12 @@ class LangBase(UnicodeMixin):
             msg = ("""Missing language identifier : You must supply it by """
                    """the way of 'code' argument or as the 'code' class """
                    """attribute.""")
-            raise InvalidLanguageIdentifier(msg)
+            raise InvalidLangageIdentifier(msg)
 
         if len(self.code.split('-')) > 1:
-            msg = ("""Invalid language identifier : Language name and """
+            msg = ("""Invalid language identifier : Langage name and """
                    """region name must be joined by a '_' not a '-'""")
-            raise InvalidLanguageIdentifier(msg)
+            raise InvalidLangageIdentifier(msg)
 
         self.language_name, self.region_name = self.split_code(self.code)
 
@@ -92,7 +95,7 @@ class LangBase(UnicodeMixin):
         Split language identifier to language name and region name (if any).
 
         Arguments:
-            code (string): Language identifier.
+            code (string): Langage identifier.
 
         Returns:
             tuple: A pair of language name and possibly region name, if code

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+import importlib
 import os
 
 import click
 
-from optimus.setup_project import setup_project
 from optimus.i18n.manager import I18NManager
-from optimus.utils import display_settings
 from optimus.interfaces.po import po_interface
+from optimus.setup_project import setup_project
+from optimus.utils import display_settings
 
 
 @click.command('po', short_help="Manage project translation catalogs")
@@ -35,6 +36,12 @@ def po_command(context, init, update, compile_opt, basedir, settings_name):
     setup_project(basedir, settings_name)
 
     # Load current project settings
-    from optimus.conf.registry import settings
+    settings = import_settings_module(settings_name, basedir=basedir)
+    #if context.obj["test_env"]:
+        #settings = importlib.reload(settings)
+
+    # Debug output
+    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
+                                'TEMPLATES_DIR', 'LOCALES_DIR'))
 
     po_interface(settings, init=init, update=update, compile_opt=compile_opt)
