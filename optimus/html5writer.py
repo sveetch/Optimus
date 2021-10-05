@@ -1,5 +1,7 @@
 # flake8: noqa
 """
+DEPRECATED: Since there is no support included anymore for RST documents.
+
 Original code is from 'Bradley Wright' on Github :
 
 https://github.com/bradleywright/rst-to-semantic-html5

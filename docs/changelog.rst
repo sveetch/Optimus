@@ -32,7 +32,21 @@ requirements and full compatibility for recent Python version**
 * Upgrade click to ``>=7.1,<8.0``;
 * Replace usage ``imp`` usage with a new system with ``importlib``;
 * Updated project templates ``basic`` and ``i18n`` with a new structure and makefile;
+* Refactored project starter:
 
+    * Now stand on cookiecutter, actually pinned to the 1.7.3, until 2.x branch has
+      been released;
+    * Implemented first with a pure programmatical interface;
+    * The CLI now use the interface and don't introduce specific code;
+    * Remove the dry run option which was only for debugging/testing;
+    * Ship only a basic cookiecutter template which is equivalent to the i18n previous
+      template;
+
+* TODO: Refactored ``po`` CLI to use programmatical interface;
+
+    * Interface does not make any importation and expect required moduled to be passed
+      as argument;
+    * CLI make importation for required modules and pass it to the interface;
 
 Version 1.1.2 - 2020/01/01
 --------------------------

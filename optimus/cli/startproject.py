@@ -5,25 +5,37 @@ from string import ascii_letters, digits
 
 import click
 
-from optimus.start_project import ProjectStarter
+from cookiecutter.exceptions import RepositoryNotFound
+from optimus.interfaces.starter import starter_interface
+from optimus.starters import resolve_internal_template
 
 
-@click.command('init', short_help="Create a new project from a template")
+@click.command('init', short_help="Create a new project from a cookiecutter template")
 @click.argument('name')
-@click.option('--template', metavar='NAME',
-              help=(("A template name either 'basic' or 'i18n'. Also a valid "
-                     "Python path to an external template can be given. "
-                     "Default value is 'basic'.")),
-              default="basic")
-@click.option('--dry-run', is_flag=True,
-              help=("Dry run mode will perform all processus but will not "
-                    "create or modify anything"))
+@click.option(
+    '--template',
+    metavar='NAME',
+    help=(
+        "A valid cookiecutter template for Optimus."
+    ),
+    default="basic",
+)
+@click.option(
+    '--destination',
+    metavar='PATH',
+    type=click.Path(exists=True),
+    help=(
+        "Directory path where to create the project directory. Default use the "
+        "current directory"
+    ),
+    default=os.getcwd(),
+)
 @click.pass_context
-def startproject_command(context, name, template, dry_run):
+def startproject_command(context, name, template, destination):
     """
     Create a new project from a template
 
-    Attempt one argument 'NAME' that will be the project name and its directory
+    Expect one argument 'NAME' that will be the project name and its directory
     name. The name must be a valid Python module name.
     """
     logger = logging.getLogger("optimus")
@@ -32,9 +44,6 @@ def startproject_command(context, name, template, dry_run):
     # identifier ::=  (letter|"_") (letter | digit | "_")*
     # This is not fully safe, user can create a project name using an installed
     # Python module that will override it and make some troubles in some case
-    # NOTE: This may not be useful yet since we don't import project container
-    # directly but only add its "project/" dir (or another custom one from arg)
-    # to sys.path to reach its modules (like settings.base).
     if name:
         if name[0] not in ascii_letters:
             logger.error("Project name must start with a letter")
@@ -45,12 +54,10 @@ def startproject_command(context, name, template, dry_run):
                               "digits or '_' character"))
                 return
 
-    if dry_run:
-        logger.warning("'Dry run mode enabled")
+    # Resolve possible internal template alias to a path
+    template = resolve_internal_template(template)
 
-    # TODO: optionnal command option to specify another path where the project
-    #       will be created
-    project_directory = os.path.abspath(os.getcwd())
-
-    starter = ProjectStarter(dry_run=dry_run)
-    starter.install(project_directory, name, template)
+    try:
+        created = starter_interface(template, name, destination)
+    except RepositoryNotFound as e:
+        raise click.Abort()

@@ -1,0 +1,9 @@
+{
+    "project_name": "Project name",
+    "package_name": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "app_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "_copy_without_render": [
+        "project/sources",
+        "project/locale"
+    ]
+}

@@ -7,8 +7,6 @@ Introduction
 
 Optimus is a static site builder. It produces HTML from templates (through `Jinja2`_) with assets management (through `webassets`_) and i18n support for translations (through `Babel`_).
 
-Read the Optimus documentation on `<https://optimus.readthedocs.org/>`_
-
 Links
 *****
 

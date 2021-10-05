@@ -1,126 +1,36 @@
 # -*- coding: utf-8 -*-
 import os
 
-import pytest
-
-import click
 from click.testing import CliRunner
 
 from optimus.cli.console_script import cli_frontend
 
 
-def test_start_basic_sample(caplog):
+def test_startproject_basic(caplog, tmpdir, fixtures_settings):
     """
-    Testing basic sample install
+    Testing basic template install
     """
+    sample_name = "basic_sample"
+    template_name = "basic"
+
+    basedir = tmpdir
+    destination = os.path.join(basedir, sample_name)
+    project_path = os.path.join(destination, "project")
+    sources_path = os.path.join(project_path, "sources")
+    localedir_path = os.path.join(project_path, "locale")
+
+    # Default verbosity
     runner = CliRunner()
+    result = runner.invoke(cli_frontend, [
+        "init",
+        sample_name,
+        "--template={}".format(template_name),
+        "--destination={}".format(basedir),
+    ])
 
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        projet_name = "basic_sample"
-        project_path = os.path.join(test_cwd, projet_name)
+    assert result.exit_code == 0
 
-        # Default verbosity
-        result = runner.invoke(cli_frontend, ["init", projet_name])
-
-        # Check output
-        expected_outputs = [
-            "Loading project template from : optimus.samples.basic",
-            "Creating new Optimus project '{name}' in : {cwd}".format(
-                name=projet_name,
-                cwd=test_cwd
-            ),
-            "Installing directories structure to : {path}".format(
-                path=project_path
-            ),
-        ]
-        for msg in expected_outputs:
-            assert (msg in result.output) is True
-
-        # Check project files and dirs
-        assert os.path.exists(project_path) is True
-        assert os.path.exists(os.path.join(project_path, 'project', 'settings', 'base.py')) is True
-        assert os.path.exists(os.path.join(project_path, 'project', "pages.py")) is True
-        assert os.path.exists(os.path.join(project_path, 'project', "sources",
-                                           "templates",
-                                           "skeleton.html")) is True
-
-        assert result.exit_code == 0
-
-
-def test_start_i18n_sample(caplog):
-    """
-    Testing i18n sample install
-    """
-    runner = CliRunner()
-
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        projet_name = "i18n_sample"
-        project_path = os.path.join(test_cwd, projet_name)
-
-        # Default verbosity
-        result = runner.invoke(cli_frontend, ["init", projet_name,
-                                              "--template=i18n"])
-
-        # Check output
-        expected_outputs = [
-            "Loading project template from : optimus.samples.i18n",
-            "Creating new Optimus project '{name}' in : {cwd}".format(
-                name=projet_name,
-                cwd=test_cwd
-            ),
-            "Installing directories structure to : {path}".format(
-                path=project_path
-            ),
-        ]
-        for msg in expected_outputs:
-            assert (msg in result.output) is True
-
-        # Check project files and dirs
-        assert os.path.exists(project_path) is True
-        assert os.path.exists(os.path.join(project_path, 'project', 'settings', 'base.py')) is True
-        assert os.path.exists(os.path.join(project_path, "babel.cfg")) is True
-        assert os.path.exists(os.path.join(project_path, 'project', "pages.py")) is True
-        assert os.path.exists(os.path.join(project_path, 'project', "sources",
-                                                         "templates",
-                                                         "skeleton.html")) is True
-
-        assert result.exit_code == 0
-
-
-def test_start_dryrun(caplog):
-    """
-    Testing basic sample with dry run mode
-    """
-    runner = CliRunner()
-
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        projet_name = "basic_dryrun"
-        project_path = os.path.join(test_cwd, projet_name)
-
-        # Default verbosity
-        result = runner.invoke(cli_frontend, ["init", projet_name, "--dry-run"])
-
-        # Check output
-        expected_outputs = [
-            "Loading project template from : optimus.samples.basic",
-            "Creating new Optimus project '{name}' in : {cwd}".format(
-                name=projet_name,
-                cwd=test_cwd
-            ),
-            "Installing directories structure to : {path}".format(
-                path=project_path
-            ),
-        ]
-        for msg in expected_outputs:
-            assert (msg in result.output) is True
-
-        # Check nothing has been created
-        assert os.path.exists(project_path) is False
-
-        assert result.exit_code == 0
+    # Expected directories according to destination and template content
+    assert os.path.exists(project_path) is True
+    assert os.path.exists(sources_path) is True
+    assert os.path.exists(localedir_path) is True

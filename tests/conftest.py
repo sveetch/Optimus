@@ -6,42 +6,100 @@ import sys
 
 import pytest
 
-from optimus import __version__, PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+import optimus
 
 
-class FixturesSettingsTestMixin(object):
+class ApplicationTestSettings:
     """
-    Mixin containing some basic settings
+    Object to store settings related to application. This is almost about useful
+    paths which may be used in tests. This is not related to Django settings.
+
+    Attributes:
+        application_path (str): Absolute path to the application directory.
+        package_path (str): Absolute path to the package directory.
+        tests_dir (str): Directory name which include tests.
+        tests_path (str): Absolute path to the tests directory.
+        fixtures_dir (str): Directory name which include tests datas.
+        fixtures_path (str): Absolute path to the tests datas.
     """
     def __init__(self):
         # Use getcwd and package name since abspath on package __file__ won't
         # play nice with tox (because tests/ dir is not deployed in
         # site-packages from where tox works)
-        self.package_dir = os.path.join(os.getcwd(), 'optimus')
+        # NOTE: Maybe not right anymore, maybe could change to the commented lines
+        # after
+        self.application_path = os.path.join(os.getcwd(), 'optimus')
+        #self.application_path = os.path.abspath(
+            #os.path.dirname(optimus.__file__)
+        #)
 
-        self.tests_dir = 'tests'
+        self.package_path = os.path.normpath(
+            os.path.join(
+                self.application_path,
+                "..",
+            )
+        )
+
+        # Tests directory
+        self.tests_dir = "tests"
         self.tests_path = os.path.normpath(
             os.path.join(
-                self.package_dir,
-                '..',
+                self.package_path,
                 self.tests_dir,
             )
         )
 
-        self.fixtures_dir = 'data_fixtures'
+        # Starters directory
+        self.starters_dir = "starters"
+        self.starters_path = os.path.normpath(
+            os.path.join(
+                self.application_path,
+                self.starters_dir,
+            )
+        )
+
+        # Test fixtures directory
+        self.fixtures_dir = "data_fixtures"
         self.fixtures_path = os.path.join(
             self.tests_path,
             self.fixtures_dir
         )
 
+    def format(self, content, extra={}):
+        """
+        Format given string to include some values related to this application.
 
-@pytest.fixture(scope='session')
-def temp_builds_dir(tmpdir_factory):
+        Arguments:
+            content (str): Content string to format with possible values.
+
+        Returns:
+            str: Given string formatted with possible values.
+        """
+        variables = {
+            "HOMEDIR": os.path.expanduser("~"),
+            "PACKAGE": self.package_path,
+            "APPLICATION": self.application_path,
+            "STARTERS": self.starters_path,
+            "TESTS": self.tests_path,
+            "FIXTURES": self.fixtures_path,
+            "VERSION": optimus.__version__,
+        }
+        if extra:
+            variables.update(extra)
+
+        return content.format(**variables)
+
+
+@pytest.fixture(scope="function")
+def temp_builds_dir(tmpdir):
     """
     Prepare a temporary build directory
+
+    DEPRECATED: Should use directly the "tmpdir" fixture in test, no need anymore
+    to have a specific fixture to create a temp dir container for optimus, pytest
+    should care itself of it and avoid conflicts with tests from other projects.
     """
-    fn = tmpdir_factory.mktemp('optimus-tests')
-    return fn
+    return tmpdir
 
 
 @pytest.fixture(scope="module")
@@ -49,7 +107,7 @@ def fixtures_settings():
     """
     Initialize and return settings (mostly paths) for fixtures (scope at module level)
     """
-    return FixturesSettingsTestMixin()
+    return ApplicationTestSettings()
 
 
 @pytest.fixture(scope="function")
@@ -225,7 +283,7 @@ def flush_settings():
         del sys.modules['settings']
     if 'optimus.conf.registry' in sys.modules:
         del sys.modules['optimus.conf.registry']
-    if PROJECT_DIR_ENVVAR in os.environ:
-        del os.environ[PROJECT_DIR_ENVVAR]
-    if SETTINGS_NAME_ENVVAR in os.environ:
-        del os.environ[SETTINGS_NAME_ENVVAR]
+    if optimus.PROJECT_DIR_ENVVAR in os.environ:
+        del os.environ[optimus.PROJECT_DIR_ENVVAR]
+    if optimus.SETTINGS_NAME_ENVVAR in os.environ:
+        del os.environ[optimus.SETTINGS_NAME_ENVVAR]

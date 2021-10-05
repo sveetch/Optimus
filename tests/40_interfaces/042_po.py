@@ -10,8 +10,10 @@ from click.testing import CliRunner
 
 from optimus.cli.console_script import cli_frontend
 from optimus.interfaces.po import po_interface
+from optimus.interfaces.starter import starter_interface
 
 
+@pytest.mark.skip(reason="On hold until start have been migrated to cookiecutter")
 def test_po_interface_init(caplog, minimal_i18n_settings, flush_settings):
     """
     Testing i18n project stuff install using i18n sample
