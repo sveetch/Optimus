@@ -2,7 +2,7 @@
 Logging
 =======
 
-Optimus makes a lot usage of logging during its processes to inform user about
+Optimus makes usage of logging during its processes to inform user about
 what it is doing or errors that occured.
 
 To be more readable, its logger is configured to be colored using
@@ -12,6 +12,21 @@ To be more readable, its logger is configured to be colored using
 import logging
 
 import colorlog
+
+
+def set_loggers_level(names, level=logging.CRITICAL):
+    """
+    Set a log level on multiple loggers.
+
+    Arguments:
+        names (list): A list of logger names to set level.
+
+    Keyword Arguments:
+        level (integer): Logging level to set on all given logger names. Default to
+            value from ``logging.CRITICAL``.
+    """
+    for item in names:
+        logging.getLogger(item).setLevel(level)
 
 
 def init_logger(level, printout=True):

@@ -8,6 +8,7 @@ import click
 from cookiecutter.exceptions import RepositoryNotFound
 from optimus.interfaces.starter import starter_interface
 from optimus.starters import resolve_internal_template
+from optimus.logs import set_loggers_level
 
 
 @click.command('init', short_help="Create a new project from a cookiecutter template")
@@ -38,6 +39,9 @@ def startproject_command(context, name, template, destination):
     Expect one argument 'NAME' that will be the project name and its directory
     name. The name must be a valid Python module name.
     """
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
+
     logger = logging.getLogger("optimus")
 
     # Valid that all characters from the name are : "_" character, letters,

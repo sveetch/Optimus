@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 TODO:
-    Remember to test logs from CLI which must mute them for the cookiecutter's stack
-    which are too much verbose.
+    Remember to mute other loggers than optimus ones:
 
-    ::
+        # Mute all other loggers from cookiecutter and its dependancies
+        set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
-        caplog.set_level(logging.CRITICAL)
-        caplog.set_level(logging.DEBUG, logger="optimus")
-
+    Have to be at the beginning of the tests.
 """
 import os
 import logging

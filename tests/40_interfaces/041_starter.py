@@ -7,17 +7,15 @@ import pytest
 from cookiecutter.exceptions import RepositoryNotFound
 
 from optimus.interfaces.starter import starter_interface
+from optimus.logs import set_loggers_level
 
 
 def test_starter_interface_basic(caplog, tmpdir, fixtures_settings):
     """
     Project starter with "basic" template should create expected structure.
     """
-    # Mute all other loggers because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     sample_name = "basic_sample"
     template_name = "basic"
@@ -43,11 +41,8 @@ def test_starter_interface_fail(caplog, tmpdir, fixtures_settings):
     Failing project creation should emit a critical log and raise the original
     exception.
     """
-    # Mute all other logger because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     sample_name = "basic_sample"
     template_name = "nope"

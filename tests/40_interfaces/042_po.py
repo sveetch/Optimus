@@ -7,6 +7,7 @@ import pytest
 
 from optimus.interfaces.po import po_interface
 from optimus.interfaces.starter import starter_interface
+from optimus.logs import set_loggers_level
 
 
 def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_settings):
@@ -14,11 +15,8 @@ def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_sett
     Init mode should creates the POT file and the enabled langages structure with their
     PO files.
     """
-    # Mute all other loggers because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     basedir = tmpdir
     sample_name = "basic"
@@ -59,11 +57,8 @@ def test_po_interface_update(caplog, tmpdir, fixtures_settings, starter_basic_se
     Update mode should just updates (or create it again if missing) the PO files for
     all enabled langages.
     """
-    # Mute all other loggers because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     basedir = tmpdir
     sample_name = "basic"
@@ -100,11 +95,8 @@ def test_po_interface_compile(caplog, tmpdir, fixtures_settings,
     """
     Compile mode should compiles the PO files to MO files.
     """
-    # Mute all other loggers because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     basedir = tmpdir
     sample_name = "basic"
@@ -143,11 +135,8 @@ def test_po_interface_all(caplog, tmpdir, fixtures_settings,
     Note this is not really useful since the compile and update always involve
     initialization first.
     """
-    # Mute all other loggers because of cookiecutter and its dependancies which are very
-    # verbose.
-    caplog.set_level(logging.CRITICAL)
-    # Then re enabled optimus logger
-    caplog.set_level(logging.DEBUG, logger="optimus")
+    # Mute all other loggers from cookiecutter and its dependancies
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
 
     basedir = tmpdir
     sample_name = "basic"
