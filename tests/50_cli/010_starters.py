@@ -6,9 +6,9 @@ from click.testing import CliRunner
 from optimus.cli.console_script import cli_frontend
 
 
-def test_startproject_basic(caplog, tmpdir, fixtures_settings):
+def test_cli_startproject(caplog, tmpdir, fixtures_settings):
     """
-    Testing basic template install
+    Testing basic template install from CLI
     """
     sample_name = "basic_sample"
     template_name = "basic"
@@ -22,19 +22,19 @@ def test_startproject_basic(caplog, tmpdir, fixtures_settings):
     # Default verbosity
     runner = CliRunner()
     result = runner.invoke(cli_frontend, [
-        "--verbose=5",
+        # "--verbose=5",
         "init",
         sample_name,
         "--template={}".format(template_name),
         "--destination={}".format(basedir),
     ])
-    print("result.exit_code:", result.exit_code)
-    print("result.exc_info:", result.exc_info)
-    if result.exit_code > 0:
-        import traceback
-        klass, error, error_tb = result.exc_info
-        print(error)
-        traceback.print_tb(error_tb, limit=None)
+    # print("result.exit_code:", result.exit_code)
+    # print("result.exc_info:", result.exc_info)
+    # if result.exit_code > 0:
+    #     import traceback
+    #     klass, error, error_tb = result.exc_info
+    #     print(error)
+    #     traceback.print_tb(error_tb, limit=None)
 
     assert result.exit_code == 0
 

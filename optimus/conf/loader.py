@@ -60,32 +60,23 @@ def import_project_module(
     """
     logger = logging.getLogger('optimus')
     logger.info('Loading "%s" module', name)
-    print("🥚 import_project_module")
 
-    print("🥚 try to find spec")
-    print(importlib.util.find_spec(name))
     # NOTE: Maybe we should raise better exception (with logged msg?), have to
     #       check
     # Try to locate module
     if importlib.util.find_spec(name):
-        print("🥚 found spec")
         # Try to import module
         try:
-            print("🥚 trying importlib.import_module")
             mod = importlib.import_module(name)
         # Module is invalid or unfound. Break, log and print out on any exception
         # during importation
         except Exception as error:
-            print("🥚 failure from importlib.import_module")
             logger.critical(import_module_err.format(name))
             # Print out useful exception
             raise error
             #sys.exit()
-        else:
-            print("🥚 succeed from importlib.import_module")
     # Unable to locate module, it's a critical failure
     else:
-        print("🥚 unable to found spec")
         logger.critical(finding_module_err.format(name))
         # TODO: We must not use sys.exit and raise a clear Exception instead,
         # higher layer level code will have to catch it and do the sys.exit/click.abort
@@ -133,7 +124,8 @@ def import_pages_module(name, basedir=None):
             base directory is given ``os.getcwd()`` is used. Default is
             ``None``.
 
-    Returns: Finded and loaded module.
+    Returns:
+        object: Finded and loaded module.
     """
     msg_finding = "Unable to find pages module: {0}"
     msg_import = "Unable to load pages module, it probably have errors: {0}"
@@ -142,24 +134,26 @@ def import_pages_module(name, basedir=None):
                                  import_module_err=msg_import)
 
 
-def import_settings(name, basedir):
+def import_settings(name, basedir=None):
     """
     Load settings module.
 
-    Validate required settings are set, then fill some missing settings to a
+    Validate required settings are set then fill some missing settings to a
     default value.
 
     Arguments:
-        name (str): Settings module name to retrieve from ``basedir``. This is Python
-            path to the module from project base directory as loaded from project setup.
-        basedir (str): Base directory from where to find settings module name.
+        name (str): Module name to retrieve from ``basedir``. This is Python path to
+            the module from project base directory as loaded from project setup.
+
+    Keyword Arguments:
+        basedir (str): Base directory from where to find module name. If no
+            base directory is given ``os.getcwd()`` is used. Default is
+            ``None``.
 
     Returns:
-        object: Settings module.
+        object: Settings module validated and filled with defaults.
     """
-    print("🏗️ import_settings")
     settings_module = import_settings_module(name, basedir)
-    print("🏗️ imported")
 
     _settings = SettingsModel()
     _settings.load_from_module(settings_module)

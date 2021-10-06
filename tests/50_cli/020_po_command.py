@@ -1,154 +1,71 @@
 # -*- coding: utf-8 -*-
-"""
-TODO:
-    Remember to mute other loggers than optimus ones:
-
-        # Mute all other loggers from cookiecutter and its dependancies
-        set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
-
-    Have to be at the beginning of the tests.
-"""
 import os
-import logging
 import shutil
 
 import pytest
 
-import click
 from click.testing import CliRunner
 
 from optimus.cli.console_script import cli_frontend
+from optimus.interfaces.starter import starter_interface
+from optimus.logs import set_loggers_level
 
-pytest.skip("broken and on refactoring way with interfaces", allow_module_level=True)
 
-##@pytest.mark.skip(reason="broken because importation cache between tests")
-def test_po_init(caplog, flush_settings):
+def test_cli_po(tmpdir, fixtures_settings):
     """
-    Testing i18n project stuff install using i18n sample
+    Testing all CLI mode in single execution
     """
+    # Mute every loggers related to "starter_interface" which are not from optimus
+    # namespace
+    set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
+
+    sample_name = "basic_sample"
+    template_name = "basic"
+
+    basedir = tmpdir
+    destination = os.path.join(basedir, sample_name)
+    template_path = os.path.join(fixtures_settings.starters_path, template_name)
+    project_path = os.path.join(destination, "project")
+    sources_path = os.path.join(project_path, "sources")
+    localedir_path = os.path.join(project_path, "locale")
+
+    created = starter_interface(template_path, sample_name, basedir)
+
+    # Remove existing locale directory for test needs
+    shutil.rmtree(localedir_path)
+
     runner = CliRunner()
 
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        name = "i18n_sample"
-        basedir = os.path.join(test_cwd, name)
-        project_path = os.path.join(basedir, "project")
-        localedir_path = os.path.join(project_path, "locale")
+    result = runner.invoke(cli_frontend, [
+        "--verbose=5",
+        "po",
+        "--init",
+        "--update",
+        "--compile",
+        "--settings-name=settings.base",
+        "--basedir={}".format(project_path)
+    ])
+    # print("result.exit_code:", result.exit_code)
+    # print("result.exc_info:", result.exc_info)
+    # if result.exit_code > 0:
+    #     import traceback
+    #     klass, error, error_tb = result.exc_info
+    #     print(error)
+    #     traceback.print_tb(error_tb, limit=None)
 
-        ## Make basic i18n project
-        #runner.invoke(cli_frontend, ["init", name, "--template=i18n"])
+    assert result.exit_code == 0
 
-        ## Remove existing locale directory for test needs
-        #shutil.rmtree(localedir_path)
-
-        # Start catalog
-        """
-        Here lives an incredible bug.
-        Command is invoked but does not return any output (logs or print), NOTHING and
-        then return a exit_code 1
-        """
-        result = runner.invoke(cli_frontend, [
-            "po",
-            "--init",
-            "--settings-name=settings.base",
-            "--basedir={}".format(basedir)
-        ])
-
-        print()
-        print("result.exit_code:", result.exit_code)
-        print("result.exc_info:", result.exc_info)
-        if result.exit_code > 0:
-            import traceback
-            klass, error, error_tb = result.exc_info
-            print(error)
-            traceback.print_tb(error_tb, limit=None)
-        print("basedir:", os.listdir(basedir))
-        print("project_path:", os.listdir(project_path))
-        print("sources:", os.listdir(os.path.join(project_path, "sources")))
-        print("settings:", os.listdir(os.path.join(project_path, "settings")))
-        print("localedir_path:", os.listdir(localedir_path))
-        print()
-
-        assert result.exit_code == 0
-
-        # Check i18n structure has been created
-        assert os.path.exists(localedir_path) is True
-        assert os.path.exists(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.po")) is True
-
-
-
-#@pytest.mark.skip(reason="broken because importation cache between tests")
-def test_po_update(caplog, flush_settings):
-    """
-    Testing project i18n catalog update from sources
-    """
-    runner = CliRunner()
-
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        name = "i18n_sample"
-        basedir = os.path.join(test_cwd, name)
-        localedir_path = os.path.join(basedir, "project", "locale")
-
-        # Make basic i18n project
-        result = runner.invoke(cli_frontend, ["init", name, "--template=i18n"])
-
-        # Remove catalog files shipped with sample
-        os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.po"))
-        os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo"))
-        os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.po"))
-        os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.mo"))
-
-        # Start catalog
-        result = runner.invoke(cli_frontend, [
-            "--test-env",
-            "po",
-            "--update",
-            "--settings-name=settings.base",
-            "--basedir={}".format(basedir),
-        ])
-
-        assert result.exit_code == 0
-
-        # Check i18n structure has been created
-        assert os.path.exists(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.po")) is True
-        assert os.path.exists(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.po")) is True
-
-
-#@pytest.mark.skip(reason="broken because importation cache between tests")
-def test_po_compile(caplog, flush_settings):
-    """
-    Testing project i18n catalog compile
-    """
-    runner = CliRunner()
-
-    # Temporary isolated current dir
-    with runner.isolated_filesystem():
-        test_cwd = os.getcwd()
-        name = "i18n_sample"
-        basedir = os.path.join(test_cwd, name)
-        localedir_path = os.path.join(basedir, "project", "locale")
-
-        # Make basic i18n project
-        result = runner.invoke(cli_frontend, ["init", name, "--template=i18n"])
-
-        # Remove *.mo compiled catalog files shipped with sample
-        os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo"))
-        os.remove(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.mo"))
-
-        # Start catalog
-        result = runner.invoke(cli_frontend, [
-            "--test-env",
-            "po",
-            "--compile",
-            "--settings-name=settings.base",
-            "--basedir={}".format(basedir),
-        ])
-
-        assert result.exit_code == 0
-
-        # Check i18n structure has been created
-        assert os.path.exists(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo")) is True
-        assert os.path.exists(os.path.join(localedir_path, "fr_FR/LC_MESSAGES/messages.mo")) is True
+    # Expected directories and files
+    assert os.path.exists(localedir_path) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
+    )) is True
+    assert os.path.exists(os.path.join(
+        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
+    )) is True
