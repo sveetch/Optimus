@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-TODO:
-    These tests are too heavy, they should only execute the "build" command on temporary
-    structure without using "init" and "po" commands before (like copying an existing
-    structure from fixtures).
-
-    There is no reason to involve other command since they are already tested elsewhere.
-"""
 import os
 
 import pytest

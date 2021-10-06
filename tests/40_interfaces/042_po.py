@@ -27,7 +27,7 @@ def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_sett
 
     settings = starter_basic_settings(project_path)
 
-    created = starter_interface(template_path, sample_name, basedir)
+    starter_interface(template_path, sample_name, basedir)
 
     # Remove existing locale directory for test needs
     shutil.rmtree(localedir_path)
@@ -69,7 +69,7 @@ def test_po_interface_update(caplog, tmpdir, fixtures_settings, starter_basic_se
 
     settings = starter_basic_settings(project_path)
 
-    created = starter_interface(template_path, sample_name, basedir)
+    starter_interface(template_path, sample_name, basedir)
 
     # Remove catalog files from sample
     os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.po"))
@@ -107,7 +107,7 @@ def test_po_interface_compile(caplog, tmpdir, fixtures_settings,
 
     settings = starter_basic_settings(project_path)
 
-    created = starter_interface(template_path, sample_name, basedir)
+    starter_interface(template_path, sample_name, basedir)
 
     # Remove compiled files from sample
     os.remove(os.path.join(localedir_path, "en_US/LC_MESSAGES/messages.mo"))
@@ -147,7 +147,7 @@ def test_po_interface_all(caplog, tmpdir, fixtures_settings,
 
     settings = starter_basic_settings(project_path)
 
-    created = starter_interface(template_path, sample_name, basedir)
+    starter_interface(template_path, sample_name, basedir)
 
     # Remove existing locale directory for test needs
     shutil.rmtree(localedir_path)

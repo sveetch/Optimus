@@ -26,19 +26,14 @@ def import_project_module(
 
     NOTE:
         * This keeps deprecated "basedir" arg until migration ends and cleaning.
-        * This remove a logging entry about basedir ("Module searched in:...") since
-          it's something to emit from "setup_project.setup_project". Some tests will
-          not appreciate, they will need a fix on expected logs.
-        * This move an ImportError emitted when checking basedir but it have been moved
-          to the "setup_project.setup_project".
 
     Note that if you use this function to import successively the same module path,
-    you will need to reload importation with something like this: ::
+    you may need to reload importation with something like this: ::
 
         mod = import_project_module(name)
         mod = importlib.reload(mod)
 
-    Else you will get unexpected behaviors like the second module returning content
+    Else you have unexpected behaviors like the second module returning content
     from a previously imported similar path module. However, this is a particular case
     that you may not encounter, this is mostly useful inside unittesting.
 

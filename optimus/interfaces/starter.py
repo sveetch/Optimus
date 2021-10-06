@@ -22,6 +22,9 @@ def starter_interface(template, project_name, output_dir):
         project_name (string): Project name. It would be used to make the
             project directory name.
         output_dir (string): Path where the project directory will be created.
+
+    Return:
+        string: Path where the project has been created.
     """
     logger = logging.getLogger("optimus")
 
