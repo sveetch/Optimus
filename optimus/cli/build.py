@@ -6,7 +6,9 @@ import click
 
 from optimus.setup_project import setup_project
 from optimus.utils import display_settings
-from optimus.conf.loader import import_pages_module, import_settings_module, load_settings
+from optimus.conf.loader import (
+    import_pages_module, import_settings_module, load_settings,
+)
 from optimus.interfaces.build import builder_interface
 
 
@@ -36,12 +38,12 @@ def build_command(context, basedir, settings_name):
 
     settings = load_settings(settings)
 
-    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
+    views = import_pages_module(settings.PAGES_MAP, basedir=basedir)
     if context.obj["test_env"]:
-        pages_map = importlib.reload(pages_map)
+        views = importlib.reload(views)
 
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
                                 'TEMPLATES_DIR', 'LOCALES_DIR'))
 
-    builder_interface(settings, pages_map)
+    builder_interface(settings, views)

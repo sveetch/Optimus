@@ -10,7 +10,7 @@ from optimus.interfaces.starter import starter_interface
 from optimus.logs import set_loggers_level
 
 
-def test_starter_interface_basic(caplog, tmpdir, fixtures_settings):
+def test_starter_interface_basic(tmpdir, fixtures_settings):
     """
     Project starter with "basic" template should create expected structure.
     """
@@ -36,7 +36,7 @@ def test_starter_interface_basic(caplog, tmpdir, fixtures_settings):
     assert os.path.exists(localedir_path) is True
 
 
-def test_starter_interface_fail(caplog, tmpdir, fixtures_settings):
+def test_starter_interface_fail(tmpdir, fixtures_settings):
     """
     Failing project creation should emit a critical log and raise the original
     exception.

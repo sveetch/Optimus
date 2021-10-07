@@ -7,6 +7,7 @@ import pytest
 
 from optimus.interfaces.build import builder_interface
 from optimus.interfaces.starter import starter_interface
+from optimus.interfaces.watch import watcher_interface
 from optimus.logs import set_loggers_level
 from optimus.pages.views.base import PageViewBase
 
@@ -30,9 +31,12 @@ class DummyViewsModule:
     ]
 
 
-def test_build_interface(tmpdir, fixtures_settings, starter_basic_settings):
+def test_watcher_interface(tmpdir, fixtures_settings, starter_basic_settings):
     """
-    Build interface should correctly build pages.
+    Watcher interface should return a correct observer with expected handlers.
+
+    This is pretty almost code from the builder interface test with additional watcher
+    parts.
     """
     # Mute all other loggers from cookiecutter and its dependancies
     set_loggers_level(["poyo", "cookiecutter", "binaryornot"])
@@ -54,7 +58,7 @@ def test_build_interface(tmpdir, fixtures_settings, starter_basic_settings):
     views = DummyViewsModule()
 
     # Process to build with given settings and page module
-    builder_interface(settings, views)
+    build_env = builder_interface(settings, views)
 
     assert os.path.exists(builddir_path) is True
     assert os.path.exists(os.path.join(
@@ -69,3 +73,19 @@ def test_build_interface(tmpdir, fixtures_settings, starter_basic_settings):
         "css",
         "app.css"
     )) is True
+
+    # Make observer
+    observer = watcher_interface(settings, views, build_env)
+    # Get configured handlers to check them
+    observed = {}
+    for path, handlers in observer._handlers.items():
+        observed[path.path] = [type(item).__name__ for item in handlers]
+
+    assert observed == {
+        os.path.join(project_path, "sources"): [
+            "AssetsWatchEventHandler"
+        ],
+        os.path.join(project_path, "sources/templates"): [
+            "TemplatesWatchEventHandler"
+        ],
+    }

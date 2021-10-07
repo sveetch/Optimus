@@ -10,7 +10,7 @@ from optimus.interfaces.starter import starter_interface
 from optimus.logs import set_loggers_level
 
 
-def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_settings):
+def test_po_interface_init(tmpdir, fixtures_settings, starter_basic_settings):
     """
     Init mode should creates the POT file and the enabled langages structure with their
     PO files.
@@ -52,7 +52,7 @@ def test_po_interface_init(caplog, tmpdir, fixtures_settings, starter_basic_sett
     )) is False
 
 
-def test_po_interface_update(caplog, tmpdir, fixtures_settings, starter_basic_settings):
+def test_po_interface_update(tmpdir, fixtures_settings, starter_basic_settings):
     """
     Update mode should just updates (or create it again if missing) the PO files for
     all enabled langages.
@@ -90,7 +90,7 @@ def test_po_interface_update(caplog, tmpdir, fixtures_settings, starter_basic_se
     )) is True
 
 
-def test_po_interface_compile(caplog, tmpdir, fixtures_settings,
+def test_po_interface_compile(tmpdir, fixtures_settings,
                               starter_basic_settings):
     """
     Compile mode should compiles the PO files to MO files.
@@ -126,7 +126,7 @@ def test_po_interface_compile(caplog, tmpdir, fixtures_settings,
     )) is True
 
 
-def test_po_interface_all(caplog, tmpdir, fixtures_settings,
+def test_po_interface_all(tmpdir, fixtures_settings,
                               starter_basic_settings):
     """
     All modes combined should create the POT and langages structure, then update it and

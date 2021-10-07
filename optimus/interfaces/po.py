@@ -10,8 +10,8 @@ def po_interface(settings, init=False, update=False, compile_opt=False):
     "init" then "update" and finally "compile".
 
     Arguments:
-        settings (object): Settings object which define paths for locale directory
-            and path for template sources to possibly scan.
+        settings (optimus.conf.model.SettingsModel): Settings object which define paths
+            for locale directory and path for template sources to possibly scan.
 
     Keyword Arguments:
         init (boolean): Enable init mode to initialize POT file and "locale" directory.
