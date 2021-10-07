@@ -5,10 +5,9 @@ import os
 import click
 
 from optimus.setup_project import setup_project
-from optimus.utils import initialize, display_settings
-from optimus.conf.loader import import_pages_module, import_settings_module
-from optimus.pages.builder import PageBuilder
-from optimus.assets.registry import register_assets
+from optimus.utils import display_settings
+from optimus.conf.loader import import_pages_module, import_settings_module, load_settings
+from optimus.interfaces.build import builder_interface
 
 
 @click.command('build', short_help="Build project pages")
@@ -28,29 +27,21 @@ def build_command(context, basedir, settings_name):
     # Set project before to be able to load its modules
     setup_project(basedir, settings_name)
 
-    # Load current project settings
-    from optimus.conf.registry import settings
-    #settings = import_settings_module(settings_name, basedir=basedir)
-    ## NOTE: is it needed and working ??
-    #if context.obj["test_env"]:
-        #settings = importlib.reload(settings)
+    # Load current project settings and page map
+    settings = import_settings_module(settings_name, basedir=basedir)
+    # In test environment, force the module reload to avoid previous test cache to be
+    # used (since the module have the same path).
+    if context.obj["test_env"]:
+        settings = importlib.reload(settings)
+
+    settings = load_settings(settings)
+
+    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
+    if context.obj["test_env"]:
+        pages_map = importlib.reload(pages_map)
 
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
                                 'TEMPLATES_DIR', 'LOCALES_DIR'))
 
-    initialize(settings)
-
-    # Init webassets and builder
-    assets_env = register_assets(settings)
-    builder = PageBuilder(settings, assets_env=assets_env)
-    pages_map = import_pages_module(settings.PAGES_MAP, basedir=basedir)
-
-    # NOTE: Required hack for tests only to reload imported module and ensure multiple
-    #       consecutive tests does not use the same module even they explicitely asked
-    #       for another one (but with the same Python path inside setuped basedir)
-    if context.obj["test_env"]:
-        pages_map = importlib.reload(pages_map)
-
-    # Proceed to page building from registered pages
-    builder.build_bulk(pages_map.PAGES)
+    builder_interface(settings, pages_map)

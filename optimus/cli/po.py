@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# import importlib
+import importlib
 import os
 
 import click
 
 from optimus.i18n.manager import I18NManager
 from optimus.interfaces.po import po_interface
-from optimus.conf.loader import import_settings
+from optimus.conf.loader import import_settings_module, load_settings
 from optimus.setup_project import setup_project
 from optimus.utils import display_settings
 
@@ -36,10 +36,14 @@ def po_command(context, init, update, compile_opt, basedir, settings_name):
     # Set project before to be able to load its modules
     setup_project(basedir, settings_name)
 
-    # Load current project settings
-    settings = import_settings(settings_name, basedir=basedir)
-    # if context.obj["test_env"]:
-        # settings = importlib.reload(settings)
+    # Load current project settings and page map
+    settings = import_settings_module(settings_name, basedir=basedir)
+    # In test environment, force the module reload to avoid previous test cache to be
+    # used (since the module have the same path).
+    if context.obj["test_env"]:
+        settings = importlib.reload(settings)
+
+    settings = load_settings(settings)
 
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',

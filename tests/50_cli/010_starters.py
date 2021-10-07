@@ -6,7 +6,8 @@ from click.testing import CliRunner
 from optimus.cli.console_script import cli_frontend
 
 
-def test_cli_startproject(caplog, tmpdir, fixtures_settings):
+def test_cli_startproject(caplog, tmpdir, fixtures_settings, flush_settings,
+                          reset_syspath):
     """
     Testing basic template install from CLI
     """
@@ -22,6 +23,7 @@ def test_cli_startproject(caplog, tmpdir, fixtures_settings):
     # Default verbosity
     runner = CliRunner()
     result = runner.invoke(cli_frontend, [
+        "--test-env",
         # "--verbose=5",
         "init",
         sample_name,
@@ -50,3 +52,6 @@ def test_cli_startproject(caplog, tmpdir, fixtures_settings):
             external_loggers.append(name)
 
     assert external_loggers == []
+
+    # Cleanup sys.path for next tests
+    reset_syspath(project_path)

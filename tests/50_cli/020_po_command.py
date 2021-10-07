@@ -11,7 +11,7 @@ from optimus.interfaces.starter import starter_interface
 from optimus.logs import set_loggers_level
 
 
-def test_cli_po(tmpdir, fixtures_settings):
+def test_cli_po(tmpdir, fixtures_settings, flush_settings, reset_syspath):
     """
     Testing all CLI mode in single execution
     """
@@ -29,7 +29,7 @@ def test_cli_po(tmpdir, fixtures_settings):
     sources_path = os.path.join(project_path, "sources")
     localedir_path = os.path.join(project_path, "locale")
 
-    created = starter_interface(template_path, sample_name, basedir)
+    starter_interface(template_path, sample_name, basedir)
 
     # Remove existing locale directory for test needs
     shutil.rmtree(localedir_path)
@@ -37,13 +37,14 @@ def test_cli_po(tmpdir, fixtures_settings):
     runner = CliRunner()
 
     result = runner.invoke(cli_frontend, [
-        "--verbose=5",
+        "--test-env",
+        # "--verbose=5",
         "po",
         "--init",
         "--update",
         "--compile",
         "--settings-name=settings.base",
-        "--basedir={}".format(project_path)
+        "--basedir={}".format(project_path),
     ])
     # print("result.exit_code:", result.exit_code)
     # print("result.exc_info:", result.exc_info)
@@ -69,3 +70,6 @@ def test_cli_po(tmpdir, fixtures_settings):
     assert os.path.exists(os.path.join(
         localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
     )) is True
+
+    # Cleanup sys.path for next tests
+    reset_syspath(project_path)

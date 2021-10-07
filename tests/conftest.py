@@ -24,12 +24,12 @@ class ApplicationTestSettings:
         fixtures_path (str): Absolute path to the tests datas.
     """
     def __init__(self):
-        # Use getcwd and package name since abspath on package __file__ won't
+        # Use getcwd and package name since abspath on package __file__ won"t
         # play nice with tox (because tests/ dir is not deployed in
         # site-packages from where tox works)
         # NOTE: Maybe not right anymore, maybe could change to the commented lines
         # after
-        self.application_path = os.path.join(os.getcwd(), 'optimus')
+        self.application_path = os.path.join(os.getcwd(), "optimus")
         #self.application_path = os.path.abspath(
             #os.path.dirname(optimus.__file__)
         #)
@@ -114,7 +114,7 @@ def fixtures_settings():
 @pytest.fixture(scope="function")
 def prepend_items():
     """
-    Return a function than prepend any item from 'paths' list with 'prefix'
+    Return a function than prepend any item from "paths" list with "prefix"
     """
     def prepend_func(prefix, paths):
         return [os.path.join(prefix, item) for item in paths]
@@ -142,12 +142,23 @@ def reset_syspath():
 def flush_settings():
     """
     Flush everything about previous imported settings so each test can import
-    its own settings without inheriting from import cache
+    its own settings without inheriting from import cache.
+
+    However the way to clean sys.module is not smart and only clean common module names,
+    you may need to evolve this list or clean it yourself for uncommon modules.
     """
-    if 'settings' in sys.modules:
-        del sys.modules['settings']
-    if 'optimus.conf.registry' in sys.modules:
-        del sys.modules['optimus.conf.registry']
+    # Common imported module from optimus and its tests
+    if "pages" in sys.modules:
+        del sys.modules["pages"]
+    if "settings" in sys.modules:
+        del sys.modules["settings"]
+    if "settings.base" in sys.modules:
+        del sys.modules["settings.base"]
+    if "settings.production" in sys.modules:
+        del sys.modules["settings.production"]
+    if "optimus.conf.registry" in sys.modules:
+        del sys.modules["optimus.conf.registry"]
+    # Environment variables
     if optimus.PROJECT_DIR_ENVVAR in os.environ:
         del os.environ[optimus.PROJECT_DIR_ENVVAR]
     if optimus.SETTINGS_NAME_ENVVAR in os.environ:
@@ -175,32 +186,32 @@ def minimal_basic_settings():
         settings.load_from_kwargs(
             DEBUG = True,
             PROJECT_DIR = basedir,
-            SITE_NAME = 'basic',
-            SITE_DOMAIN = 'localhost',
-            SOURCES_DIR = os.path.join(basedir, 'sources'),
-            TEMPLATES_DIR = os.path.join(basedir, 'sources', 'templates'),
-            PUBLISH_DIR = os.path.join(basedir, '_build/dev'),
-            STATIC_DIR = os.path.join(basedir, '_build/dev', 'static'),
-            STATIC_URL = 'static/',
+            SITE_NAME = "basic",
+            SITE_DOMAIN = "localhost",
+            SOURCES_DIR = os.path.join(basedir, "sources"),
+            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
+            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL = "static/",
             BUNDLES = {
-                'modernizr_js': Bundle(
+                "modernizr_js": Bundle(
                     "js/modernizr.src.js",
                     filters=None,
-                    output='js/modernizr.min.js'
+                    output="js/modernizr.min.js"
                 ),
-                'app_css': Bundle(
-                    'css/app.css',
+                "app_css": Bundle(
+                    "css/app.css",
                     filters=None,
-                    output='css/app.min.css'
+                    output="css/app.min.css"
                 ),
-                'app_js': Bundle(
+                "app_js": Bundle(
                     "js/app.js",
                     filters=None,
-                    output='js/app.min.js'
+                    output="js/app.min.js"
                 ),
             },
             FILES_TO_SYNC = (
-                ('css', 'css'),
+                ("css", "css"),
             ),
         )
         return settings
@@ -211,7 +222,7 @@ def minimal_basic_settings():
 @pytest.fixture(scope="function")
 def minimal_i18n_settings():
     """
-    Alike 'minimal_basic_settings' return a function to load minimal i18n
+    Alike "minimal_basic_settings" return a function to load minimal i18n
     settings.
     """
     def settings_func(basedir):
@@ -221,16 +232,16 @@ def minimal_i18n_settings():
         settings.load_from_kwargs(
             DEBUG = True,
             PROJECT_DIR = basedir,
-            SITE_NAME = 'minimal_i18n',
-            SITE_DOMAIN = 'localhost',
-            SOURCES_DIR = os.path.join(basedir, 'sources'),
-            TEMPLATES_DIR = os.path.join(basedir, 'sources', 'templates'),
-            PUBLISH_DIR = os.path.join(basedir, '_build/dev'),
-            STATIC_DIR = os.path.join(basedir, '_build/dev', 'static'),
-            STATIC_URL = 'static/',
-            LOCALES_DIR = os.path.join(basedir, 'locale'),
+            SITE_NAME = "minimal_i18n",
+            SITE_DOMAIN = "localhost",
+            SOURCES_DIR = os.path.join(basedir, "sources"),
+            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
+            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL = "static/",
+            LOCALES_DIR = os.path.join(basedir, "locale"),
             LANGUAGE_CODE = "en_US",
-            LANGUAGES = ("en_US", 'fr_FR'),
+            LANGUAGES = ("en_US", "fr_FR"),
         )
         return settings
 
@@ -240,7 +251,7 @@ def minimal_i18n_settings():
 @pytest.fixture(scope="function")
 def i18n_template_settings():
     """
-    Alike 'minimal_basic_settings' return a function to load basic i18n
+    Alike "minimal_basic_settings" return a function to load basic i18n
     settings.
 
     WARNING: For sanity, following settings have to be identic to those ones
@@ -254,35 +265,35 @@ def i18n_template_settings():
         settings.load_from_kwargs(
             DEBUG = True,
             PROJECT_DIR = basedir,
-            SITE_NAME = 'basic_i18n',
-            SITE_DOMAIN = 'localhost',
-            SOURCES_DIR = os.path.join(basedir, 'sources'),
-            TEMPLATES_DIR = os.path.join(basedir, 'sources', 'templates'),
-            PUBLISH_DIR = os.path.join(basedir, '_build/dev'),
-            STATIC_DIR = os.path.join(basedir, '_build/dev', 'static'),
-            STATIC_URL = 'static/',
-            LOCALES_DIR = os.path.join(basedir, 'locale'),
+            SITE_NAME = "basic_i18n",
+            SITE_DOMAIN = "localhost",
+            SOURCES_DIR = os.path.join(basedir, "sources"),
+            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
+            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL = "static/",
+            LOCALES_DIR = os.path.join(basedir, "locale"),
             LANGUAGE_CODE = "en_US",
-            LANGUAGES = ("en_US", 'fr_FR'),
+            LANGUAGES = ("en_US", "fr_FR"),
             BUNDLES = {
-                'modernizr_js': Bundle(
+                "modernizr_js": Bundle(
                     "js/modernizr.src.js",
                     filters=None,
-                    output='js/modernizr.min.js'
+                    output="js/modernizr.min.js"
                 ),
-                'app_css': Bundle(
-                    'css/app.css',
+                "app_css": Bundle(
+                    "css/app.css",
                     filters=None,
-                    output='css/app.min.css'
+                    output="css/app.min.css"
                 ),
-                'app_js': Bundle(
+                "app_js": Bundle(
                     "js/app.js",
                     filters=None,
-                    output='js/app.min.js'
+                    output="js/app.min.js"
                 ),
             },
             FILES_TO_SYNC = (
-                ('css', 'css'),
+                ("css", "css"),
             ),
         )
         return settings

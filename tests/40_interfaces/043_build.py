@@ -43,7 +43,7 @@ def test_build_interface(caplog, tmpdir, fixtures_settings, starter_basic_settin
     template_path = os.path.join(fixtures_settings.starters_path, sample_name)
     project_path = os.path.join(destination, "project")
 
-    # Get basic settings
+    # Get basic settings and its computed path
     settings = starter_basic_settings(project_path)
     builddir_path = settings.PUBLISH_DIR
 
@@ -62,4 +62,10 @@ def test_build_interface(caplog, tmpdir, fixtures_settings, starter_basic_settin
     )) is True
     assert os.path.exists(os.path.join(
         builddir_path, "index_fr_FR.html",
+    )) is True
+    assert os.path.exists(os.path.join(
+        builddir_path,
+        "static",
+        "css",
+        "app.css"
     )) is True

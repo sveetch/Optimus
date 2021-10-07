@@ -129,19 +129,36 @@ def import_pages_module(name, basedir=None):
                                  import_module_err=msg_import)
 
 
-def import_settings(name, basedir=None):
+def load_settings(settings_module):
     """
     Load settings module.
 
-    Validate required settings are set then fill some missing settings to a
-    default value.
+    A shortcut to validate required settings are set then fill some missing settings to
+    a default value.
 
     Arguments:
-        name (str): Module name to retrieve from ``basedir``. This is Python path to
+        settings_module (object): A settings module to load in model.
+
+    Returns:
+        optimus.conf.model.SettingsModel: Settings module validated and filled with
+        defaults.
+    """
+    _settings = SettingsModel()
+    _settings.load_from_module(settings_module)
+
+    return _settings
+
+
+def import_settings(name, basedir=None):
+    """
+    Import and load settings module.
+
+    Arguments:
+        name (string): Module name to retrieve from ``basedir``. This is Python path to
             the module from project base directory as loaded from project setup.
 
     Keyword Arguments:
-        basedir (str): Base directory from where to find module name. If no
+        basedir (string): Base directory from where to find module name. If no
             base directory is given ``os.getcwd()`` is used. Default is
             ``None``.
 
@@ -150,7 +167,4 @@ def import_settings(name, basedir=None):
     """
     settings_module = import_settings_module(name, basedir)
 
-    _settings = SettingsModel()
-    _settings.load_from_module(settings_module)
-
-    return _settings
+    return load_settings(settings_module)
