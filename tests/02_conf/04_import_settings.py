@@ -20,8 +20,7 @@ def test_wrong_basedir(temp_builds_dir, caplog, fixtures_settings, reset_syspath
     """
     Settings module name is given but basedir is wrong
     """
-    package_name = 'niet_package'
-    module_name = 'settings'
+    package_name = "niet_package"
     basedir = os.path.join(fixtures_settings.fixtures_path, package_name)
 
     with pytest.raises(ImportError):
@@ -35,11 +34,11 @@ def test_success(fixtures_settings, reset_syspath):
     """
     Success
     """
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    basedir = os.path.join(fixtures_settings.fixtures_path, "basic_template")
 
     setup_project(basedir, "dummy_value", set_envvar=False)
 
-    mod = import_settings(name='settings', basedir=basedir)
+    mod = import_settings(name="settings", basedir=basedir)
 
     assert mod.SITE_NAME == "basic"
 
@@ -51,12 +50,14 @@ def test_missing_required_settings(caplog, fixtures_settings, reset_syspath):
     """
     Correctly imported settings but module miss some required ones
     """
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'dummy_package')
-    module_name = 'miss_required_settings'
+    basedir = os.path.join(fixtures_settings.fixtures_path, "dummy_package")
+    module_name = "miss_required_settings"
 
-    exception_msg = ('The following settings are required but not defined: '
-                     'PROJECT_DIR, SOURCES_DIR, TEMPLATES_DIR, PUBLISH_DIR, '
-                     'STATIC_DIR')
+    exception_msg = (
+        "The following settings are required but not defined: "
+        "PROJECT_DIR, SOURCES_DIR, TEMPLATES_DIR, PUBLISH_DIR, "
+        "STATIC_DIR"
+    )
 
     setup_project(basedir, "dummy_value", set_envvar=False)
 
@@ -65,15 +66,11 @@ def test_missing_required_settings(caplog, fixtures_settings, reset_syspath):
 
     assert caplog.record_tuples == [
         (
-            'optimus',
+            "optimus",
             logging.INFO,
-            'Register project base directory: {}'.format(basedir)
+            "Register project base directory: {}".format(basedir),
         ),
-        (
-            'optimus',
-            logging.INFO,
-            'Loading "{}" module'.format(module_name)
-        ),
+        ("optimus", logging.INFO, 'Loading "{}" module'.format(module_name)),
     ]
 
     # Cleanup sys.path for next tests
@@ -84,14 +81,14 @@ def test_minimal_settings_fill(fixtures_settings, reset_syspath):
     """
     Check some settings filled with a minimal settings module
     """
-    basedir = os.path.join(fixtures_settings.fixtures_path, 'dummy_package')
-    module_name = 'minimal_settings'
+    basedir = os.path.join(fixtures_settings.fixtures_path, "dummy_package")
+    module_name = "minimal_settings"
 
     setup_project(basedir, "dummy_value", set_envvar=False)
 
     mod = import_settings(name=module_name, basedir=basedir)
 
-    assert mod.PROJECT_DIR == '/home/foo'
+    assert mod.PROJECT_DIR == "/home/foo"
     assert mod.BUNDLES == {}
     assert list(mod.ENABLED_BUNDLES) == []
 

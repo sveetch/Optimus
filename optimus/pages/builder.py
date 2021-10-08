@@ -49,9 +49,9 @@ class PageBuilder(object):
         dry_run (boolean): Dry run mode.
 
     """
-    def __init__(self, settings, jinja_env=None, assets_env=None,
-                 dry_run=False):
-        self.logger = logging.getLogger('optimus')
+
+    def __init__(self, settings, jinja_env=None, assets_env=None, dry_run=False):
+        self.logger = logging.getLogger("optimus")
 
         self.settings = settings
 
@@ -83,8 +83,9 @@ class PageBuilder(object):
             jinja2.Jinja2Environment: Configured Jinja2 environment.
         """
         exts = []
-        self.logger.debug(("No Jinja2 environment given, initializing a "
-                           "new environment"))
+        self.logger.debug(
+            ("No Jinja2 environment given, initializing a " "new environment")
+        )
 
         # It the assets environment is given, active the Jinja extension to
         # use webassets
@@ -97,14 +98,13 @@ class PageBuilder(object):
 
         # Active i18n behaviors if i18n extension is loaded and Babel has been
         # imported
-        if 'jinja2.ext.i18n' in exts and babel_support is not None:
+        if "jinja2.ext.i18n" in exts and babel_support is not None:
             self.internationalized = True
             self.logger.debug("'i18n' enabled")
 
         # Boot Jinja environment
         env = Jinja2Environment(
-            loader=FileSystemLoader(self.settings.TEMPLATES_DIR),
-            extensions=exts
+            loader=FileSystemLoader(self.settings.TEMPLATES_DIR), extensions=exts
         )
 
         # Enable Jinja filters
@@ -147,15 +147,15 @@ class PageBuilder(object):
             domain_prefix = "https://{}"
 
         return {
-            'debug': self.settings.DEBUG,
-            'SITE': {
-                'name': self.settings.SITE_NAME,
-                'domain': self.settings.SITE_DOMAIN,
-                'web_url': domain_prefix.format(self.settings.SITE_DOMAIN),
+            "debug": self.settings.DEBUG,
+            "SITE": {
+                "name": self.settings.SITE_NAME,
+                "domain": self.settings.SITE_DOMAIN,
+                "web_url": domain_prefix.format(self.settings.SITE_DOMAIN),
             },
-            'STATIC_URL': self.settings.STATIC_URL,
-            '_SETTINGS': self.serialize_settings(),
-            'OPTIMUS': __version__,
+            "STATIC_URL": self.settings.STATIC_URL,
+            "_SETTINGS": self.serialize_settings(),
+            "OPTIMUS": __version__,
         }
 
     def get_translation_for_item(self, page_item):
@@ -186,15 +186,12 @@ class PageBuilder(object):
             msg = " - Loading translations for locale: {} - {}"
             self.logger.debug(msg.format(lang.code, lang))
             self.translations[lang.code] = babel_support.Translations.load(
-                self.settings.LOCALES_DIR,
-                lang.code,
-                'messages'
+                self.settings.LOCALES_DIR, lang.code, "messages"
             )
 
         # Install it in the Jinja env
         self.jinja_env.install_gettext_translations(
-            self.translations[lang.code],
-            newstyle=False
+            self.translations[lang.code], newstyle=False
         )
 
         return self.translations[lang.code]
@@ -239,8 +236,9 @@ class PageBuilder(object):
         self.logger.info("Starting page builds")
 
         if not page_list:
-            self.logger.warning(("Page scanning skipped as there are no "
-                                 "registered pages"))
+            self.logger.warning(
+                ("Page scanning skipped as there are no " "registered pages")
+            )
             return None
 
         knowed = set([])
@@ -279,8 +277,9 @@ class PageBuilder(object):
         # Template render
         content = page_item.render(self.jinja_env)
 
-        destination_path = os.path.join(self.settings.PUBLISH_DIR,
-                                        page_item.get_destination())
+        destination_path = os.path.join(
+            self.settings.PUBLISH_DIR, page_item.get_destination()
+        )
         # Creating destination path if needed
         destination_dir, destination_file = os.path.split(destination_path)
         if not os.path.exists(destination_dir):
@@ -291,7 +290,7 @@ class PageBuilder(object):
         # Write it
         self.logger.debug(" - Writing to: {}".format(destination_path))
         if not self.dry_run:
-            with io.open(destination_path, 'w') as fp:
+            with io.open(destination_path, "w") as fp:
                 fp.write(content)
 
         return destination_path
@@ -311,8 +310,9 @@ class PageBuilder(object):
         self.logger.info("Starting page builds")
 
         if not page_list:
-            self.logger.warning(("Page management skipped as there are no "
-                                 "registered pages"))
+            self.logger.warning(
+                ("Page management skipped as there are no " "registered pages")
+            )
             return None
 
         builded = []

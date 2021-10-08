@@ -1,6 +1,6 @@
 """
 Valid module to import
 """
-dsqd ;
+dsqd
 
 SOME_VAR = "Yep"

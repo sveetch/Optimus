@@ -15,9 +15,9 @@ def init_directory(directory):
 
     Returns: ``True`` if directory has been created else ``False``.
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
     if not os.path.exists(directory):
-        logger.debug('Creating directory: {}'.format(directory))
+        logger.debug("Creating directory: {}".format(directory))
         os.makedirs(directory)
         return True
     return False
@@ -65,19 +65,20 @@ def recursive_directories_create(project_directory, tree, dry_run=False):
         dry_run (bool): Enabled dry run mode, no directory will be created.
             Default to ``False``.
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
 
     for item in tree:
         if len(item) > 0:
             new_dir = item[0]
             path_dir = os.path.join(project_directory, new_dir)
             if not os.path.exists(path_dir):
-                logger.info('* Creating new directory : {}'.format(path_dir))
+                logger.info("* Creating new directory : {}".format(path_dir))
                 if not dry_run:
                     os.makedirs(path_dir)
             else:
-                logger.warning(('* Following path allready exist : '
-                                '{}').format(path_dir))
+                logger.warning(
+                    ("* Following path allready exist : " "{}").format(path_dir)
+                )
         # Follow children directories to create them
         if len(item) > 1:
             recursive_directories_create(path_dir, item[1], dry_run=dry_run)
@@ -98,5 +99,6 @@ def initialize(settings):
 
     if settings.FILES_TO_SYNC is not None:
         for item in settings.FILES_TO_SYNC:
-            synchronize_assets_sources(settings.SOURCES_DIR,
-                                       settings.STATIC_DIR, item, None)
+            synchronize_assets_sources(
+                settings.SOURCES_DIR, settings.STATIC_DIR, item, None
+            )

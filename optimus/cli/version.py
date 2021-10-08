@@ -11,10 +11,10 @@ from watchdog.version import VERSION_STRING as watchdog_version
 try:
     from cherrypy import __version__ as cherrypy_version
 except ImportError:
-    cherrypy_version = 'Not installed'
+    cherrypy_version = "Not installed"
 
 
-@click.command('version', short_help="Print out versions informations")
+@click.command("version", short_help="Print out versions informations")
 @click.pass_context
 def version_command(context):
     """

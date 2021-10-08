@@ -1,7 +1,6 @@
 """
 Some fixture methods
 """
-import logging
 import os
 import sys
 
@@ -23,6 +22,7 @@ class ApplicationTestSettings:
         fixtures_dir (str): Directory name which include tests datas.
         fixtures_path (str): Absolute path to the tests datas.
     """
+
     def __init__(self):
         # Use getcwd and package name since abspath on package __file__ won"t
         # play nice with tox (because tests/ dir is not deployed in
@@ -30,9 +30,9 @@ class ApplicationTestSettings:
         # NOTE: Maybe not right anymore, maybe could change to the commented lines
         # after
         self.application_path = os.path.join(os.getcwd(), "optimus")
-        #self.application_path = os.path.abspath(
-            #os.path.dirname(optimus.__file__)
-        #)
+        # self.application_path = os.path.abspath(
+        # os.path.dirname(optimus.__file__)
+        # )
 
         self.package_path = os.path.normpath(
             os.path.join(
@@ -61,10 +61,7 @@ class ApplicationTestSettings:
 
         # Test fixtures directory
         self.fixtures_dir = "data_fixtures"
-        self.fixtures_path = os.path.join(
-            self.tests_path,
-            self.fixtures_dir
-        )
+        self.fixtures_path = os.path.join(self.tests_path, self.fixtures_dir)
 
     def format(self, content, extra={}):
         """
@@ -116,6 +113,7 @@ def prepend_items():
     """
     Return a function than prepend any item from "paths" list with "prefix"
     """
+
     def prepend_func(prefix, paths):
         return [os.path.join(prefix, item) for item in paths]
 
@@ -131,6 +129,7 @@ def reset_syspath():
     use ``setup_project.setup_project`` to add base directory to sys.path
     and avoid clash with next tests doing the same.
     """
+
     def reset_func(path):
         if path in sys.path:
             del sys.path[sys.path.index(path)]
@@ -178,41 +177,32 @@ def minimal_basic_settings():
     WARNING: For sanity, following settings have to be identic to those ones
              from ``data_fixtures/basic_template/settings.py``.
     """
+
     def settings_func(basedir):
         from optimus.conf.model import SettingsModel
         from webassets import Bundle
 
         settings = SettingsModel()
         settings.load_from_kwargs(
-            DEBUG = True,
-            PROJECT_DIR = basedir,
-            SITE_NAME = "basic",
-            SITE_DOMAIN = "localhost",
-            SOURCES_DIR = os.path.join(basedir, "sources"),
-            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
-            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
-            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
-            STATIC_URL = "static/",
-            BUNDLES = {
+            DEBUG=True,
+            PROJECT_DIR=basedir,
+            SITE_NAME="basic",
+            SITE_DOMAIN="localhost",
+            SOURCES_DIR=os.path.join(basedir, "sources"),
+            TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
+            STATIC_DIR=os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL="static/",
+            BUNDLES={
                 "modernizr_js": Bundle(
-                    "js/modernizr.src.js",
-                    filters=None,
-                    output="js/modernizr.min.js"
+                    "js/modernizr.src.js", filters=None, output="js/modernizr.min.js"
                 ),
                 "app_css": Bundle(
-                    "css/app.css",
-                    filters=None,
-                    output="css/app.min.css"
+                    "css/app.css", filters=None, output="css/app.min.css"
                 ),
-                "app_js": Bundle(
-                    "js/app.js",
-                    filters=None,
-                    output="js/app.min.js"
-                ),
+                "app_js": Bundle("js/app.js", filters=None, output="js/app.min.js"),
             },
-            FILES_TO_SYNC = (
-                ("css", "css"),
-            ),
+            FILES_TO_SYNC=(("css", "css"),),
         )
         return settings
 
@@ -225,23 +215,24 @@ def minimal_i18n_settings():
     Alike "minimal_basic_settings" return a function to load minimal i18n
     settings.
     """
+
     def settings_func(basedir):
         from optimus.conf.model import SettingsModel
 
         settings = SettingsModel()
         settings.load_from_kwargs(
-            DEBUG = True,
-            PROJECT_DIR = basedir,
-            SITE_NAME = "minimal_i18n",
-            SITE_DOMAIN = "localhost",
-            SOURCES_DIR = os.path.join(basedir, "sources"),
-            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
-            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
-            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
-            STATIC_URL = "static/",
-            LOCALES_DIR = os.path.join(basedir, "locale"),
-            LANGUAGE_CODE = "en_US",
-            LANGUAGES = ("en_US", "fr_FR"),
+            DEBUG=True,
+            PROJECT_DIR=basedir,
+            SITE_NAME="minimal_i18n",
+            SITE_DOMAIN="localhost",
+            SOURCES_DIR=os.path.join(basedir, "sources"),
+            TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
+            STATIC_DIR=os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL="static/",
+            LOCALES_DIR=os.path.join(basedir, "locale"),
+            LANGUAGE_CODE="en_US",
+            LANGUAGES=("en_US", "fr_FR"),
         )
         return settings
 
@@ -257,44 +248,35 @@ def i18n_template_settings():
     WARNING: For sanity, following settings have to be identic to those ones
              from ``data_fixtures/basic_i18n/settings.py``.
     """
+
     def settings_func(basedir):
         from optimus.conf.model import SettingsModel
         from webassets import Bundle
 
         settings = SettingsModel()
         settings.load_from_kwargs(
-            DEBUG = True,
-            PROJECT_DIR = basedir,
-            SITE_NAME = "basic_i18n",
-            SITE_DOMAIN = "localhost",
-            SOURCES_DIR = os.path.join(basedir, "sources"),
-            TEMPLATES_DIR = os.path.join(basedir, "sources", "templates"),
-            PUBLISH_DIR = os.path.join(basedir, "_build/dev"),
-            STATIC_DIR = os.path.join(basedir, "_build/dev", "static"),
-            STATIC_URL = "static/",
-            LOCALES_DIR = os.path.join(basedir, "locale"),
-            LANGUAGE_CODE = "en_US",
-            LANGUAGES = ("en_US", "fr_FR"),
-            BUNDLES = {
+            DEBUG=True,
+            PROJECT_DIR=basedir,
+            SITE_NAME="basic_i18n",
+            SITE_DOMAIN="localhost",
+            SOURCES_DIR=os.path.join(basedir, "sources"),
+            TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
+            PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
+            STATIC_DIR=os.path.join(basedir, "_build/dev", "static"),
+            STATIC_URL="static/",
+            LOCALES_DIR=os.path.join(basedir, "locale"),
+            LANGUAGE_CODE="en_US",
+            LANGUAGES=("en_US", "fr_FR"),
+            BUNDLES={
                 "modernizr_js": Bundle(
-                    "js/modernizr.src.js",
-                    filters=None,
-                    output="js/modernizr.min.js"
+                    "js/modernizr.src.js", filters=None, output="js/modernizr.min.js"
                 ),
                 "app_css": Bundle(
-                    "css/app.css",
-                    filters=None,
-                    output="css/app.min.css"
+                    "css/app.css", filters=None, output="css/app.min.css"
                 ),
-                "app_js": Bundle(
-                    "js/app.js",
-                    filters=None,
-                    output="js/app.min.js"
-                ),
+                "app_js": Bundle("js/app.js", filters=None, output="js/app.min.js"),
             },
-            FILES_TO_SYNC = (
-                ("css", "css"),
-            ),
+            FILES_TO_SYNC=(("css", "css"),),
         )
         return settings
 
@@ -309,6 +291,7 @@ def starter_basic_settings():
     WARNING:
         These settings must be identical to the ones from equivalent starter template.
     """
+
     def settings_func(basedir):
         """
         Return settings according to the basedir given.
@@ -325,38 +308,28 @@ def starter_basic_settings():
 
         settings = SettingsModel()
         settings.load_from_kwargs(
-            DEBUG = True,
-            PROJECT_DIR = basedir,
-            SITE_NAME = "try_i18n",
-            SITE_DOMAIN = "localhost",
-            SOURCES_DIR = sources_dir,
-            TEMPLATES_DIR = templates_dir,
-            PUBLISH_DIR = publish_dir,
-            STATIC_DIR = static_dir,
-            LOCALES_DIR = locales_dir,
-            LANGUAGE_CODE = default_language_code,
-            LANGUAGES = (default_language_code, "fr_FR"),
-            STATIC_URL = "static/",
-            BUNDLES = {
+            DEBUG=True,
+            PROJECT_DIR=basedir,
+            SITE_NAME="try_i18n",
+            SITE_DOMAIN="localhost",
+            SOURCES_DIR=sources_dir,
+            TEMPLATES_DIR=templates_dir,
+            PUBLISH_DIR=publish_dir,
+            STATIC_DIR=static_dir,
+            LOCALES_DIR=locales_dir,
+            LANGUAGE_CODE=default_language_code,
+            LANGUAGES=(default_language_code, "fr_FR"),
+            STATIC_URL="static/",
+            BUNDLES={
                 "modernizr_js": Bundle(
-                    "js/modernizr.src.js",
-                    filters=None,
-                    output="js/modernizr.min.js"
+                    "js/modernizr.src.js", filters=None, output="js/modernizr.min.js"
                 ),
                 "app_css": Bundle(
-                    "css/app.css",
-                    filters=None,
-                    output="css/app.min.css"
+                    "css/app.css", filters=None, output="css/app.min.css"
                 ),
-                "app_js": Bundle(
-                    "js/app.js",
-                    filters=None,
-                    output="js/app.min.js"
-                ),
+                "app_js": Bundle("js/app.js", filters=None, output="js/app.min.js"),
             },
-            FILES_TO_SYNC = (
-                "css",
-            ),
+            FILES_TO_SYNC=("css",),
         )
         return settings
 

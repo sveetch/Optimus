@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import sys
 
-import pytest
-
-import click
 from click.testing import CliRunner
 
 from optimus.cli.console_script import cli_frontend
@@ -35,13 +31,16 @@ def test_cli_watcher(caplog, tmpdir, fixtures_settings, flush_settings, reset_sy
 
     runner = CliRunner()
 
-    result = runner.invoke(cli_frontend, [
-        "--test-env",
-        # "--verbose=5",
-        "watch",
-        "--settings-name=settings.base",
-        "--basedir={}".format(project_path)
-    ])
+    result = runner.invoke(
+        cli_frontend,
+        [
+            "--test-env",
+            # "--verbose=5",
+            "watch",
+            "--settings-name=settings.base",
+            "--basedir={}".format(project_path),
+        ],
+    )
     # print("result.exit_code:", result.exit_code)
     # print("result.exc_info:", result.exc_info)
     # if result.exit_code > 0:
@@ -56,12 +55,9 @@ def test_cli_watcher(caplog, tmpdir, fixtures_settings, flush_settings, reset_sy
     assert os.path.exists(os.path.join(builddir_path)) is True
     assert os.path.exists(os.path.join(builddir_path, "index.html")) is True
     assert os.path.exists(os.path.join(builddir_path, "index_fr_FR.html")) is True
-    assert os.path.exists(os.path.join(
-        builddir_path,
-        "static",
-        "css",
-        "app.css"
-    )) is True
+    assert (
+        os.path.exists(os.path.join(builddir_path, "static", "css", "app.css")) is True
+    )
 
     # At least ensure the warning before observer start is here
     assert caplog.record_tuples[-1] == (

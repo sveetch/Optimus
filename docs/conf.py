@@ -17,9 +17,9 @@ from optimus import __version__ as optimus_version
 
 # -- Project information -----------------------------------------------------
 
-project = 'Optimus'
-copyright = '2012-2021, David THENON'
-author = 'David Thenon'
+project = "Optimus"
+copyright = "2012-2021, David THENON"
+author = "David Thenon"
 
 # The short X.Y version
 version = optimus_version
@@ -33,25 +33,25 @@ release = optimus_version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.todo',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # Use index.rst as root content doc file
-master_doc = 'index'
+master_doc = "index"
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -59,7 +59,7 @@ master_doc = 'index'
 # a list of builtin themes. Default to builtin theme "alabaster" if sphinx rtd
 # is not available.
 #
-html_theme = 'alabaster'
+html_theme = "alabaster"
 try:
     import sphinx_rtd_theme
 except ImportError:
@@ -72,7 +72,7 @@ else:
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # -- Autodoc config---------- -------------------------------------------------
 

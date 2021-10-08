@@ -35,6 +35,7 @@ def test_define_code_through_attr():
     """
     Inherit from LangBase to define default code through attribute
     """
+
     class Foo(LangBase):
         code = "fr"
 
@@ -47,6 +48,7 @@ def test_define_code_arg_and_attr():
     """
     Code defined through argument override the attribute
     """
+
     class Foo(LangBase):
         code = "fr"
 
@@ -55,31 +57,33 @@ def test_define_code_arg_and_attr():
     assert foo.code == "en"
 
 
-@pytest.mark.parametrize('code,name,region', [
-    (
-        'fr',
-        'fr',
-        None,
-    ),
-    (
-        'en',
-        'en',
-        None,
-    ),
-    (
-        'fr_BE',
-        'fr',
-        'BE',
-    ),
-    (
-        'zh_CN',
-        'zh',
-        'CN',
-    ),
-])
+@pytest.mark.parametrize(
+    "code,name,region",
+    [
+        (
+            "fr",
+            "fr",
+            None,
+        ),
+        (
+            "en",
+            "en",
+            None,
+        ),
+        (
+            "fr_BE",
+            "fr",
+            "BE",
+        ),
+        (
+            "zh_CN",
+            "zh",
+            "CN",
+        ),
+    ],
+)
 def test_parsed_code(code, name, region):
-    """
-    """
+    """ """
     lang = LangBase(code=code)
 
     assert lang.code == code

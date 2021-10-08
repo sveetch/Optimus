@@ -13,7 +13,7 @@ def display_settings(settings, names):
             be ``NOT SET``.
 
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
     for item in names:
-        value = getattr(settings, item, 'NOT SET')
+        value = getattr(settings, item, "NOT SET")
         logger.debug(" - Settings.{} = {}".format(item, value))

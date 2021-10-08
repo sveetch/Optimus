@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
-import logging
 
 import pytest
 
 from optimus.exceptions import ServerConfigurationError, InvalidHostname
 from optimus.interfaces.runserver import server_interface
-from optimus.pages.views.base import PageViewBase
 
 
 def test_server_interface_success(tmpdir, fixtures_settings, starter_basic_settings):
@@ -41,8 +39,9 @@ def test_server_interface_success(tmpdir, fixtures_settings, starter_basic_setti
     }
 
 
-def test_server_interface_no_builddir(tmpdir, fixtures_settings,
-                                      starter_basic_settings):
+def test_server_interface_no_builddir(
+    tmpdir, fixtures_settings, starter_basic_settings
+):
     """
     Interface should raise an exception when publish directory does not exists.
     """
@@ -51,7 +50,6 @@ def test_server_interface_no_builddir(tmpdir, fixtures_settings,
     basedir = tmpdir
     sample_name = "basic"
     destination = os.path.join(basedir, sample_name)
-    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
     project_path = os.path.join(destination, "project")
 
     # Get basic settings and its computed path
@@ -61,8 +59,9 @@ def test_server_interface_no_builddir(tmpdir, fixtures_settings,
         server_interface(settings, hostname)
 
 
-def test_server_interface_invalid_hostname(tmpdir, fixtures_settings,
-                                           starter_basic_settings):
+def test_server_interface_invalid_hostname(
+    tmpdir, fixtures_settings, starter_basic_settings
+):
     """
     Interface should raise an exception when given hostname is invalid.
     """
@@ -71,7 +70,6 @@ def test_server_interface_invalid_hostname(tmpdir, fixtures_settings,
     basedir = tmpdir
     sample_name = "basic"
     destination = os.path.join(basedir, sample_name)
-    template_path = os.path.join(fixtures_settings.starters_path, sample_name)
     project_path = os.path.join(destination, "project")
 
     # Get basic settings and its computed path

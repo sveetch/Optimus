@@ -62,6 +62,7 @@ class PageViewBase(UnicodeMixin):
         **kwargs: Arbitrary keyword arguments. Will be added as object
             attribute.
     """
+
     title = None
     template_name = None
     destination = None
@@ -70,8 +71,8 @@ class PageViewBase(UnicodeMixin):
 
     def __init__(self, **kwargs):
         self._used_templates = None
-        self.logger = logging.getLogger('optimus')
-        self.__settings = kwargs.pop('settings', None)
+        self.logger = logging.getLogger("optimus")
+        self.__settings = kwargs.pop("settings", None)
 
         # Store every passed keyword argument as object attribute
         for key, value in kwargs.items():
@@ -90,8 +91,7 @@ class PageViewBase(UnicodeMixin):
             string: Representation with name and code
         """
         return "<{name} {dest}>".format(
-            name=self.__class__.__name__,
-            dest=self.get_destination()
+            name=self.__class__.__name__, dest=self.get_destination()
         )
 
     def validate(self):
@@ -103,12 +103,12 @@ class PageViewBase(UnicodeMixin):
         """
         err = []
 
-        for item in ['title', 'template_name', 'destination']:
+        for item in ["title", "template_name", "destination"]:
             if not getattr(self, item):
                 err.append(item)
 
         if len(err) > 0:
-            msg = ("These attributes are required: {}".format(", ".join(err)))
+            msg = "These attributes are required: {}".format(", ".join(err))
             raise ViewImproperlyConfigured(msg)
 
         return True
@@ -124,8 +124,10 @@ class PageViewBase(UnicodeMixin):
             in kwargs. Default to ``None``.
         """
         if not self.__settings:
-            msg = ("""View required settings defined either from init """
-                   """arguments or through settings attribute""")
+            msg = (
+                """View required settings defined either from init """
+                """arguments or through settings attribute"""
+            )
             raise ViewImproperlyConfigured(msg)
         return self.__settings
 
@@ -177,9 +179,7 @@ class PageViewBase(UnicodeMixin):
             string: Page destination path relative to build directory.
         """
         return os.path.normpath(
-            self.destination.format(
-                language_code=self.get_lang().code
-            )
+            self.destination.format(language_code=self.get_lang().code)
         )
 
     def get_relative_position(self):
@@ -191,7 +191,7 @@ class PageViewBase(UnicodeMixin):
             subdirectories or "./" if at the root. Won't never return empty
             string.
         """
-        return ((len(self.get_destination().split("/"))-1)*"../" or "./")
+        return (len(self.get_destination().split("/")) - 1) * "../" or "./"
 
     def get_template_name(self):
         """
@@ -200,9 +200,7 @@ class PageViewBase(UnicodeMixin):
         Returns:
             string: Template file path relative to templates directory.
         """
-        return self.template_name.format(
-            language_code=self.get_lang().code
-        )
+        return self.template_name.format(language_code=self.get_lang().code)
 
     def get_context(self):
         """
@@ -211,13 +209,15 @@ class PageViewBase(UnicodeMixin):
         Returns:
             dict: Template context of variables.
         """
-        self.context.update({
-            'page_title': self.get_title(),
-            'page_destination': self.get_destination(),
-            'page_relative_position': self.get_relative_position(),
-            'page_lang': self.get_lang(),
-            'page_template_name': self.get_template_name(),
-        })
+        self.context.update(
+            {
+                "page_title": self.get_title(),
+                "page_destination": self.get_destination(),
+                "page_relative_position": self.get_relative_position(),
+                "page_lang": self.get_lang(),
+                "page_template_name": self.get_template_name(),
+            }
+        )
 
         self.logger.debug(" - Initial context: {}".format(self.context))
 
@@ -276,15 +276,10 @@ class PageViewBase(UnicodeMixin):
         if self._used_templates is None:
             self.env = env
 
-            found = self._recurse_template_search(
-                env,
-                self.get_template_name()
-            )
+            found = self._recurse_template_search(env, self.get_template_name())
 
             self._used_templates = [self.get_template_name()] + found
 
-            self.logger.debug(" - Used templates: {}".format(
-                self._used_templates
-            ))
+            self.logger.debug(" - Used templates: {}".format(self._used_templates))
 
         return self._used_templates

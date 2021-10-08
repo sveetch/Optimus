@@ -2,7 +2,7 @@
 import os
 import logging
 
-from optimus.exceptions import ServerConfigurationError, InvalidHostname
+from optimus.exceptions import ServerConfigurationError
 from optimus.utils import get_host_parts
 
 
@@ -57,18 +57,20 @@ def server_interface(settings, hostname, index="index.html"):
     logger.info(msg.format(address=address, port=port))
 
     # Configure webapp server
-    cherrypy.config.update({
-        'server.socket_host': address,
-        'server.socket_port': port,
-        'engine.autoreload_on': False,
-    })
+    cherrypy.config.update(
+        {
+            "server.socket_host": address,
+            "server.socket_port": port,
+            "engine.autoreload_on": False,
+        }
+    )
 
     # Configure webapp for static files
     app_conf = {
-        '/': {
-            'tools.staticdir.index': index,
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': settings.PUBLISH_DIR,
+        "/": {
+            "tools.staticdir.index": index,
+            "tools.staticdir.on": True,
+            "tools.staticdir.dir": settings.PUBLISH_DIR,
         },
     }
 

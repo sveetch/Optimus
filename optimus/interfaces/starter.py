@@ -4,8 +4,6 @@ import logging
 from cookiecutter.main import cookiecutter
 from cookiecutter.exceptions import RepositoryNotFound
 
-from optimus.utils import display_settings
-
 
 def starter_interface(template, project_name, output_dir):
     """

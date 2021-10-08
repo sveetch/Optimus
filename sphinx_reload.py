@@ -20,40 +20,16 @@ from livereload import Server, shell
 server = Server()
 
 # Watch RST documents sources
-server.watch(
-    'docs/*.rst',
-    shell(
-        'make html',
-        cwd='docs'
-    )
-)
-server.watch(
-    'docs/api/*.rst',
-    shell(
-        'make html',
-        cwd='docs'
-    )
-)
+server.watch("docs/*.rst", shell("make html", cwd="docs"))
+server.watch("docs/api/*.rst", shell("make html", cwd="docs"))
 
 # Watch application sources
-server.watch(
-    'optimus/*.py',
-    shell(
-        'make html',
-        cwd='docs'
-    )
-)
-server.watch(
-    'optimus/*/**.py',
-    shell(
-        'make html',
-        cwd='docs'
-    )
-)
+server.watch("optimus/*.py", shell("make html", cwd="docs"))
+server.watch("optimus/*/**.py", shell("make html", cwd="docs"))
 
 # Serve the builded documentation
 server.serve(
-    root='docs/_build/html',
+    root="docs/_build/html",
     port=8002,
     host="0.0.0.0",
 )

@@ -32,7 +32,7 @@ def resolve_internal_template(path):
             it does not match any alias, just return the given name so it is used by
             cookiecutter to search itself for a path or an URL.
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
 
     if path in TEMPLATE_ALIAS:
         path = TEMPLATE_ALIAS[path]

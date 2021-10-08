@@ -48,6 +48,7 @@ def init_logger(level, printout=True):
     # Redirect outputs to the void space, mostly for usage within unittests
     if not printout:
         from io import StringIO
+
         dummystream = StringIO()
         handler = logging.StreamHandler(dummystream)
     # Standard output with colored messages
@@ -55,8 +56,7 @@ def init_logger(level, printout=True):
         handler = logging.StreamHandler()
         handler.setFormatter(
             colorlog.ColoredFormatter(
-                '%(asctime)s - %(log_color)s%(message)s',
-                datefmt="%H:%M:%S"
+                "%(asctime)s - %(log_color)s%(message)s", datefmt="%H:%M:%S"
             )
         )
 

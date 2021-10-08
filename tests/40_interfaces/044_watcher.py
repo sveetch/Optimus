@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import logging
-import shutil
-
-import pytest
 
 from optimus.interfaces.build import builder_interface
 from optimus.interfaces.starter import starter_interface
@@ -16,6 +12,7 @@ class DummyView(PageViewBase):
     """
     A dummy view similar to the one from "basic" starter.
     """
+
     title = "My project"
     template_name = "index.html"
     destination = "index_{language_code}.html"
@@ -25,6 +22,7 @@ class DummyViewsModule:
     """
     Object to mime a page module.
     """
+
     PAGES = [
         DummyView(destination="index.html"),
         DummyView(lang="fr_FR"),
@@ -61,18 +59,27 @@ def test_watcher_interface(tmpdir, fixtures_settings, starter_basic_settings):
     build_env = builder_interface(settings, views)
 
     assert os.path.exists(builddir_path) is True
-    assert os.path.exists(os.path.join(
-        builddir_path, "index.html",
-    )) is True
-    assert os.path.exists(os.path.join(
-        builddir_path, "index_fr_FR.html",
-    )) is True
-    assert os.path.exists(os.path.join(
-        builddir_path,
-        "static",
-        "css",
-        "app.css"
-    )) is True
+    assert (
+        os.path.exists(
+            os.path.join(
+                builddir_path,
+                "index.html",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                builddir_path,
+                "index_fr_FR.html",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(os.path.join(builddir_path, "static", "css", "app.css")) is True
+    )
 
     # Make observer
     observer = watcher_interface(settings, views, build_env)
@@ -82,10 +89,6 @@ def test_watcher_interface(tmpdir, fixtures_settings, starter_basic_settings):
         observed[path.path] = [type(item).__name__ for item in handlers]
 
     assert observed == {
-        os.path.join(project_path, "sources"): [
-            "AssetsWatchEventHandler"
-        ],
-        os.path.join(project_path, "sources/templates"): [
-            "TemplatesWatchEventHandler"
-        ],
+        os.path.join(project_path, "sources"): ["AssetsWatchEventHandler"],
+        os.path.join(project_path, "sources/templates"): ["TemplatesWatchEventHandler"],
     }

@@ -48,7 +48,7 @@ version, also some part of core have changed.
 * Fixed tests so they can work on CLI without to be troubled by other tests which
   make importations of settings or views modules;
 * Now all CLI are tested;
-
+* Application and tests are 100% valid with Flake8;
 
 Version 1.1.2 - 2020/01/01
 --------------------------

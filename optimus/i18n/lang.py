@@ -49,6 +49,7 @@ class LangBase(UnicodeMixin):
         external_code (string): External code for some external apps, will be
             equal to ``alt_code`` if not set.
     """
+
     label = None
     code = None
     alt_code = None
@@ -58,14 +59,18 @@ class LangBase(UnicodeMixin):
         self.code = code or self.code
 
         if self.code is None:
-            msg = ("""Missing language identifier : You must supply it by """
-                   """the way of 'code' argument or as the 'code' class """
-                   """attribute.""")
+            msg = (
+                """Missing language identifier : You must supply it by """
+                """the way of 'code' argument or as the 'code' class """
+                """attribute."""
+            )
             raise InvalidLangageIdentifier(msg)
 
-        if len(self.code.split('-')) > 1:
-            msg = ("""Invalid language identifier : Langage name and """
-                   """region name must be joined by a '_' not a '-'""")
+        if len(self.code.split("-")) > 1:
+            msg = (
+                """Invalid language identifier : Langage name and """
+                """region name must be joined by a '_' not a '-'"""
+            )
             raise InvalidLangageIdentifier(msg)
 
         self.language_name, self.region_name = self.split_code(self.code)
@@ -86,8 +91,7 @@ class LangBase(UnicodeMixin):
             string: Representation with name and code
         """
         return "<{name} code:{code}>".format(
-            name=self.__class__.__name__,
-            code=self.code
+            name=self.__class__.__name__, code=self.code
         )
 
     def split_code(self, code):
@@ -101,7 +105,7 @@ class LangBase(UnicodeMixin):
             tuple: A pair of language name and possibly region name, if code
             does not contain any region it will be ``None``.
         """
-        items = code.split('_')
+        items = code.split("_")
         language_name = items[0]
         region_name = None
 

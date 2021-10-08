@@ -24,10 +24,11 @@ class PageRegistry(object):
             contain their related page view.
         logger (logging.Logger): Optimus logger.
     """
+
     def __init__(self, elements={}):
         self.elements = {}
         self.map_dest_to_page = {}
-        self.logger = logging.getLogger('optimus')
+        self.logger = logging.getLogger("optimus")
 
     def add_page(self, page, templates):
         """

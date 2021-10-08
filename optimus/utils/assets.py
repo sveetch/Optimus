@@ -26,22 +26,26 @@ def synchronize_assets_sources(from_path, to_path, src, dest, dry_run=False):
     Returns:
         str: Copied destination path
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
     source = os.path.join(from_path, src)
     destination = os.path.join(to_path, src)
 
     if not os.path.exists(source):
-        logger.warning(('The given source does not exist and so can '
-                        'not be synchronized : {}').format(source))
+        logger.warning(
+            (
+                "The given source does not exist and so can " "not be synchronized : {}"
+            ).format(source)
+        )
         return
 
     if os.path.exists(destination):
-        logger.debug('Removing old asset destination: {}'.format(destination))
+        logger.debug("Removing old asset destination: {}".format(destination))
         if not dry_run:
             shutil.rmtree(destination)
 
-    logger.debug(('Synchronizing asset from '
-                  '"{}" to "{}"').format(source, destination))
+    logger.debug(
+        ("Synchronizing asset from " '"{}" to "{}"').format(source, destination)
+    )
     if not dry_run:
         shutil.copytree(source, destination)
 

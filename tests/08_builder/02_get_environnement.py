@@ -1,8 +1,6 @@
 import os
 import logging
 
-import pytest
-
 from jinja2.ext import Extension
 
 from optimus.pages.builder import PageBuilder
@@ -13,17 +11,19 @@ def test_get_environnement(minimal_basic_settings, fixtures_settings, caplog):
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
     """
+
     class DummyExtension(Extension):
         """
         Dummy extension
         """
-        tags = set(['dummy'])
+
+        tags = set(["dummy"])
 
     def DummyFilter(content):
         return "Nope"
 
     # Get basic sample settings
-    projectdir = os.path.join(fixtures_settings.fixtures_path, 'basic_template')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, "basic_template")
     settings = minimal_basic_settings(projectdir)
 
     # Init builder with default environment
@@ -39,32 +39,22 @@ def test_get_environnement(minimal_basic_settings, fixtures_settings, caplog):
     jinja_env = builder.get_environnement()
 
     # Only dummy extension enabled
-    assert list(jinja_env.extensions.keys()) == [
-        '02_get_environnement.DummyExtension'
-    ]
+    assert list(jinja_env.extensions.keys()) == ["02_get_environnement.DummyExtension"]
 
     assert "dummy_filter" in jinja_env.filters
 
     # Using 'get_environnement' afterwards trigger additional debug log
     assert caplog.record_tuples == [
         (
-            'optimus',
+            "optimus",
             logging.DEBUG,
-            ('No Jinja2 environment given, initializing a new environment')
+            ("No Jinja2 environment given, initializing a new environment"),
         ),
+        ("optimus", logging.DEBUG, "'i18n' enabled"),
+        ("optimus", logging.DEBUG, ("PageBuilder initialized")),
         (
-            'optimus',
+            "optimus",
             logging.DEBUG,
-            "'i18n' enabled"
-        ),
-        (
-            'optimus',
-            logging.DEBUG,
-            ('PageBuilder initialized')
-        ),
-        (
-            'optimus',
-            logging.DEBUG,
-            ('No Jinja2 environment given, initializing a new environment')
+            ("No Jinja2 environment given, initializing a new environment"),
         ),
     ]

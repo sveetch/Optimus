@@ -46,15 +46,17 @@ class I18NManager:
         settings (conf.model.SettingsModel): Settings registry instance.
         logger (logging.Logger): Optimus logger.
     """
+
     catalog_name = "messages.{0}"
     catalog_path = "{0}/LC_MESSAGES"
-    header_comment = ("# Translations template for PROJECT project\n# Created "
-                      "by Optimus")
+    header_comment = (
+        "# Translations template for PROJECT project\n# Created " "by Optimus"
+    )
 
     def __init__(self, settings):
         self.settings = settings
         self._pot = None
-        self.logger = logging.getLogger('optimus')
+        self.logger = logging.getLogger("optimus")
 
     def get_template_path(self):
         """
@@ -63,8 +65,7 @@ class I18NManager:
         Returns:
             string: Catalog template file path.
         """
-        return os.path.join(self.settings.LOCALES_DIR,
-                            self.catalog_name.format("pot"))
+        return os.path.join(self.settings.LOCALES_DIR, self.catalog_name.format("pot"))
 
     def get_catalog_dir(self, locale):
         """
@@ -76,8 +77,7 @@ class I18NManager:
         Returns:
             string: Catalog directory path.
         """
-        return os.path.join(self.settings.LOCALES_DIR,
-                            self.catalog_path.format(locale))
+        return os.path.join(self.settings.LOCALES_DIR, self.catalog_path.format(locale))
 
     def get_po_filepath(self, locale):
         """
@@ -89,8 +89,9 @@ class I18NManager:
         Returns:
             string: Catalog file path.
         """
-        return os.path.join(self.get_catalog_dir(locale),
-                            self.catalog_name.format("po"))
+        return os.path.join(
+            self.get_catalog_dir(locale), self.catalog_name.format("po")
+        )
 
     def get_mo_filepath(self, locale):
         """
@@ -102,8 +103,9 @@ class I18NManager:
         Returns:
             string: Compiled catalog file path.
         """
-        return os.path.join(self.get_catalog_dir(locale),
-                            self.catalog_name.format("mo"))
+        return os.path.join(
+            self.get_catalog_dir(locale), self.catalog_name.format("mo")
+        )
 
     def check_locales_dir(self):
         """
@@ -147,7 +149,9 @@ class I18NManager:
         Returns:
             dict: Dictionnary of languages identifiers.
         """
-        _f = lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x # noqa
+        _f = (
+            lambda x: x[0] if isinstance(x, list) or isinstance(x, tuple) else x
+        )  # noqa
         return map(_f, languages)
 
     def init_locales_dir(self):
@@ -156,8 +160,7 @@ class I18NManager:
         if it does not allready exists.
         """
         if not self.check_locales_dir():
-            self.logger.warning(("Locale directory does not exists, "
-                                 "creating it"))
+            self.logger.warning(("Locale directory does not exists, " "creating it"))
             os.makedirs(self.settings.LOCALES_DIR)
 
     def build_pot(self, force=False):
@@ -177,10 +180,12 @@ class I18NManager:
             babel.messages.catalog.Catalog: Catalog template object.
         """
         if force or not self.check_template_path():
-            self.logger.info(("Proceeding to extraction to update the "
-                              "template catalog (POT)"))
-            self._pot = Catalog(project=self.settings.SITE_NAME,
-                                header_comment=self.header_comment)
+            self.logger.info(
+                ("Proceeding to extraction to update the " "template catalog (POT)")
+            )
+            self._pot = Catalog(
+                project=self.settings.SITE_NAME, header_comment=self.header_comment
+            )
             # Follow all paths to search for pattern to extract
             for extract_path in self.settings.I18N_EXTRACT_SOURCES:
                 msg = "Searching for pattern to extract in : {0}"
@@ -188,20 +193,24 @@ class I18NManager:
                 extracted = extract_from_dir(
                     dirname=extract_path,
                     method_map=self.settings.I18N_EXTRACT_MAP,
-                    options_map=self.settings.I18N_EXTRACT_OPTIONS
+                    options_map=self.settings.I18N_EXTRACT_OPTIONS,
                 )
                 # Proceed to extract from given path
                 for filename, lineno, message, comments, context in extracted:
                     filepath = os.path.normpath(
                         os.path.join(
-                            os.path.basename(self.settings.SOURCES_DIR),
-                            filename
+                            os.path.basename(self.settings.SOURCES_DIR), filename
                         )
                     )
-                    self._pot.add(message, None, [(filepath, lineno)],
-                                  auto_comments=comments, context=context)
+                    self._pot.add(
+                        message,
+                        None,
+                        [(filepath, lineno)],
+                        auto_comments=comments,
+                        context=context,
+                    )
 
-            with io.open(self.get_template_path(), 'wb') as fp:
+            with io.open(self.get_template_path(), "wb") as fp:
                 write_po(fp, self._pot)
 
         return self._pot
@@ -220,7 +229,7 @@ class I18NManager:
         if self._pot is not None:
             return self._pot
         if self.check_template_path():
-            with io.open(self.get_template_path(), 'rb') as fp:
+            with io.open(self.get_template_path(), "rb") as fp:
                 self._pot = read_po(fp)
             return self._pot
         return self.build_pot()
@@ -252,14 +261,15 @@ class I18NManager:
         Returns:
             babel.messages.catalog.Catalog: Catalog template object.
         """
-        tmpname = os.path.join(os.path.dirname(filepath),
-                               tempfile.gettempprefix() +
-                               os.path.basename(filepath))
+        tmpname = os.path.join(
+            os.path.dirname(filepath),
+            tempfile.gettempprefix() + os.path.basename(filepath),
+        )
         # Attempt to write new file to a temp file, clean temp file if it fails
         try:
-            with io.open(tmpname, 'wb') as tmpfile:
+            with io.open(tmpname, "wb") as tmpfile:
                 write_po(tmpfile, catalog, **kwargs)
-        except: # noqa
+        except:  # noqa
             os.remove(tmpname)
             raise
 
@@ -320,7 +330,7 @@ class I18NManager:
                 if not os.path.exists(translation_dir):
                     os.makedirs(translation_dir)
 
-                with io.open(catalog_path, 'wb') as fp:
+                with io.open(catalog_path, "wb") as fp:
                     write_po(fp, catalog_template)
 
                 created.append(locale)
@@ -380,7 +390,7 @@ class I18NManager:
         for locale in languages:
             msg = "Compiling catalog (MO) for language '{0}' to {1}"
             self.logger.info(msg.format(locale, self.get_mo_filepath(locale)))
-            with io.open(self.get_po_filepath(locale), 'rb') as fp:
+            with io.open(self.get_po_filepath(locale), "rb") as fp:
                 #
                 catalog = read_po(fp, locale)
 
@@ -389,17 +399,20 @@ class I18NManager:
             for message, errors in catalog.check():
                 for error in errors:
                     errs = True
-                    self.logger.warning('Error at line {0}: {1}'.format(
-                        message.lineno,
-                        error
-                    ))
+                    self.logger.warning(
+                        "Error at line {0}: {1}".format(message.lineno, error)
+                    )
             # Don't overwrite previous MO file if there have been error
             if errs:
-                self.logger.critical(("There has been errors within the "
-                                      "catalog, compilation has been aborted"))
+                self.logger.critical(
+                    (
+                        "There has been errors within the "
+                        "catalog, compilation has been aborted"
+                    )
+                )
                 break
 
-            with io.open(self.get_mo_filepath(locale), 'wb') as fp:
+            with io.open(self.get_mo_filepath(locale), "wb") as fp:
                 write_mo(fp, catalog, use_fuzzy=False)
 
             compiled.append(locale)

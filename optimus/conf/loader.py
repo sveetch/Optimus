@@ -4,7 +4,6 @@ Module loader helpers
 *********************
 
 """
-import os
 import importlib
 import logging
 import sys
@@ -16,7 +15,7 @@ def import_project_module(
     name,
     basedir=None,
     finding_module_err="Unable to find module: {0}",
-    import_module_err="Unable to load module: {0}"
+    import_module_err="Unable to load module: {0}",
 ):
     """
     Load given module name.
@@ -53,7 +52,7 @@ def import_project_module(
     Returns:
         object: Finded and loaded module.
     """
-    logger = logging.getLogger('optimus')
+    logger = logging.getLogger("optimus")
     logger.info('Loading "%s" module', name)
 
     # NOTE: Maybe we should raise better exception (with logged msg?), have to
@@ -69,15 +68,15 @@ def import_project_module(
             logger.critical(import_module_err.format(name))
             # Print out useful exception
             raise error
-            #sys.exit()
+            # sys.exit()
     # Unable to locate module, it's a critical failure
     else:
         logger.critical(finding_module_err.format(name))
         # TODO: We must not use sys.exit and raise a clear Exception instead,
         # higher layer level code will have to catch it and do the sys.exit/click.abort
         # itself if this is the required behavior. Actually sys.exit usage is opaque
-        #msg = "Unable to found module: {}"
-        #raise ImportError(msg.format(name))
+        # msg = "Unable to found module: {}"
+        # raise ImportError(msg.format(name))
         sys.exit()
 
     return mod
@@ -101,9 +100,13 @@ def import_settings_module(name, basedir=None):
     """
     msg_finding = "Unable to find settings module: {0}"
     msg_import = "Unable to load settings module, it probably have errors: {0}"
-    return import_project_module(name, basedir=basedir,
-                                 finding_module_err=msg_finding,
-                                 import_module_err=msg_import)
+
+    return import_project_module(
+        name,
+        basedir=basedir,
+        finding_module_err=msg_finding,
+        import_module_err=msg_import,
+    )
 
 
 def import_pages_module(name, basedir=None):
@@ -124,9 +127,12 @@ def import_pages_module(name, basedir=None):
     """
     msg_finding = "Unable to find pages module: {0}"
     msg_import = "Unable to load pages module, it probably have errors: {0}"
-    return import_project_module(name, basedir=basedir,
-                                 finding_module_err=msg_finding,
-                                 import_module_err=msg_import)
+    return import_project_module(
+        name,
+        basedir=basedir,
+        finding_module_err=msg_finding,
+        import_module_err=msg_import,
+    )
 
 
 def load_settings(settings_module):

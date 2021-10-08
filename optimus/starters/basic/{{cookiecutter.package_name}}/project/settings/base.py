@@ -9,9 +9,7 @@ DEBUG = True
 
 PROJECT_DIR = os.path.normpath(
     os.path.join(
-        os.path.abspath(
-            os.path.dirname(__file__)
-        ),
+        os.path.abspath(os.path.dirname(__file__)),
         "..",
     )
 )
@@ -45,20 +43,10 @@ STATIC_URL = "static/"
 # Extra or custom bundles
 BUNDLES = {
     "modernizr_js": Bundle(
-        "js/modernizr.src.js",
-        filters=None,
-        output="js/modernizr.min.js"
+        "js/modernizr.src.js", filters=None, output="js/modernizr.min.js"
     ),
-    "app_css": Bundle(
-        "css/app.css",
-        filters=None,
-        output="css/app.min.css"
-    ),
-    "app_js": Bundle(
-        "js/app.js",
-        filters=None,
-        output="js/app.min.js"
-    ),
+    "app_css": Bundle("css/app.css", filters=None, output="css/app.min.css"),
+    "app_js": Bundle("js/app.js", filters=None, output="js/app.min.js"),
 }
 
 # Sources files or directory to synchronize within the static directory

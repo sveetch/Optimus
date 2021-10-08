@@ -42,9 +42,7 @@ def watcher_interface(settings, views, build_env):
 
     # Init templates events watchers
     templates_event_handler = TemplatesWatchEventHandler(
-        settings,
-        build_env["builder"],
-        **settings.WATCHER_TEMPLATES_PATTERNS
+        settings, build_env["builder"], **settings.WATCHER_TEMPLATES_PATTERNS
     )
 
     # Init assets events watchers
@@ -53,7 +51,7 @@ def watcher_interface(settings, views, build_env):
             settings,
             build_env["assets_env"],
             build_env["builder"],
-            **settings.WATCHER_ASSETS_PATTERNS
+            **settings.WATCHER_ASSETS_PATTERNS,
         )
 
     # Initialize observer to use

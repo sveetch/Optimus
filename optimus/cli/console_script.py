@@ -13,20 +13,33 @@ from optimus.logs import init_logger
 
 
 # Help alias on '-h' argument
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 # Default logger conf
-OPTIMUS_LOGGER_CONF = ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL', None)
+OPTIMUS_LOGGER_CONF = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", None)
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.option('-v', '--verbose', type=click.IntRange(min=0, max=5), default=4,
-              metavar='INTEGER',
-              help="An integer between 0 and 5, where '0' make a totaly "
-              "silent output and '5' set level to DEBUG (the most verbose "
-              "level). Default to '4' (Info level).")
-@click.option('--test-env', is_flag=True, hidden=True,
-              help=("Just an option to run for test and enable some specific tricks to run correctly"))
+@click.option(
+    "-v",
+    "--verbose",
+    type=click.IntRange(min=0, max=5),
+    default=4,
+    metavar="INTEGER",
+    help=(
+        "An integer between 0 and 5, where '0' make a totaly silent output and '5' "
+        "set level to DEBUG (the most verbose level). Default to '4' (Info level)."
+    ),
+)
+@click.option(
+    "--test-env",
+    is_flag=True,
+    hidden=True,
+    help=(
+        "Just an option to run for test and enable some specific tricks to run "
+        "correctly"
+    ),
+)
 @click.pass_context
 def cli_frontend(ctx, verbose, test_env):
     """
@@ -45,9 +58,9 @@ def cli_frontend(ctx, verbose, test_env):
 
     # Init the default context that will be passed to commands
     ctx.obj = {
-        'verbosity': verbose,
-        'logger': root_logger,
-        'test_env': test_env,
+        "verbosity": verbose,
+        "logger": root_logger,
+        "test_env": test_env,
     }
 
 

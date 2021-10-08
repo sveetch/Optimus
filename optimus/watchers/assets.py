@@ -32,12 +32,13 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             arguments.
         logger (logging.Logger): Optimus logger.
     """
+
     def __init__(self, settings, assets_env, pages_builder, *args, **kwargs):
         self.settings = settings
         self.assets_env = assets_env
         self.pages_builder = pages_builder
 
-        self.logger = logging.getLogger('optimus')
+        self.logger = logging.getLogger("optimus")
 
         super(AssetsWatchEventHandler, self).__init__(*args, **kwargs)
 
@@ -57,8 +58,9 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
         # Search in the registry if the file is a knowed asset from a bundle
         if rel_path in self.assets_env.optimus_registry.map_dest_to_bundle:
-            bundle_name = self.assets_env.optimus_registry\
-                          .map_dest_to_bundle[rel_path] # noqa
+            bundle_name = self.assets_env.optimus_registry.map_dest_to_bundle[
+                rel_path
+            ]  # noqa
 
             msg = "Build required for bundle: {}"
             self.logger.debug(msg.format(bundle_name))
@@ -91,10 +93,12 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
                 ``watchdog.events.FileModifiedEvent``.
         """
         # We are only interested for destination
-        if match_any_paths([event.dest_path],
-                           included_patterns=self.patterns,
-                           excluded_patterns=self.ignore_patterns,
-                           case_sensitive=self.case_sensitive):
+        if match_any_paths(
+            [event.dest_path],
+            included_patterns=self.patterns,
+            excluded_patterns=self.ignore_patterns,
+            case_sensitive=self.case_sensitive,
+        ):
             msg = "Change detected from a move on: {}"
             self.logger.debug(msg.format(event.dest_path))
 

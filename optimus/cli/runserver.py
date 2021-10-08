@@ -13,21 +13,35 @@ from optimus.interfaces.runserver import server_interface
 
 
 # TODO: Change settings-name to settings ?
-@click.command('runserver', short_help=("Launch a simple HTTP server on "
-                                        "built project"))
-@click.argument('hostname', default="127.0.0.1:80")
-@click.option('--basedir', metavar='PATH', type=click.Path(exists=True),
-              help=("Base directory where to search for settings file. "
-                    "Default value use current directory."),
-              default=os.getcwd())
-@click.option('--settings-name', metavar='NAME',
-              help=("Settings file name to use without '.py' extension. "
-                    "Default value is 'settings'."),
-              default="settings")
-@click.option('--index', metavar='FILENAME',
-              help=("Filename to use as directory index. "
-                    "Default value is 'index.html'."),
-              default="index.html")
+@click.command(
+    "runserver", short_help=("Launch a simple HTTP server on " "built project")
+)
+@click.argument("hostname", default="127.0.0.1:80")
+@click.option(
+    "--basedir",
+    metavar="PATH",
+    type=click.Path(exists=True),
+    help=(
+        "Base directory where to search for settings file. "
+        "Default value use current directory."
+    ),
+    default=os.getcwd(),
+)
+@click.option(
+    "--settings-name",
+    metavar="NAME",
+    help=(
+        "Settings file name to use without '.py' extension. "
+        "Default value is 'settings'."
+    ),
+    default="settings",
+)
+@click.option(
+    "--index",
+    metavar="FILENAME",
+    help=("Filename to use as directory index. " "Default value is 'index.html'."),
+    default="index.html",
+)
 @click.pass_context
 def runserver_command(context, basedir, settings_name, index, hostname):
     """
@@ -55,8 +69,10 @@ def runserver_command(context, basedir, settings_name, index, hostname):
     settings = load_settings(settings)
 
     # Debug output
-    display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
-                                'TEMPLATES_DIR', 'LOCALES_DIR'))
+    display_settings(
+        settings,
+        ("DEBUG", "PROJECT_DIR", "SOURCES_DIR", "TEMPLATES_DIR", "LOCALES_DIR"),
+    )
 
     try:
         server_env = server_interface(settings, hostname, index=index)

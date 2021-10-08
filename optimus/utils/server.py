@@ -2,7 +2,7 @@
 from optimus.exceptions import InvalidHostname
 
 
-def get_host_parts(hostname, default_name='127.0.0.1', default_port=80):
+def get_host_parts(hostname, default_name="127.0.0.1", default_port=80):
     """
     Parse given hostname
 
@@ -21,15 +21,16 @@ def get_host_parts(hostname, default_name='127.0.0.1', default_port=80):
     """
     name = None
     port = None
-    hostparts = hostname.split(':')
+    hostparts = hostname.split(":")
 
     if len(hostparts) > 2:
         raise InvalidHostname("Invalid hostname format, too many ':'")
     elif len(hostparts) == 2:
         name, port = hostparts
         if not port or not name:
-            raise InvalidHostname(("Invalid hostname format, address or port "
-                                   "is empty"))
+            raise InvalidHostname(
+                ("Invalid hostname format, address or port " "is empty")
+            )
 
         try:
             port = int(port)

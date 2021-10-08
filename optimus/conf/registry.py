@@ -6,7 +6,6 @@ Settings registration
 This is the entry point to reach settings from project page module.
 """
 import os
-import importlib
 
 from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.conf.loader import import_settings
@@ -17,9 +16,13 @@ try:
     if not basedir:
         raise KeyError
 except KeyError:
-    raise ImportError(("Project cannot be imported, because "
-                       "environment variable {} is "
-                       "undefined.").format(PROJECT_DIR_ENVVAR))
+    raise ImportError(
+        (
+            "Project cannot be imported, because "
+            "environment variable {} is "
+            "undefined."
+        ).format(PROJECT_DIR_ENVVAR)
+    )
 
 try:
     name = os.environ[SETTINGS_NAME_ENVVAR]
@@ -27,9 +30,13 @@ try:
     if not name:
         raise KeyError
 except KeyError:
-    raise ImportError(("Settings cannot be imported, because "
-                       "environment variable {} is "
-                       "undefined.").format(SETTINGS_NAME_ENVVAR))
+    raise ImportError(
+        (
+            "Settings cannot be imported, because "
+            "environment variable {} is "
+            "undefined."
+        ).format(SETTINGS_NAME_ENVVAR)
+    )
 
 # Reachable settings object
 settings = import_settings(name, basedir)

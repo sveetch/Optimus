@@ -1,6 +1,5 @@
 import io
 import importlib
-import logging
 import os
 import shutil
 
@@ -16,32 +15,41 @@ def DummyFilter(content):
     return "DummyFilter: {}".format(content)
 
 
-@pytest.mark.parametrize('sample_fixture_name,attempted_destinations', [
-    (
-        'basic_template',
-        # Relative destination path from dev build dir
-        [
-            'index.html',
-        ],
-    ),
-    (
-        'basic2_template',
-        [
-            'index.html',
-            'sub/foo.html',
-            'sub/bar.html',
-        ],
-    ),
-    (
-        'i18n_template',
-        [
-            'index.html',
-            'index_fr_FR.html',
-        ],
-    ),
-])
-def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
-                    temp_builds_dir, sample_fixture_name, attempted_destinations):
+@pytest.mark.parametrize(
+    "sample_fixture_name,attempted_destinations",
+    [
+        (
+            "basic_template",
+            # Relative destination path from dev build dir
+            [
+                "index.html",
+            ],
+        ),
+        (
+            "basic2_template",
+            [
+                "index.html",
+                "sub/foo.html",
+                "sub/bar.html",
+            ],
+        ),
+        (
+            "i18n_template",
+            [
+                "index.html",
+                "index_fr_FR.html",
+            ],
+        ),
+    ],
+)
+def test_build_item(
+    minimal_basic_settings,
+    fixtures_settings,
+    reset_syspath,
+    temp_builds_dir,
+    sample_fixture_name,
+    attempted_destinations,
+):
     """
     Build each page
 
@@ -52,13 +60,11 @@ def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
     required since in development mode webassets use a hash on every asset
     file that we can't rely on and would break builded file comparaison
     """
-    basepath = temp_builds_dir.join('builder_build_item_{}'.format(sample_fixture_name))
+    basepath = temp_builds_dir.join("builder_build_item_{}".format(sample_fixture_name))
     projectdir = os.path.join(basepath.strpath, sample_fixture_name)
 
     attempts_dir = os.path.join(
-        fixtures_settings.fixtures_path,
-        'builds',
-        sample_fixture_name
+        fixtures_settings.fixtures_path, "builds", sample_fixture_name
     )
 
     # Copy sample from fixtures dir
@@ -73,7 +79,7 @@ def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
 
     # Enabled production mode for webassets without url expire in a custom
     # cache dir, so we have stable asset filename for comparaison
-    cache_dir = os.path.join(projectdir, 'webassets-cache')
+    cache_dir = os.path.join(projectdir, "webassets-cache")
     os.makedirs(cache_dir)
     settings.DEBUG = False
     settings.WEBASSETS_CACHE = cache_dir
@@ -97,8 +103,9 @@ def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
         buildeds.append(found)
 
     # Add absolute build dir to each attempted relative path
-    assert buildeds == [os.path.join(settings.PUBLISH_DIR, path)
-                        for path in attempted_destinations]
+    assert buildeds == [
+        os.path.join(settings.PUBLISH_DIR, path) for path in attempted_destinations
+    ]
 
     # Check every builded destination exists
     for path in attempted_destinations:
@@ -106,17 +113,17 @@ def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
         attempt_path = os.path.join(attempts_dir, path)
 
         # Open builded file
-        with io.open(dest_path, 'r') as destfp:
+        with io.open(dest_path, "r") as destfp:
             built = destfp.read()
 
         # Write attempted file from builded file
         # This is only temporary stuff to enable when writing new test or
         # updating existing one
-        #with io.open(attempt_path, 'w') as writefp:
-            #writefp.write(built)
+        # with io.open(attempt_path, 'w') as writefp:
+        # writefp.write(built)
 
         # Open attempted file from 'builds'
-        with io.open(attempt_path, 'r') as attemptfp:
+        with io.open(attempt_path, "r") as attemptfp:
             attempted = attemptfp.read()
 
         assert built == attempted
@@ -125,46 +132,49 @@ def test_build_item(minimal_basic_settings, fixtures_settings, reset_syspath,
     reset_syspath(projectdir)
 
 
-@pytest.mark.parametrize('sample_fixture_name,attempted_destinations', [
-    (
-        'basic_template',
-        # Relative destination path from dev build dir
-        [
-            'index.html',
-        ],
-    ),
-    (
-        'basic2_template',
-        [
-            'index.html',
-            'sub/foo.html',
-            'sub/bar.html',
-        ],
-    ),
-    (
-        'i18n_template',
-        [
-            'index.html',
-            'index_fr_FR.html',
-        ],
-    ),
-])
-def test_build_bulk(minimal_basic_settings, fixtures_settings, reset_syspath,
-                    temp_builds_dir, sample_fixture_name, attempted_destinations):
+@pytest.mark.parametrize(
+    "sample_fixture_name,attempted_destinations",
+    [
+        (
+            "basic_template",
+            # Relative destination path from dev build dir
+            [
+                "index.html",
+            ],
+        ),
+        (
+            "basic2_template",
+            [
+                "index.html",
+                "sub/foo.html",
+                "sub/bar.html",
+            ],
+        ),
+        (
+            "i18n_template",
+            [
+                "index.html",
+                "index_fr_FR.html",
+            ],
+        ),
+    ],
+)
+def test_build_bulk(
+    minimal_basic_settings,
+    fixtures_settings,
+    reset_syspath,
+    temp_builds_dir,
+    sample_fixture_name,
+    attempted_destinations,
+):
     """
     Build all pages in one bulk action
 
     Since 'build_item' test allready compare builded file, we dont do it again
     here, just check returned paths
     """
-    basepath = temp_builds_dir.join('builder_build_bulk_{}'.format(sample_fixture_name))
+    basepath = temp_builds_dir.join("builder_build_bulk_{}".format(sample_fixture_name))
     projectdir = os.path.join(basepath.strpath, sample_fixture_name)
-
-    attempts_dir = os.path.join(
-        fixtures_settings.fixtures_path,
-        'builds',
-        sample_fixture_name
-    )
 
     # Copy sample from fixtures dir
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
@@ -191,13 +201,14 @@ def test_build_bulk(minimal_basic_settings, fixtures_settings, reset_syspath,
     buildeds = builder.build_bulk(pages_map.PAGES)
 
     # Check every attempted file has been created (promise)
-    assert buildeds == [os.path.join(settings.PUBLISH_DIR, path)
-                        for path in attempted_destinations]
+    assert buildeds == [
+        os.path.join(settings.PUBLISH_DIR, path) for path in attempted_destinations
+    ]
 
     # Check promised builded file exists
     for dest in attempted_destinations:
         absdest = os.path.join(settings.PUBLISH_DIR, dest)
-        assert os.path.exists(absdest) == True
+        assert os.path.exists(absdest) is True
 
     # Cleanup sys.path for next tests
     reset_syspath(projectdir)

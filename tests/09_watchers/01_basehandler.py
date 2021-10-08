@@ -1,48 +1,49 @@
-import os
-
 import pytest
 
 from optimus.watchers import BaseHandler
 
 
-@pytest.mark.parametrize('path,attempt', [
-    (
-        '/foo/project',
-        '.',
-    ),
-    (
-        'machin.txt',
-        'machin.txt',
-    ),
-    (
-        '/foo/machin.txt',
-        '/foo/machin.txt',
-    ),
-    (
-        '/foo/project/machin.txt',
-        'machin.txt',
-    ),
-    (
-        '/foo/nope/machin.txt',
-        '/foo/nope/machin.txt',
-    ),
-    (
-        '/foo/project/ping/pong/machin.txt',
-        'ping/pong/machin.txt',
-    ),
-    (
-        '/foo/project/foo/project/machin.txt',
-        'foo/project/machin.txt',
-    ),
-    (
-        '/foo/project/foo/templates/machin.txt',
-        'foo/templates/machin.txt',
-    ),
-    (
-        '/foo/project/foo/project/machin.txt',
-        'foo/project/machin.txt',
-    ),
-])
+@pytest.mark.parametrize(
+    "path,attempt",
+    [
+        (
+            "/foo/project",
+            ".",
+        ),
+        (
+            "machin.txt",
+            "machin.txt",
+        ),
+        (
+            "/foo/machin.txt",
+            "/foo/machin.txt",
+        ),
+        (
+            "/foo/project/machin.txt",
+            "machin.txt",
+        ),
+        (
+            "/foo/nope/machin.txt",
+            "/foo/nope/machin.txt",
+        ),
+        (
+            "/foo/project/ping/pong/machin.txt",
+            "ping/pong/machin.txt",
+        ),
+        (
+            "/foo/project/foo/project/machin.txt",
+            "foo/project/machin.txt",
+        ),
+        (
+            "/foo/project/foo/templates/machin.txt",
+            "foo/templates/machin.txt",
+        ),
+        (
+            "/foo/project/foo/project/machin.txt",
+            "foo/project/machin.txt",
+        ),
+    ],
+)
 def test_get_relative_path(path, attempt):
     """
     Check relative path for both 'get_relative_asset_path' and
@@ -53,8 +54,8 @@ def test_get_relative_path(path, attempt):
 
     # Faking settings for both usages
     class Settings(object):
-        TEMPLATES_DIR = '/foo/project'
-        SOURCES_DIR = '/foo/project'
+        TEMPLATES_DIR = "/foo/project"
+        SOURCES_DIR = "/foo/project"
 
     handler.settings = Settings()
 

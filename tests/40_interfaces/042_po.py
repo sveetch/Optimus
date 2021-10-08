@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import logging
 import shutil
 
 from optimus.interfaces.po import po_interface
@@ -36,18 +35,50 @@ def test_po_interface_init(tmpdir, fixtures_settings, starter_basic_settings):
     # Expected directories and files
     assert os.path.exists(localedir_path) is True
     assert os.path.exists(os.path.join(localedir_path, "messages.pot")) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
-    )) is False
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
-    )) is False
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is False
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is False
+    )
 
 
 def test_po_interface_update(tmpdir, fixtures_settings, starter_basic_settings):
@@ -80,16 +111,31 @@ def test_po_interface_update(tmpdir, fixtures_settings, starter_basic_settings):
 
     # Expected directories and files
     assert os.path.exists(localedir_path) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
-    )) is True
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
 
 
-def test_po_interface_compile(tmpdir, fixtures_settings,
-                              starter_basic_settings):
+def test_po_interface_compile(tmpdir, fixtures_settings, starter_basic_settings):
     """
     Compile mode should compiles the PO files to MO files.
     """
@@ -116,16 +162,31 @@ def test_po_interface_compile(tmpdir, fixtures_settings,
 
     # Expected directories and files
     assert os.path.exists(localedir_path) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
-    )) is True
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is True
+    )
 
 
-def test_po_interface_all(tmpdir, fixtures_settings,
-                              starter_basic_settings):
+def test_po_interface_all(tmpdir, fixtures_settings, starter_basic_settings):
     """
     All modes combined should create the POT and langages structure, then update it and
     compile the MO files.
@@ -155,15 +216,47 @@ def test_po_interface_all(tmpdir, fixtures_settings,
 
     # Expected directories and files
     assert os.path.exists(localedir_path) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.po",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "en_US", "LC_MESSAGES", "messages.mo",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.po",
-    )) is True
-    assert os.path.exists(os.path.join(
-        localedir_path, "fr_FR", "LC_MESSAGES", "messages.mo",
-    )) is True
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "en_US",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.po",
+            )
+        )
+        is True
+    )
+    assert (
+        os.path.exists(
+            os.path.join(
+                localedir_path,
+                "fr_FR",
+                "LC_MESSAGES",
+                "messages.mo",
+            )
+        )
+        is True
+    )

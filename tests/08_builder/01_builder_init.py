@@ -1,11 +1,8 @@
 import os
 import logging
 
-import pytest
-
 from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
-from jinja2.ext import Extension
 
 from optimus.pages.builder import PageBuilder
 
@@ -16,7 +13,7 @@ def test_empty(minimal_basic_settings, fixtures_settings, caplog):
     webassets environments
     """
     # Get basic sample settings
-    projectdir = os.path.join(fixtures_settings.fixtures_path, 'minimal_basic')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, "minimal_basic")
     settings = minimal_basic_settings(projectdir)
 
     # Init builder
@@ -24,25 +21,17 @@ def test_empty(minimal_basic_settings, fixtures_settings, caplog):
 
     # Sample settings define only i18n extension
     assert list(builder.jinja_env.extensions.keys()) == [
-        'jinja2.ext.InternationalizationExtension',
+        "jinja2.ext.InternationalizationExtension",
     ]
 
     assert caplog.record_tuples == [
         (
-            'optimus',
+            "optimus",
             logging.DEBUG,
-            ('No Jinja2 environment given, initializing a new environment')
+            ("No Jinja2 environment given, initializing a new environment"),
         ),
-        (
-            'optimus',
-            logging.DEBUG,
-            "'i18n' enabled"
-        ),
-        (
-            'optimus',
-            logging.DEBUG,
-            ('PageBuilder initialized')
-        ),
+        ("optimus", logging.DEBUG, "'i18n' enabled"),
+        ("optimus", logging.DEBUG, ("PageBuilder initialized")),
     ]
 
 
@@ -52,7 +41,7 @@ def test_custom_jinja(minimal_basic_settings, fixtures_settings, caplog):
     environment
     """
     # Get basic sample settings
-    projectdir = os.path.join(fixtures_settings.fixtures_path, 'minimal_basic')
+    projectdir = os.path.join(fixtures_settings.fixtures_path, "minimal_basic")
     settings = minimal_basic_settings(projectdir)
 
     # Init a custom Jinja environment without any extension
@@ -67,9 +56,5 @@ def test_custom_jinja(minimal_basic_settings, fixtures_settings, caplog):
     assert list(builder.jinja_env.extensions.keys()) == []
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.DEBUG,
-            ('PageBuilder initialized')
-        ),
+        ("optimus", logging.DEBUG, ("PageBuilder initialized")),
     ]

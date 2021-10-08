@@ -27,11 +27,12 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             arguments.
         logger (logging.Logger): Optimus logger.
     """
+
     def __init__(self, settings, pages_builder, *args, **kwargs):
         self.settings = settings
         self.pages_builder = pages_builder
 
-        self.logger = logging.getLogger('optimus')
+        self.logger = logging.getLogger("optimus")
 
         super(TemplatesWatchEventHandler, self).__init__(*args, **kwargs)
 
@@ -58,8 +59,9 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             msg = "--- Changes detected on: {} ---"
             self.logger.warning(msg.format(rel_path))
 
-            requires = self.pages_builder.registry\
-                       .get_pages_from_dependency(rel_path) # noqa
+            requires = self.pages_builder.registry.get_pages_from_dependency(
+                rel_path
+            )  # noqa
 
             self.logger.debug("Requires for rebuild: {}".format(requires))
 
@@ -80,10 +82,12 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
                 ``watchdog.events.FileModifiedEvent``.
         """
         # We are only interested for the destination
-        if match_any_paths([event.dest_path],
-                           included_patterns=self.patterns,
-                           excluded_patterns=self.ignore_patterns,
-                           case_sensitive=self.case_sensitive):
+        if match_any_paths(
+            [event.dest_path],
+            included_patterns=self.patterns,
+            excluded_patterns=self.ignore_patterns,
+            case_sensitive=self.case_sensitive,
+        ):
             msg = "Change detected from a move on: {}"
             self.logger.debug(msg.format(event.dest_path))
 

@@ -2,11 +2,8 @@ import os
 
 import pytest
 
-from webassets import Bundle
-
 from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
-from webassets.ext.jinja2 import AssetsExtension
 
 from optimus.exceptions import ViewImproperlyConfigured
 from optimus.pages.views.base import PageViewBase
@@ -17,7 +14,8 @@ class DummySettings:
     """
     Dummy object with needed settings
     """
-    LANGUAGE_CODE = 'en'
+
+    LANGUAGE_CODE = "en"
 
 
 def test_empty():
@@ -33,26 +31,27 @@ def test_required_attrs_through_args():
     Define required attributes through arguments
     """
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
     )
 
-    assert view.title == 'Dummy'
+    assert view.title == "Dummy"
 
 
 def test_required_attrs_through_attrs():
     """
     Define required attributes through attributes
     """
+
     class DummyView(PageViewBase):
-        title = 'Dummy'
-        destination = 'Foo'
-        template_name = 'Bar'
+        title = "Dummy"
+        destination = "Foo"
+        template_name = "Bar"
 
     view = DummyView()
 
-    assert view.title == 'Dummy'
+    assert view.title == "Dummy"
 
 
 def test_required_attrs_through_mixed():
@@ -60,13 +59,14 @@ def test_required_attrs_through_mixed():
     Define some required attributes through attributes and others through
     arguments
     """
+
     class DummyView(PageViewBase):
-        destination = 'Foo'
-        template_name = 'Bar'
+        destination = "Foo"
+        template_name = "Bar"
 
-    view = DummyView(title='Dummy')
+    view = DummyView(title="Dummy")
 
-    assert view.title == 'Dummy'
+    assert view.title == "Dummy"
 
 
 def test_settings_missing():
@@ -74,9 +74,9 @@ def test_settings_missing():
     PageViewBase validate required settings object within getter
     """
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
     )
 
     with pytest.raises(ViewImproperlyConfigured):
@@ -88,9 +88,9 @@ def test_settings_through_arg():
     Given settings through argument
     """
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
         settings=42,
     )
 
@@ -102,9 +102,9 @@ def test_settings_through_setter():
     Given settings through setter
     """
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
     )
 
     with pytest.raises(ViewImproperlyConfigured):
@@ -117,12 +117,12 @@ def test_settings_through_setter():
 
 def test_get_title():
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
     )
 
-    assert view.get_title() == 'Dummy'
+    assert view.get_title() == "Dummy"
 
 
 def test_get_lang_default():
@@ -133,13 +133,13 @@ def test_get_lang_default():
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
         settings=settings,
     )
 
-    assert view.get_lang().label == 'en'
+    assert view.get_lang().label == "en"
 
 
 def test_get_lang_code():
@@ -149,14 +149,14 @@ def test_get_lang_code():
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
-        lang='fr',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
+        lang="fr",
         settings=settings,
     )
 
-    assert view.get_lang().label == 'fr'
+    assert view.get_lang().label == "fr"
 
 
 def test_get_lang_object():
@@ -165,50 +165,53 @@ def test_get_lang_object():
     """
     settings = DummySettings()
 
-    locale = LangBase(code='fr')
+    locale = LangBase(code="fr")
 
     view = PageViewBase(
-        title='Dummy',
-        destination='Foo',
-        template_name='Bar',
+        title="Dummy",
+        destination="Foo",
+        template_name="Bar",
         lang=locale,
         settings=settings,
     )
 
-    assert view.get_lang().label == 'fr'
+    assert view.get_lang().label == "fr"
     assert view.get_lang() == locale
 
 
-@pytest.mark.parametrize('destination,path', [
-    (
-        'index.html',
-        'index.html',
-    ),
-    (
-        'foo/index.html',
-        'foo/index.html',
-    ),
-    (
-        'index.{language_code}.html',
-        'index.fr.html',
-    ),
-    (
-        'foo/{language_code}/index.html',
-        'foo/fr/index.html',
-    ),
-    (
-        'foo/index_{language_code}.html',
-        'foo/index_fr.html',
-    ),
-    (
-        'foo/../{language_code}/index.html',
-        'fr/index.html',
-    ),
-    (
-        '../foo/{language_code}/index.html',
-        '../foo/fr/index.html',
-    ),
-])
+@pytest.mark.parametrize(
+    "destination,path",
+    [
+        (
+            "index.html",
+            "index.html",
+        ),
+        (
+            "foo/index.html",
+            "foo/index.html",
+        ),
+        (
+            "index.{language_code}.html",
+            "index.fr.html",
+        ),
+        (
+            "foo/{language_code}/index.html",
+            "foo/fr/index.html",
+        ),
+        (
+            "foo/index_{language_code}.html",
+            "foo/index_fr.html",
+        ),
+        (
+            "foo/../{language_code}/index.html",
+            "fr/index.html",
+        ),
+        (
+            "../foo/{language_code}/index.html",
+            "../foo/fr/index.html",
+        ),
+    ],
+)
 def test_get_destination(destination, path):
     """
     Check destination
@@ -216,38 +219,41 @@ def test_get_destination(destination, path):
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
+        title="Dummy",
         destination=destination,
-        template_name='bar.html',
-        lang='fr',
+        template_name="bar.html",
+        lang="fr",
         settings=settings,
     )
 
     assert view.get_destination() == path
 
 
-@pytest.mark.parametrize('destination,position', [
-    (
-        'foo',
-        './',
-    ),
-    (
-        'index.html',
-        './',
-    ),
-    (
-        'foo/index.html',
-        '../',
-    ),
-    (
-        'foo/bar/index.html',
-        '../../',
-    ),
-    (
-        'foo/bar/hip/hop/index.html',
-        '../../../../',
-    ),
-])
+@pytest.mark.parametrize(
+    "destination,position",
+    [
+        (
+            "foo",
+            "./",
+        ),
+        (
+            "index.html",
+            "./",
+        ),
+        (
+            "foo/index.html",
+            "../",
+        ),
+        (
+            "foo/bar/index.html",
+            "../../",
+        ),
+        (
+            "foo/bar/hip/hop/index.html",
+            "../../../../",
+        ),
+    ],
+)
 def test_get_relative_position(destination, position):
     """
     Check determined relative position for destination from the root (publish
@@ -256,30 +262,33 @@ def test_get_relative_position(destination, position):
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
+        title="Dummy",
         destination=destination,
-        template_name='dummy.html',
-        lang='fr',
+        template_name="dummy.html",
+        lang="fr",
         settings=settings,
     )
 
     assert view.get_relative_position() == position
 
 
-@pytest.mark.parametrize('name,attempted', [
-    (
-        'foo.html',
-        'foo.html',
-    ),
-    (
-        'foo.{language_code}.html',
-        'foo.fr.html',
-    ),
-    (
-        'foo/{language_code}/index.html',
-        'foo/fr/index.html',
-    ),
-])
+@pytest.mark.parametrize(
+    "name,attempted",
+    [
+        (
+            "foo.html",
+            "foo.html",
+        ),
+        (
+            "foo.{language_code}.html",
+            "foo.fr.html",
+        ),
+        (
+            "foo/{language_code}/index.html",
+            "foo/fr/index.html",
+        ),
+    ],
+)
 def test_get_template_name(name, attempted):
     """
     Check template name with and without lang placeholder
@@ -287,10 +296,10 @@ def test_get_template_name(name, attempted):
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
-        destination='dummy.html',
+        title="Dummy",
+        destination="dummy.html",
         template_name=name,
-        lang='fr',
+        lang="fr",
         settings=settings,
     )
 
@@ -303,22 +312,22 @@ def test_get_context_from_zero():
     """
     settings = DummySettings()
 
-    locale = LangBase(code='fr')
+    locale = LangBase(code="fr")
 
     view = PageViewBase(
-        title='Dummy',
-        destination='{language_code}/hip/../hop.html',
-        template_name='foo/bar.html',
+        title="Dummy",
+        destination="{language_code}/hip/../hop.html",
+        template_name="foo/bar.html",
         lang=locale,
         settings=settings,
     )
 
     assert view.get_context() == {
-        'page_template_name': 'foo/bar.html',
-        'page_title': 'Dummy',
-        'page_relative_position': '../',
-        'page_lang': locale,
-        'page_destination': 'fr/hop.html'
+        "page_template_name": "foo/bar.html",
+        "page_title": "Dummy",
+        "page_relative_position": "../",
+        "page_lang": locale,
+        "page_destination": "fr/hop.html",
     }
 
 
@@ -328,29 +337,29 @@ def test_get_context_nonempty():
     """
     settings = DummySettings()
 
-    locale = LangBase(code='fr')
+    locale = LangBase(code="fr")
 
     class DummyView(PageViewBase):
         context = {
-            'myvar': True,
-            'page_title': 'Nope',
+            "myvar": True,
+            "page_title": "Nope",
         }
 
     view = DummyView(
-        title='Dummy',
-        destination='{language_code}/hip/../hop.html',
-        template_name='foo/bar.html',
+        title="Dummy",
+        destination="{language_code}/hip/../hop.html",
+        template_name="foo/bar.html",
         lang=locale,
         settings=settings,
     )
 
     assert view.get_context() == {
-        'myvar': True,
-        'page_template_name': 'foo/bar.html',
-        'page_title': 'Dummy',
-        'page_relative_position': '../',
-        'page_lang': locale,
-        'page_destination': 'fr/hop.html'
+        "myvar": True,
+        "page_template_name": "foo/bar.html",
+        "page_title": "Dummy",
+        "page_relative_position": "../",
+        "page_lang": locale,
+        "page_destination": "fr/hop.html",
     }
 
 
@@ -358,31 +367,39 @@ def test_render(temp_builds_dir):
     """
     Render a basic page
     """
-    basepath = temp_builds_dir.join('views_base_render')
+    basepath = temp_builds_dir.join("views_base_render")
 
     # Create directory structure
-    templates_dir = os.path.join(basepath.strpath, 'templates')
+    templates_dir = os.path.join(basepath.strpath, "templates")
     os.makedirs(templates_dir)
 
     # Create dummy templates
     skeleton_template = os.path.join(templates_dir, "skeleton.html")
     sample_template = os.path.join(templates_dir, "sample.html")
     with open(skeleton_template, "w") as fp:
-        fp.write(("""<html><body>"""
-                  """{% block content %}Nope{% endblock %}"""
-                  """</body></html>"""))
+        fp.write(
+            (
+                """<html><body>"""
+                """{% block content %}Nope{% endblock %}"""
+                """</body></html>"""
+            )
+        )
     with open(sample_template, "w") as fp:
-        fp.write(("""{% extends "skeleton.html" %}"""
-                  """{% block content %}Hello World!{% endblock %}"""))
+        fp.write(
+            (
+                """{% extends "skeleton.html" %}"""
+                """{% block content %}Hello World!{% endblock %}"""
+            )
+        )
 
     # Make a view to render
     settings = DummySettings()
 
     view = PageViewBase(
-        title='Dummy',
-        destination='{language_code}/sample.html',
-        template_name='sample.html',
-        lang='fr',
+        title="Dummy",
+        destination="{language_code}/sample.html",
+        template_name="sample.html",
+        lang="fr",
         settings=settings,
     )
 
@@ -391,7 +408,7 @@ def test_render(temp_builds_dir):
         loader=FileSystemLoader(templates_dir),
     )
 
-    assert view.render(jinja_env) == '<html><body>Hello World!</body></html>'
+    assert view.render(jinja_env) == "<html><body>Hello World!</body></html>"
 
 
 def test_introspect(temp_builds_dir):
@@ -400,22 +417,30 @@ def test_introspect(temp_builds_dir):
 
     NOTE: This test lacks of recursive template inheritance
     """
-    basepath = temp_builds_dir.join('views_base_introspect')
+    basepath = temp_builds_dir.join("views_base_introspect")
 
     # Create directory structure
-    templates_dir = os.path.join(basepath.strpath, 'templates')
+    templates_dir = os.path.join(basepath.strpath, "templates")
     os.makedirs(templates_dir)
 
     # Create dummy templates
     skeleton_template = os.path.join(templates_dir, "skeleton.html")
     sample_template = os.path.join(templates_dir, "sample.html")
     with open(skeleton_template, "w") as fp:
-        fp.write(("""<html><body>"""
-                  """{% block content %}Nope{% endblock %}"""
-                  """</body></html>"""))
+        fp.write(
+            (
+                """<html><body>"""
+                """{% block content %}Nope{% endblock %}"""
+                """</body></html>"""
+            )
+        )
     with open(sample_template, "w") as fp:
-        fp.write(("""{% extends "skeleton.html" %}"""
-                  """{% block content %}Hello World!{% endblock %}"""))
+        fp.write(
+            (
+                """{% extends "skeleton.html" %}"""
+                """{% block content %}Hello World!{% endblock %}"""
+            )
+        )
 
     # Dummy settings
     settings = DummySettings()
@@ -427,31 +452,26 @@ def test_introspect(temp_builds_dir):
 
     # Make a view to render
     view = PageViewBase(
-        title='Dummy',
-        destination='{language_code}/sample.html',
-        template_name='sample.html',
-        lang='fr',
+        title="Dummy",
+        destination="{language_code}/sample.html",
+        template_name="sample.html",
+        lang="fr",
         settings=settings,
     )
 
-    assert view._recurse_template_search(jinja_env, 'sample.html') == [
-        'skeleton.html'
-    ]
+    assert view._recurse_template_search(jinja_env, "sample.html") == ["skeleton.html"]
 
-    assert view.introspect(jinja_env) == [
-        'sample.html',
-        'skeleton.html'
-    ]
+    assert view.introspect(jinja_env) == ["sample.html", "skeleton.html"]
 
 
 def test_introspect_inclusion(temp_builds_dir):
     """
     Template introspection to cover includes
     """
-    basepath = temp_builds_dir.join('views_base_introspect_inclusion')
+    basepath = temp_builds_dir.join("views_base_introspect_inclusion")
 
     # Create directory structure
-    templates_dir = os.path.join(basepath.strpath, 'templates')
+    templates_dir = os.path.join(basepath.strpath, "templates")
     os.makedirs(templates_dir)
 
     # Create dummy templates
@@ -459,12 +479,21 @@ def test_introspect_inclusion(temp_builds_dir):
     sample_template = os.path.join(templates_dir, "sample.html")
     include_template = os.path.join(templates_dir, "inclusion.html")
     with open(skeleton_template, "w") as fp:
-        fp.write(("""<html><body>"""
-                  """{% block content %}Nope{% endblock %}"""
-                  """</body></html>"""))
+        fp.write(
+            (
+                """<html><body>"""
+                """{% block content %}Nope{% endblock %}"""
+                """</body></html>"""
+            )
+        )
     with open(sample_template, "w") as fp:
-        fp.write(("""{% extends "skeleton.html" %}"""
-                  """{% block content %}Hello World! {% include 'inclusion.html' %}{% endblock %}"""))
+        fp.write(
+            (
+                """{% extends "skeleton.html" %}"""
+                """{% block content %}Hello World! {% include 'inclusion.html' %}"""
+                """{% endblock %}"""
+            )
+        )
 
     with open(include_template, "w") as fp:
         fp.write(("""I'm an inclusion"""))
@@ -479,20 +508,20 @@ def test_introspect_inclusion(temp_builds_dir):
 
     # Make a view to render
     view = PageViewBase(
-        title='Dummy',
-        destination='{language_code}/sample.html',
-        template_name='sample.html',
-        lang='fr',
+        title="Dummy",
+        destination="{language_code}/sample.html",
+        template_name="sample.html",
+        lang="fr",
         settings=settings,
     )
 
-    assert view._recurse_template_search(jinja_env, 'sample.html') == [
-        'skeleton.html',
-        'inclusion.html'
+    assert view._recurse_template_search(jinja_env, "sample.html") == [
+        "skeleton.html",
+        "inclusion.html",
     ]
 
     assert view.introspect(jinja_env) == [
-        'sample.html',
-        'skeleton.html',
-        'inclusion.html'
+        "sample.html",
+        "skeleton.html",
+        "inclusion.html",
     ]

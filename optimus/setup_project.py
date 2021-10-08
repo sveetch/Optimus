@@ -35,15 +35,12 @@ def setup_project(basedir, settings_name, set_envvar=True, set_syspath=True):
 
     # Set required environment variables to load settings
     if set_envvar:
-        if (
-            PROJECT_DIR_ENVVAR not in os.environ or
-            not os.environ[PROJECT_DIR_ENVVAR]
-        ):
+        if PROJECT_DIR_ENVVAR not in os.environ or not os.environ[PROJECT_DIR_ENVVAR]:
             os.environ[PROJECT_DIR_ENVVAR] = basedir
             status["set_os_environ_project"] = basedir
         if (
-            SETTINGS_NAME_ENVVAR not in os.environ or
-            not os.environ[SETTINGS_NAME_ENVVAR]
+            SETTINGS_NAME_ENVVAR not in os.environ
+            or not os.environ[SETTINGS_NAME_ENVVAR]
         ):
             os.environ[SETTINGS_NAME_ENVVAR] = settings_name
             status["set_os_environ_settings"] = settings_name

@@ -12,6 +12,7 @@ class DummySettings:
     """
     Dummy object with required settings for asset environment
     """
+
     DEBUG = False
     STATIC_URL = "static/"
     STATIC_DIR = "/home/foo/static"
@@ -29,13 +30,13 @@ def test_no_bundle(caplog):
     settings = DummySettings()
     assets_environment = register_assets(settings)
 
-    assert assets_environment == None
+    assert assets_environment is None
 
     assert caplog.record_tuples == [
         (
-            'optimus',
+            "optimus",
             logging.WARNING,
-            'Asset registering skipped as there are no enabled bundle'
+            "Asset registering skipped as there are no enabled bundle",
         ),
     ]
 
@@ -45,22 +46,14 @@ def test_bundle_keyerror(caplog):
     Enabled bundle does not exists
     """
     settings = DummySettings()
-    settings.ENABLED_BUNDLES = ['foo', 'bar']
+    settings.ENABLED_BUNDLES = ["foo", "bar"]
 
     with pytest.raises(KeyError):
-        assets_environment = register_assets(settings)
+        register_assets(settings)
 
     assert caplog.record_tuples == [
-        (
-            'optimus',
-            logging.INFO,
-            'Starting asset registering'
-        ),
-        (
-            'optimus',
-            logging.DEBUG,
-            'Registering bundle: foo'
-        ),
+        ("optimus", logging.INFO, "Starting asset registering"),
+        ("optimus", logging.DEBUG, "Registering bundle: foo"),
     ]
 
 
@@ -68,14 +61,14 @@ def test_basic(caplog, temp_builds_dir):
     """
     Registering with basic settings and webassets validating defined assets
     """
-    basepath = temp_builds_dir.join('assets_register_basic')
+    basepath = temp_builds_dir.join("assets_register_basic")
 
     # Make some needed dirs
-    sources_dir = os.path.join(basepath.strpath, 'sources')
-    static_dir = os.path.join(basepath.strpath, 'static')
-    cache_dir = os.path.join(basepath.strpath, 'webassets-cache')
-    os.makedirs(os.path.join(sources_dir, 'js'))
-    os.makedirs(os.path.join(sources_dir, 'css'))
+    sources_dir = os.path.join(basepath.strpath, "sources")
+    static_dir = os.path.join(basepath.strpath, "static")
+    cache_dir = os.path.join(basepath.strpath, "webassets-cache")
+    os.makedirs(os.path.join(sources_dir, "js"))
+    os.makedirs(os.path.join(sources_dir, "css"))
     os.makedirs(static_dir)
     os.makedirs(cache_dir)
 
@@ -96,64 +89,42 @@ def test_basic(caplog, temp_builds_dir):
     settings.WEBASSETS_URLEXPIRE = False
 
     settings.BUNDLES = {
-        'unused_js': Bundle(
-            "js/unused.src.js",
-            filters=None,
-            output='js/unused.min.js'
+        "unused_js": Bundle(
+            "js/unused.src.js", filters=None, output="js/unused.min.js"
         ),
-        'app_css': Bundle(
-            'css/app.css',
-            filters=None,
-            output='css/app.min.css'
-        ),
-        'app_js': Bundle(
-            "js/app.js",
-            filters=None,
-            output='js/app.min.js'
-        ),
+        "app_css": Bundle("css/app.css", filters=None, output="css/app.min.css"),
+        "app_js": Bundle("js/app.js", filters=None, output="js/app.min.js"),
     }
-    settings.ENABLED_BUNDLES = ['app_css', 'app_js']
+    settings.ENABLED_BUNDLES = ["app_css", "app_js"]
 
     # Temporary set logger level
-    with caplog.at_level(logging.DEBUG, logger='optimus'):
+    with caplog.at_level(logging.DEBUG, logger="optimus"):
         # Init webassets environment
-        assets_environment = register_assets(settings)
+        register_assets(settings)
 
     assert caplog.record_tuples == [
+        ("optimus", logging.INFO, "Starting asset registering"),
+        ("optimus", logging.DEBUG, "Registering bundle: app_css"),
+        ("optimus", logging.DEBUG, "Registering bundle: app_js"),
         (
-            'optimus',
+            "optimus",
             logging.INFO,
-            'Starting asset registering'
+            "  Processing: {}".format(os.path.join(static_dir, "css", "app.min.css")),
         ),
         (
-            'optimus',
+            "optimus",
             logging.DEBUG,
-            'Registering bundle: app_css'
+            "  - {}".format(os.path.join("static", "css", "app.min.css")),
         ),
         (
-            'optimus',
-            logging.DEBUG,
-            'Registering bundle: app_js'
-        ),
-        (
-            'optimus',
+            "optimus",
             logging.INFO,
-            '  Processing: {}'.format(os.path.join(static_dir, "css", "app.min.css"))
+            "  Processing: {}".format(os.path.join(static_dir, "js", "app.min.js")),
         ),
         (
-            'optimus',
+            "optimus",
             logging.DEBUG,
-            '  - {}'.format(os.path.join('static', "css", "app.min.css"))
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            '  Processing: {}'.format(os.path.join(static_dir, "js", "app.min.js"))
-        ),
-        (
-            'optimus',
-            logging.DEBUG,
-            '  - {}'.format(os.path.join('static', "js", "app.min.js"))
+            "  - {}".format(os.path.join("static", "js", "app.min.js")),
         ),
     ]
 
@@ -162,13 +133,13 @@ def test_nodebug(caplog, temp_builds_dir):
     """
     Check bundle is not forced to resolve when not in debug mode
     """
-    basepath = temp_builds_dir.join('assets_register_nodebug')
+    basepath = temp_builds_dir.join("assets_register_nodebug")
 
     # Make some needed dirs
-    sources_dir = os.path.join(basepath.strpath, 'sources')
-    static_dir = os.path.join(basepath.strpath, 'static')
-    cache_dir = os.path.join(basepath.strpath, 'webassets-cache')
-    os.makedirs(os.path.join(sources_dir, 'css'))
+    sources_dir = os.path.join(basepath.strpath, "sources")
+    static_dir = os.path.join(basepath.strpath, "static")
+    cache_dir = os.path.join(basepath.strpath, "webassets-cache")
+    os.makedirs(os.path.join(sources_dir, "css"))
     os.makedirs(static_dir)
     os.makedirs(cache_dir)
 
@@ -185,28 +156,20 @@ def test_nodebug(caplog, temp_builds_dir):
     settings.WEBASSETS_URLEXPIRE = False
 
     settings.BUNDLES = {
-        'app_css': Bundle(
-            'css/app.css',
-            filters=None,
-            output='css/app.min.css'
-        ),
+        "app_css": Bundle("css/app.css", filters=None, output="css/app.min.css"),
     }
-    settings.ENABLED_BUNDLES = ['app_css']
+    settings.ENABLED_BUNDLES = ["app_css"]
 
     # Temporary set logger level
-    with caplog.at_level(logging.INFO, logger='optimus'):
+    with caplog.at_level(logging.INFO, logger="optimus"):
         # Init webassets environment
-        assets_environment = register_assets(settings)
+        register_assets(settings)
 
     assert caplog.record_tuples == [
+        ("optimus", logging.INFO, "Starting asset registering"),
         (
-            'optimus',
+            "optimus",
             logging.INFO,
-            'Starting asset registering'
-        ),
-        (
-            'optimus',
-            logging.INFO,
-            '  Processing: {}'.format(os.path.join(static_dir, "css", "app.min.css"))
+            "  Processing: {}".format(os.path.join(static_dir, "css", "app.min.css")),
         ),
     ]

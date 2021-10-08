@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from webassets.filter import Filter
 
 
-__all__ = ('RCSSMin',)
+__all__ = ("RCSSMin",)
 
 
 class RCSSMin(Filter):
@@ -16,8 +16,9 @@ class RCSSMin(Filter):
     totally outdated and doesn't work with Python 3.
     """
 
-    name = 'rcssmin'
+    name = "rcssmin"
 
     def output(self, _in, out, **kw):
         import rcssmin
+
         out.write(rcssmin.cssmin(_in.read()))

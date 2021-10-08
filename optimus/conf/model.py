@@ -26,10 +26,18 @@ class SettingsModel(object):
         _required_settings (list): Settings names required to be defined from
             loading methods.
     """
+
     _excluded_names = []
     _required_settings = (
-        'PROJECT_DIR', 'DEBUG', 'SITE_NAME', 'SITE_DOMAIN', 'SOURCES_DIR',
-        'TEMPLATES_DIR', 'PUBLISH_DIR', 'STATIC_DIR', 'STATIC_URL',
+        "PROJECT_DIR",
+        "DEBUG",
+        "SITE_NAME",
+        "SITE_DOMAIN",
+        "SOURCES_DIR",
+        "TEMPLATES_DIR",
+        "PUBLISH_DIR",
+        "STATIC_DIR",
+        "STATIC_URL",
     )
 
     def validate_name(self, name):
@@ -45,8 +53,11 @@ class SettingsModel(object):
         Returns:
             bool: True if name is valid, else False.
         """
-        return (name not in self._excluded_names and not name.startswith('_')
-                and name.isupper())
+        return (
+            name not in self._excluded_names
+            and not name.startswith("_")
+            and name.isupper()
+        )
 
     def check(self):
         """
@@ -59,8 +70,9 @@ class SettingsModel(object):
                 missing_settings.append(setting_name)
 
         if len(missing_settings) > 0:
-            msg = ("The following settings are required but not "
-                   "defined: {0}").format(", ".join(missing_settings))
+            msg = (
+                "The following settings are required but not " "defined: {0}"
+            ).format(", ".join(missing_settings))
             raise InvalidSettings(msg)
 
     def _default_jinja(self):
@@ -69,9 +81,7 @@ class SettingsModel(object):
         """
         # Python paths for each extensions to use with Jinja2
         if not hasattr(self, "JINJA_EXTENSIONS"):
-            self.JINJA_EXTENSIONS = (
-                'jinja2.ext.i18n',
-            )
+            self.JINJA_EXTENSIONS = ("jinja2.ext.i18n",)
 
         # Template filters to use with Jinja2
         if not hasattr(self, "JINJA_FILTERS"):
@@ -84,18 +94,18 @@ class SettingsModel(object):
         # Templates watcher settings
         if not hasattr(self, "WATCHER_TEMPLATES_PATTERNS"):
             self.WATCHER_TEMPLATES_PATTERNS = {
-                'patterns': ['*.html'],
-                'ignore_patterns': None,
-                'ignore_directories': False,
-                'case_sensitive': False,
+                "patterns": ["*.html"],
+                "ignore_patterns": None,
+                "ignore_directories": False,
+                "case_sensitive": False,
             }
         # Assets watcher settings
         if not hasattr(self, "WATCHER_ASSETS_PATTERNS"):
             self.WATCHER_ASSETS_PATTERNS = {
-                'patterns': ['*.css', '*.js', '*.json'],
-                'ignore_patterns': None,
-                'ignore_directories': False,
-                'case_sensitive': False,
+                "patterns": ["*.css", "*.js", "*.json"],
+                "ignore_patterns": None,
+                "ignore_directories": False,
+                "case_sensitive": False,
             }
 
     def _default_webassets(self):
@@ -104,8 +114,7 @@ class SettingsModel(object):
         """
         # The directory where webassets will store his cache
         if not hasattr(self, "WEBASSETS_CACHE"):
-            self.WEBASSETS_CACHE = os.path.join(self.PROJECT_DIR,
-                                                '.webassets-cache')
+            self.WEBASSETS_CACHE = os.path.join(self.PROJECT_DIR, ".webassets-cache")
 
         # Asset version appended through url querystring behavior
         if not hasattr(self, "WEBASSETS_URLEXPIRE"):
@@ -124,7 +133,7 @@ class SettingsModel(object):
         """
         # Default directory for translation catalog
         if not hasattr(self, "LOCALES_DIR"):
-            self.LOCALES_DIR = os.path.join(self.PROJECT_DIR, 'locale')
+            self.LOCALES_DIR = os.path.join(self.PROJECT_DIR, "locale")
 
         # Default used language
         if not hasattr(self, "LANGUAGE_CODE"):
@@ -137,37 +146,21 @@ class SettingsModel(object):
         # Default map for translaction extract with babel
         if not hasattr(self, "I18N_EXTRACT_MAP"):
             self.I18N_EXTRACT_MAP = (
-                ('pages.py', 'python'),
-                ('*settings.py', 'python'),
-                ('**/templates/**.html', 'jinja2'),
+                ("pages.py", "python"),
+                ("*settings.py", "python"),
+                ("**/templates/**.html", "jinja2"),
             )
 
         if not hasattr(self, "I18N_EXTRACT_OPTIONS"):
             self.I18N_EXTRACT_OPTIONS = {
-                '**/templates/**.html': {
-                    'extensions': 'webassets.ext.jinja2.AssetsExtension',
-                    'encoding': 'utf-8'
+                "**/templates/**.html": {
+                    "extensions": "webassets.ext.jinja2.AssetsExtension",
+                    "encoding": "utf-8",
                 },
             }
 
         if not hasattr(self, "I18N_EXTRACT_SOURCES"):
             self.I18N_EXTRACT_SOURCES = (self.PROJECT_DIR,)
-
-    def _default_rst(self):
-        """
-        Set default attributes for required settings ReSTructuredText
-
-        DEPRECATED: We don't ship anymore RST features.
-        """
-        # ReSTructuredText parser settings to use when building a RST document
-        if not hasattr(self, "RST_PARSER_SETTINGS"):
-            self.RST_PARSER_SETTINGS = {
-                'initial_header_level': 3,
-                'file_insertion_enabled': True,
-                'raw_enabled': False,
-                'footnote_references': 'superscript',
-                'doctitle_xform': False,
-            }
 
     def apply_defaults(self):
         """
@@ -191,7 +184,6 @@ class SettingsModel(object):
         self._default_jinja()
         self._default_webassets()
         self._default_babel()
-        self._default_rst()
 
     def load_from_kwargs(self, check=True, defaults=True, **kwargs):
         """
