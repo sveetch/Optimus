@@ -4,9 +4,9 @@ import os
 
 import click
 
+from optimus.conf.loader import import_settings_module, load_settings
 from optimus.i18n.manager import I18NManager
 from optimus.interfaces.po import po_interface
-from optimus.conf.loader import import_settings_module, load_settings
 from optimus.setup_project import setup_project
 from optimus.utils import display_settings
 

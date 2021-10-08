@@ -3,8 +3,6 @@ import os
 import logging
 import shutil
 
-import pytest
-
 from optimus.interfaces.po import po_interface
 from optimus.interfaces.starter import starter_interface
 from optimus.logs import set_loggers_level

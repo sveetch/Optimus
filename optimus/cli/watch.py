@@ -6,13 +6,13 @@ import time
 
 import click
 
-from optimus.setup_project import setup_project
-from optimus.utils import display_settings
 from optimus.conf.loader import (
     import_pages_module, import_settings_module, load_settings,
 )
 from optimus.interfaces.build import builder_interface
 from optimus.interfaces.watch import watcher_interface
+from optimus.setup_project import setup_project
+from optimus.utils import display_settings
 
 
 @click.command('watch', short_help="Watch for changes in project sources")

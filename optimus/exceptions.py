@@ -66,7 +66,15 @@ class ViewImproperlyConfigured(OptimusBaseException):
     pass
 
 
-class InvalidHostname(OptimusBaseException):
+class ServerConfigurationError(OptimusBaseException):
+    """
+    Exception to be raised when trying to run live server with a error in given
+    configuration.
+    """
+    pass
+
+
+class InvalidHostname(ServerConfigurationError):
     """
     Exception to be raised when a parsed hostname is invalid.
     """

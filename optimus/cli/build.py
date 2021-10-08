@@ -4,12 +4,12 @@ import os
 
 import click
 
-from optimus.setup_project import setup_project
-from optimus.utils import display_settings
 from optimus.conf.loader import (
     import_pages_module, import_settings_module, load_settings,
 )
 from optimus.interfaces.build import builder_interface
+from optimus.setup_project import setup_project
+from optimus.utils import display_settings
 
 
 @click.command('build', short_help="Build project pages")

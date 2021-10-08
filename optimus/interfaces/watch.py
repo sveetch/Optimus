@@ -67,10 +67,10 @@ def watcher_interface(settings, views, build_env):
     )
     # Register assets events watcher
     # NOTE: This observe a single handler for every assets for simplicity. However the
-    #       drawback is it watch on the whole sources directory but it has been
+    #       drawback is it watch on the whole sources directory, but it has been
     #       configured to care only about assets (css and js files) so it may not be
     #       a performance leak except on very huge source directory. The only issue is
-    #       that it may trigger some event for a css or js file which is a template.
+    #       that it may trigger some event for css or js files which are in templates.
     if build_env["assets_env"] is not None:
         observer.schedule(
             assets_event_handler,

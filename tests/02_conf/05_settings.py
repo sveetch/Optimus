@@ -33,7 +33,7 @@ def test_fail_name(monkeypatch, caplog, fixtures_settings, flush_settings):
         from optimus.conf.registry import settings
 
 
-@pytest.mark.skip(reason="this is very tricky")
+@pytest.mark.skip(reason="Tricky test which may not work after other tests, keeped as history")
 def test_success(monkeypatch, caplog, fixtures_settings, flush_settings, reset_syspath):
     """
     Check automatic settings loading from registry is working

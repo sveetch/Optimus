@@ -11,8 +11,10 @@ Changelog
 Version 2.0.0 - Unreleased
 --------------------------
 
-**A major update with some big refactoring, backward compatible issues, modern
-requirements and full compatibility for recent Python version**
+**A major update with big refactoring and modern stack**
+
+There are some backward incompatibility issues for projects created before this
+version, also some part of core have changed.
 
 * Remove support for Python3.5;
 * Add support for Python 3.6 to 3.8;
@@ -30,23 +32,23 @@ requirements and full compatibility for recent Python version**
   default HTTP in template context variable ``SITE.web_url``;
 * Removed requirement and usage of ``six`` since this is a Python3 from some time;
 * Upgrade click to ``>=7.1,<8.0``;
-* Replace usage ``imp`` usage with a new system with ``importlib``;
-* Updated project templates ``basic`` and ``i18n`` with a new structure and makefile;
+* Replaced usage of deprecated ``imp`` usage with a new system with ``importlib``;
 * Refactored project starter:
 
     * Now stand on cookiecutter, actually pinned to the 1.7.3, until 2.x branch has
       been released;
-    * Implemented first with a pure programmatical interface;
-    * The CLI now use the interface and don't introduce specific code;
     * Remove the dry run option which was only for debugging/testing;
     * Ship only a basic cookiecutter template which is equivalent to the i18n previous
       template;
 
-* TODO: Refactored ``po`` CLI to use programmatical interface;
+* Added interfaces which are functional implementations of what CLI did but without
+  making importation and project settings so they can be used programmaticaly and
+  correctly tested;
+* Now CLI used their respective interface to make their job;
+* Fixed tests so they can work on CLI without to be troubled by other tests which
+  make importations of settings or views modules;
+* Now all CLI are tested;
 
-    * Interface does not make any importation and expect required moduled to be passed
-      as argument;
-    * CLI make importation for required modules and pass it to the interface;
 
 Version 1.1.2 - 2020/01/01
 --------------------------

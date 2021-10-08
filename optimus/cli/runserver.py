@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
+import importlib
 import logging
 import os
 
 import click
 
-from optimus.exceptions import InvalidHostname
+from optimus.conf.loader import import_settings_module, load_settings
+from optimus.exceptions import ServerConfigurationError
 from optimus.setup_project import setup_project
-from optimus.utils import display_settings, get_host_parts
+from optimus.utils import display_settings
+from optimus.interfaces.runserver import server_interface
 
-
-try:
-    import cherrypy
-except ImportError:
-    CHERRYPY_AVAILABLE = False
-else:
-    CHERRYPY_AVAILABLE = True
 
 # TODO: Change settings-name to settings ?
 @click.command('runserver', short_help=("Launch a simple HTTP server on "
@@ -46,55 +42,32 @@ def runserver_command(context, basedir, settings_name, index, hostname):
     """
     logger = logging.getLogger("optimus")
 
-    if not CHERRYPY_AVAILABLE:
-        logger.error(("Unable to import CherryPy, you need to install it "
-                      "with 'pip install cherrypy'"))
-        raise click.Abort()
-
     # Set project before to be able to load its modules
     setup_project(basedir, settings_name)
 
-    # Load current project settings
-    from optimus.conf.registry import settings
+    # Load current project settings and page map
+    settings = import_settings_module(settings_name, basedir=basedir)
+    # In test environment, force the module reload to avoid previous test cache to be
+    # used (since the module have the same path).
+    if context.obj["test_env"]:
+        settings = importlib.reload(settings)
+
+    settings = load_settings(settings)
 
     # Debug output
     display_settings(settings, ('DEBUG', 'PROJECT_DIR', 'SOURCES_DIR',
                                 'TEMPLATES_DIR', 'LOCALES_DIR'))
 
-    # Get hostname to bind to
     try:
-        address, port = get_host_parts(hostname)
-    except InvalidHostname as e:
+        server_env = server_interface(settings, hostname, index=index)
+    except ServerConfigurationError as e:
         logger.error(e)
         raise click.Abort()
 
-    # Check project publish directory exists
-    if not os.path.exists(settings.PUBLISH_DIR):
-        logger.error(("Publish directory does not exist yet, you need to "
-                      "build it before"))
-        raise click.Abort()
-
-    # Run server with publish directory served with tools.staticdir
-    logger.info(("Running HTTP server on "
-                 "address {address} with port {port}").format(
-                    address=address,
-                    port=port,
-               ))
-
-    # Configure webapp server
-    cherrypy.config.update({
-        'server.socket_host': address,
-        'server.socket_port': port,
-        'engine.autoreload_on': False,
-    })
-
-    # Configure webapp static
-    conf = {
-        '/': {
-            'tools.staticdir.index': index,
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': settings.PUBLISH_DIR,
-        },
-    }
-
-    cherrypy.quickstart(None, '/', config=conf)
+    # Don't start cherrypy server during tests
+    if not context.obj["test_env"]:
+        server_env["cherrypy"].quickstart(
+            None,
+            server_env["mount_on"],
+            config=server_env["app_conf"],
+        )
