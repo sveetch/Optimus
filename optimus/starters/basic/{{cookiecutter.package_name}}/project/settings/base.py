@@ -17,7 +17,7 @@ PROJECT_DIR = os.path.normpath(
 )
 
 # Common site name and domain to use available in templates
-SITE_NAME = "try_i18n"
+SITE_NAME = "{{ cookiecutter.project_name }}"
 SITE_DOMAIN = "localhost"
 
 # Sources directory where the assets will be searched
