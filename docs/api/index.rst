@@ -18,4 +18,4 @@ Modules
    watchers.rst
    pages.rst
    i18n.rst
-   start_project.rst
+   interfaces.rst

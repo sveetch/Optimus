@@ -1,4 +1,4 @@
-# Frozen requirement versions from '2.0.0rc6' installation
+# Frozen requirement versions from '2.0.0rc7' installation
 Babel==2.9.1
 CherryPy==18.6.1
 click==7.1.2

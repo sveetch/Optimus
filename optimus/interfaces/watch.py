@@ -35,7 +35,7 @@ def watcher_interface(settings, views, build_env):
 
     Returns:
         watchdog.observers.Observer: The initialized and configured observer for
-            setted watchers.
+        setted watchers.
     """
     # Perform a first scanning of page templates
     build_env["builder"].scan_bulk(views.PAGES)

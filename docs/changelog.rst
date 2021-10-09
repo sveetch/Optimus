@@ -19,19 +19,30 @@ version, also some part of core have changed.
 * Remove support for Python3.5;
 * Add support for Python 3.6 to 3.8;
 * Fix a test for recent Babel version;
-* Upgrade dependancies to recent versions and pin some other ones;
+* Upgrade dependancies to recent versions and pin some other ones:
+
+    * ``click`` to ``>=7.1,<8.0``;
+    * ``Jinja`` to ``>=3.0.1,<4.0.0``;
+    * ``webassets`` to ``==2.0``;
+    * ``rcssmin`` to ``==1.0.6``;
+    * ``jsmin`` to ``==3.0.0``;
+    * ``colorama`` to ``==0.4.4``;
+    * ``colorlog`` to ``==6.4.1``;
+    * ``cookiecutter`` to ``==1.7.3``;
+
 * Fix event watcher to use ported ``match_any_path`` instead of ``match_path`` from
   deprecated ``pathtools``;
-* Add frozen requirement file and freezer script;
-* Update package config;
-* Add tox to dev requirements;
+* Add frozen requirement file and freezer script. Frozen requirement file is updated
+  on each release, it may help you to know the exact dependancies versions validated
+  to work;
+* Update package configuration;
+* Add ``tox`` tool to dev requirements;
 * Improve Makefile;
-* Update sphinx config;
-* Drop sphinx-autoreload in profit of livereload;
+* Update sphinx configuration;
+* Drop ``sphinx-autoreload`` in profit of ``livereload``;
 * Add new setting ``HTTPS_ENABLED`` to enabled HTTPS protocol instead of
   default HTTP in template context variable ``SITE.web_url``;
 * Removed requirement and usage of ``six`` since this is a Python3 from some time;
-* Upgrade click to ``>=7.1,<8.0``;
 * Replaced usage of deprecated ``imp`` usage with a new system with ``importlib``;
 * Refactored project starter:
 
@@ -49,6 +60,8 @@ version, also some part of core have changed.
   make importations of settings or views modules;
 * Now all CLI are tested;
 * Application and tests are 100% valid with Flake8;
+* Updated documentation;
+
 
 Version 1.1.2 - 2020/01/01
 --------------------------

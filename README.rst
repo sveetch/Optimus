@@ -1,11 +1,13 @@
 .. _webassets: https://github.com/miracle2k/webassets
-.. _Jinja2: http://jinja.pocoo.org/
-.. _Babel: https://pypi.python.org/pypi/Babel
+.. _Jinja2: https://jinja.palletsprojects.com/
+.. _Babel: http://babel.pocoo.org/
 
 Introduction
 ============
 
-Optimus is a static site builder. It produces HTML from templates (through `Jinja2`_) with assets management (through `webassets`_) and i18n support for translations (through `Babel`_).
+Optimus is a static site builder, it produces HTML from templates (through `Jinja2`_)
+with assets management (through `webassets`_) and i18n support for translations
+(through `Babel`_).
 
 Links
 *****
