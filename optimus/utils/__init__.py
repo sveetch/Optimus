@@ -5,7 +5,6 @@ from optimus.utils.directory import (
     recursive_directories_create,
     initialize,
 )
-from optimus.utils.text import UnicodeMixin
 from optimus.utils.settings import display_settings
 from optimus.utils.server import get_host_parts
 
@@ -15,7 +14,6 @@ __all__ = [
     "init_directory",
     "recursive_directories_create",
     "initialize",
-    "UnicodeMixin",
     "display_settings",
     "get_host_parts",
 ]

@@ -5,10 +5,9 @@ Langage base object
 
 """
 from optimus.exceptions import InvalidLangageIdentifier
-from optimus.utils import UnicodeMixin
 
 
-class LangBase(UnicodeMixin):
+class LangBase:
     """
     Langage base object to encapsulate the language label, code and other
     details.
@@ -80,7 +79,7 @@ class LangBase(UnicodeMixin):
         self.alt_code = self.alt_code or self.code
         self.external_code = self.external_code or self.code
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def __repr__(self):

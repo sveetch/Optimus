@@ -247,7 +247,7 @@ is not defined in the list, you can assume than they are empty.
         )
 
     So the default behavior is only to search for translations in template sources,
-    ``pages.py`` and all common settings files.
+    ``pages`` module and settings module.
 **I18N_EXTRACT_SOURCES**
     List of path to search for translation to extract. In these paths, a scan will be
     done using the rules from ``I18N_EXTRACT_MAP``.
@@ -420,7 +420,7 @@ You can override some methods to add logic or change some behaviors in your
 
             def get_context(self):
                 # This line set the default context from PageViewBase
-                super(MyPage, self).get_context()
+                super().get_context()
                 # Add your new variables here
                 self.context.update({
                     'foo': 'bar',
@@ -439,8 +439,17 @@ They will be extracted and stored in catalog files where you will have to fill t
 translations. Then compile your catalog files and then, the page building will replace
 strings with the translation accordingly to the page language.
 
-The recommended way is to use the Optimus command ``po`` see this
-in :ref:`usage-translations-label`.
+Also note than translation in Python code is different, you will need to mark them with
+gettext function like this: ::
+
+    from gettext import gettext as _
+    foo = _("Cheese")
+
+And a custom templatetag for Jinja so it can interpret and compile translation from a
+variable.
+
+Finally, the recommended way to manage your catalogs is to use the Optimus command
+``po`` see this in :ref:`usage-translations-label`, even you can use the *raw way*.
 
 .. _basics-translations-locale-label:
 

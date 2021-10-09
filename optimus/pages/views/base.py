@@ -5,11 +5,10 @@ import os
 from jinja2 import meta as Jinja2Meta
 
 from optimus.exceptions import ViewImproperlyConfigured
-from optimus.utils import UnicodeMixin
 from optimus.i18n.lang import LangBase
 
 
-class PageViewBase(UnicodeMixin):
+class PageViewBase:
     """
     Base view object for a page
 
@@ -80,7 +79,7 @@ class PageViewBase(UnicodeMixin):
 
         self.validate()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_destination()
 
     def __repr__(self):
