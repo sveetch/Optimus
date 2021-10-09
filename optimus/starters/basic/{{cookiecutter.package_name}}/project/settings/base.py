@@ -30,6 +30,9 @@ STATIC_DIR = os.path.join(PROJECT_DIR, PUBLISH_DIR, "static")
 # Path to the i18n messages catalog directory
 LOCALES_DIR = os.path.join(PROJECT_DIR, "locale")
 
+# Python path to views module which enable the page views to build
+PAGES_MAP = "views"
+
 # Locale name for default language to use for Pages
 LANGUAGE_CODE = "en_US"
 

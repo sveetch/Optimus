@@ -19,6 +19,10 @@ help:
 	@echo ""
 	@echo "  build               -- to build project with default environnement"
 	@echo "  watch               -- to launch project watcher with default environnement"
+	@echo ""
+	@echo "  po                  -- to update PO catalogs from last sources changes in templates"
+	@echo "  mo                  -- to compile MO files from PO catalogs"
+	@echo ""
 	@echo "  server              -- to launch local server on $(SERVER_HOST) with default environnement"
 	@echo ""
 	@echo "  build-prod          -- to build project with production environnement"
@@ -83,6 +87,20 @@ watch:
 	@echo ""
 	$(OPTIMUS) watch --basedir $(PROJECT_DIR) --settings-name $(SETTINGS_BASE)
 .PHONY: watch
+
+po:
+	@echo ""
+	@echo "==== Update PO catalogs from sources ===="
+	@echo ""
+	$(OPTIMUS) po --basedir $(PROJECT_DIR) --settings-name $(SETTINGS_BASE) --update
+.PHONY: po
+
+mo:
+	@echo ""
+	@echo "==== Compile MO files from PO catalogs ===="
+	@echo ""
+	$(OPTIMUS) po --basedir $(PROJECT_DIR) --settings-name $(SETTINGS_BASE) --compile
+.PHONY: mo
 
 server:
 	@echo ""
