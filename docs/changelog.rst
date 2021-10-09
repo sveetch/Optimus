@@ -17,7 +17,7 @@ There are some backward incompatibility issues for projects created before this
 version, also some part of core have changed.
 
 * Remove support for Python3.5;
-* Add support for Python 3.6 to 3.8;
+* Add support for Python 3.6 to 3.9;
 * Fix a test for recent Babel version;
 * Upgrade dependancies to recent versions and pin some other ones:
 
