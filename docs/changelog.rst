@@ -8,7 +8,7 @@ Changelog
 =========
 
 
-Version 2.0.0 - Unreleased
+Version 2.0.0 - 2020/10/10
 --------------------------
 
 **A major update with big refactoring and modern stack**
