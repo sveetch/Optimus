@@ -8,6 +8,13 @@ Changelog
 =========
 
 
+Version 2.0.1 - Unreleased
+--------------------------
+
+A minor version only to update ``.readthedocs.yml`` file to follow service deprecations
+changes.
+
+
 Version 2.0.0 - 2020/10/10
 --------------------------
 
