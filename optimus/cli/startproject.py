@@ -12,11 +12,17 @@ from optimus.logs import set_loggers_level
 
 
 @click.command("init", short_help="Create a new project from a cookiecutter template")
-@click.argument("name")
+@click.option(
+    "--name",
+    prompt='The project name to create, this must be a valid Python module name.',
+)
 @click.option(
     "--template",
     metavar="NAME",
-    help=("A valid cookiecutter template for Optimus."),
+    help=(
+        "Template to build project, it can be either 'basic' or a path or URL to a "
+        "cookiecutter template for Optimus."
+    ),
     default="basic",
 )
 @click.option(
@@ -58,7 +64,7 @@ def startproject_command(context, name, template, destination):
                         "digits or '_' character"
                     )
                 )
-                return
+                raise click.Abort()
 
     # Resolve possible internal template alias to a path
     template = resolve_internal_template(template)

@@ -111,7 +111,7 @@ project:
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating new project <---$(FORMATRESET)\n"
 	@echo ""
 	@mkdir -p dist
-	$(VENV_PATH)/bin/optimus-cli init --destination dist/ sample
+	$(VENV_PATH)/bin/optimus-cli init --destination dist/
 .PHONY: project
 
 docs:

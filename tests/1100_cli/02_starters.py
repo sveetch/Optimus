@@ -29,7 +29,7 @@ def test_cli_startproject(
             "--test-env",
             # "--verbose=5",
             "init",
-            sample_name,
+            "--name={}".format(sample_name),
             "--template={}".format(template_name),
             "--destination={}".format(basedir),
         ],
