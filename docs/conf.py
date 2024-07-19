@@ -10,6 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 
 # Get the module version
 from optimus import __version__ as optimus_version
@@ -17,8 +18,9 @@ from optimus import __version__ as optimus_version
 
 # -- Project information -----------------------------------------------------
 
+now = datetime.date.today()
 project = "Optimus"
-copyright = "2012-2021, David THENON"
+copyright = '2012-{}, David THENON'.format(now.year)
 author = "David Thenon"
 
 # The short X.Y version

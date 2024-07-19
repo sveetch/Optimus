@@ -57,5 +57,5 @@ FILES_TO_SYNC = (
     # Synchronize compiled CSS
     "css",
     # Synchronize images if any
-    # "images",
+    "images",
 )

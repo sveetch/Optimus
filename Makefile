@@ -12,23 +12,50 @@ PACKAGE_NAME=Optimus
 PACKAGE_SLUG=`echo $(PACKAGE_NAME) | tr '-' '_'`
 APPLICATION_NAME=optimus
 
+# Formatting variables, FORMATRESET is always to be used last to close formatting
+FORMATBLUE:=$(shell tput setab 4)
+FORMATGREEN:=$(shell tput setab 2)
+FORMATRED:=$(shell tput setab 1)
+FORMATBOLD:=$(shell tput bold)
+FORMATRESET:=$(shell tput sgr0)
+
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo
-	@echo "  install             -- to install this project with virtualenv and Pip"
-	@echo "  freeze-dependencies -- to write a frozen.txt file with installed dependencies versions"
+	@echo "  Cleaning"
+	@echo "  ========"
 	@echo
 	@echo "  clean               -- to clean EVERYTHING (Warning)"
 	@echo "  clean-doc           -- to remove documentation builds"
 	@echo "  clean-install       -- to clean Python side installation"
 	@echo "  clean-pycache       -- to remove all __pycache__, this is recursive from current directory"
 	@echo
+	@echo "  Installation"
+	@echo "  ============"
+	@echo
+	@echo "  install             -- to install this project with virtualenv and Pip"
+	@echo "  freeze-dependencies -- to write a frozen.txt file with installed dependencies versions"
+	@echo
+	@echo "  Usage"
+	@echo "  ====="
+	@echo
+	@echo "  project              -- to create a new project with basic template"
+	@echo
+	@echo "  Documentation"
+	@echo "  ============="
+	@echo
 	@echo "  docs                -- to build documentation"
 	@echo "  livedocs            -- to run livereload server to rebuild documentation on source changes"
+	@echo
+	@echo "  Quality"
+	@echo "  ======="
 	@echo
 	@echo "  flake               -- to launch Flake8 checking"
 	@echo "  test                -- to launch base test suite using Pytest"
 	@echo "  quality             -- to launch Flake8 checking and every tests suites"
+	@echo
+	@echo "  Release"
+	@echo "  ======="
 	@echo
 	@echo "  check-release       -- to check package release before uploading it to PyPi"
 	@echo "  release             -- to release package for latest version on PyPi (once release has been pushed to repository)"
@@ -36,7 +63,7 @@ help:
 
 clean-pycache:
 	@echo ""
-	@echo "==== Clear Python cache ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Clear Python cache <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf .pytest_cache
 	rm -Rf .tox
@@ -46,7 +73,7 @@ clean-pycache:
 
 clean-install:
 	@echo ""
-	@echo "==== Clear installation ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Clear installation <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf $(VENV_PATH)
 	rm -Rf $(PACKAGE_SLUG).egg-info
@@ -54,7 +81,7 @@ clean-install:
 
 clean-doc:
 	@echo ""
-	@echo "==== Clear documentation ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Clear documentation <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf docs/_build
 .PHONY: clean-doc
@@ -64,7 +91,7 @@ clean: clean-doc clean-install clean-pycache
 
 venv:
 	@echo ""
-	@echo "==== Install virtual environment ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Install virtual environment <---$(FORMATRESET)\n"
 	@echo ""
 	virtualenv -p $(PYTHON_INTERPRETER) $(VENV_PATH)
 	# This is required for those ones using old distribution
@@ -74,28 +101,36 @@ venv:
 
 install: venv
 	@echo ""
-	@echo "==== Install everything for development ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Install everything for development <---$(FORMATRESET)\n"
 	@echo ""
-	$(PIP) install -e .[dev,runserver]
+	$(PIP) install -e .[dev,doc,doc-live,release,runserver]
 .PHONY: install
+
+project:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating new project <---$(FORMATRESET)\n"
+	@echo ""
+	@mkdir -p dist
+	$(VENV_PATH)/bin/optimus-cli init --destination dist/ sample
+.PHONY: project
 
 docs:
 	@echo ""
-	@echo "==== Build documentation ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Build documentation <---$(FORMATRESET)\n"
 	@echo ""
 	cd docs && make html
 .PHONY: docs
 
 livedocs:
 	@echo ""
-	@echo "==== Watching documentation sources ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Watching documentation sources <---$(FORMATRESET)\n"
 	@echo ""
 	$(SPHINX_RELOAD)
 .PHONY: livedocs
 
 flake:
 	@echo ""
-	@echo "==== Flake ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Flake <---$(FORMATRESET)\n"
 	@echo ""
 	$(FLAKE) --show-source $(APPLICATION_NAME)
 	$(FLAKE) --show-source tests
@@ -103,28 +138,28 @@ flake:
 
 test:
 	@echo ""
-	@echo "==== Tests ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tests <---$(FORMATRESET)\n"
 	@echo ""
 	$(PYTEST) -vv tests/
 .PHONY: test
 
 tox:
 	@echo ""
-	@echo "==== Tox ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tox <---$(FORMATRESET)\n"
 	@echo ""
 	$(TOX)
 .PHONY: tox
 
 freeze-dependencies:
 	@echo ""
-	@echo "==== Freeze dependencies versions ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Freeze dependencies versions <---$(FORMATRESET)\n"
 	@echo ""
 	$(VENV_PATH)/bin/python freezer.py
 .PHONY: freeze-dependencies
 
 build-package:
 	@echo ""
-	@echo "==== Build package ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Build package <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf dist
 	$(VENV_PATH)/bin/python setup.py sdist
@@ -132,14 +167,14 @@ build-package:
 
 release: build-package
 	@echo ""
-	@echo "==== Release ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Release <---$(FORMATRESET)\n"
 	@echo ""
 	$(TWINE) upload dist/*
 .PHONY: release
 
 check-release: build-package
 	@echo ""
-	@echo "==== Check package ===="
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Check package <---$(FORMATRESET)\n"
 	@echo ""
 	$(TWINE) check dist/*
 .PHONY: check-release
