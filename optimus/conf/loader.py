@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module loader helpers
 *********************
@@ -8,7 +7,7 @@ import importlib
 import logging
 import sys
 
-from optimus.conf.model import SettingsModel
+from .model import SettingsModel
 
 
 def import_project_module(

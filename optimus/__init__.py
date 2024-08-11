@@ -1,6 +1,4 @@
 """Optimus is a static site builder using Jinja2, webassets and Babel."""
-from __future__ import absolute_import, unicode_literals
-
 import os
 from setuptools.config import read_configuration
 

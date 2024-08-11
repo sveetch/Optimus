@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings registration
 *********************
@@ -8,7 +7,8 @@ This is the entry point to reach settings from project page module.
 import os
 
 from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
-from optimus.conf.loader import import_settings
+from .loader import import_settings
+
 
 try:
     basedir = os.environ[PROJECT_DIR_ENVVAR]
@@ -24,6 +24,7 @@ except KeyError:
         ).format(PROJECT_DIR_ENVVAR)
     )
 
+
 try:
     name = os.environ[SETTINGS_NAME_ENVVAR]
     # If it's set but is an empty string.
@@ -37,6 +38,7 @@ except KeyError:
             "undefined."
         ).format(SETTINGS_NAME_ENVVAR)
     )
+
 
 # Reachable settings object
 settings = import_settings(name, basedir)

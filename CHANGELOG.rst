@@ -18,6 +18,9 @@ Version 2.1.0 - Unreleased
 * Upgdaded package setup to split dev dependencies on extra requirements;
 * Upgraded package base dependancies to the latest versions;
 * Changed command ``init`` so the argument ``name`` is now a prompt option;
+* Changed template watcher so a Jinja exception for template error won't break the
+  watcher. Instead the watcher display the full exception stacktrace, a notice about it
+  and then still continue to watch for another changes;
 
 
 Version 2.0.1 - 2023/08/18

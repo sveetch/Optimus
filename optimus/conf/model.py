@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings model
 **************
@@ -6,7 +5,7 @@ Settings model
 """
 import os
 
-from optimus.exceptions import InvalidSettings
+from ..exceptions import InvalidSettings
 
 
 class SettingsModel(object):
@@ -71,7 +70,7 @@ class SettingsModel(object):
 
         if len(missing_settings) > 0:
             msg = (
-                "The following settings are required but not " "defined: {0}"
+                "The following settings are required but not defined: {0}"
             ).format(", ".join(missing_settings))
             raise InvalidSettings(msg)
 

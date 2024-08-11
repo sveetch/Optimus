@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 .. _watchdog: https://github.com/gorakhargosh/watchdog
 

@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
 import logging
+import traceback
 
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.utils.patterns import match_any_paths
+
+from jinja2.exceptions import TemplateSyntaxError
 
 from optimus.watchers import BaseHandler
 
@@ -42,9 +44,7 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
         If template is a snippet included in other templates they will be
         flagged for build too. This is recursive so a snippet in a snippet in
-        a snippet will raises to page templates.
-
-        ``path`` argument is a template path
+        a snippet will raises also to page templates.
 
         Arguments:
             path (string): Template path.
@@ -65,8 +65,20 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
             self.logger.debug("Requires for rebuild: {}".format(requires))
 
-            builds = self.pages_builder.build_bulk(requires)
-            built.extend(builds)
+            try:
+                builds = self.pages_builder.build_bulk(requires)
+            except TemplateSyntaxError as e:
+                self.logger.error(traceback.format_exc())
+                msg = (
+                    "Jinja encountered an error on template '{}', once fixed and "
+                    "saved the template will be able to build again."
+                )
+                self.logger.error(msg.format(e.name))
+                self.logger.warning(
+                    "--- Optimus still continues to watch for changes ---"
+                )
+            else:
+                built.extend(builds)
 
         return built
 
