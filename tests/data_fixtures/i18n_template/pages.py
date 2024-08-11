@@ -2,7 +2,7 @@
 """
 The project pages map for basic_i18n
 """
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 
 # Dont import settings since it will break tests
 # from optimus.conf import settings
@@ -11,7 +11,7 @@ Page objects
 """
 
 
-class Index(PageViewBase):
+class Index(PageTemplateView):
     """
     Default index page
     """

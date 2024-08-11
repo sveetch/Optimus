@@ -2,10 +2,10 @@
 """
 The project pages map for basic
 """
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 
 
-class SamplePage(PageViewBase):
+class SamplePage(PageTemplateView):
     """
     Sample page defaults as index
     """

@@ -1,33 +1,26 @@
-# -*- coding: utf-8 -*-
 import logging
 
 
 class PageRegistry(object):
     """
-    Page registry
+    Page registry.
 
     Index templates and memorize page destination that use them.
 
-    TODO:
-        * elements should be named 'templates'.
-        * get_pages_from_dependency() return a list of destinations using a
-          template name, it should be named 'get_pages_from_template'
-        * @map_dest_to_page should be named 'destinations_pages'
-
     Keyword Arguments:
-        elements (dict): Initial element dictionnary. Default to an empty dict.
+        templates (dict): Initial element dictionnary. Default to an empty dict.
 
     Attributes:
-        elements (string): Dictionnary indexed on template names which contain
+        templates (string): Dictionnary indexed on template names which contain
             destinations using them.
-        map_dest_to_page (string): Dictionnary indexed on destinations which
+        destinations_pages_index (string): Dictionnary indexed on destinations which
             contain their related page view.
         logger (logging.Logger): Optimus logger.
     """
 
-    def __init__(self, elements={}):
-        self.elements = {}
-        self.map_dest_to_page = {}
+    def __init__(self, templates={}):
+        self.templates = {}
+        self.destinations_pages_index = {}
         self.logger = logging.getLogger("optimus")
 
     def add_page(self, page, templates):
@@ -39,15 +32,15 @@ class PageRegistry(object):
             templates (list): List of templates names to link to given page
                 instance.
         """
-        self.map_dest_to_page[page.get_destination()] = page
+        self.destinations_pages_index[page.get_destination()] = page
 
         for k in templates:
-            if k in self.elements:
-                self.elements[k].add(page.get_destination())
+            if k in self.templates:
+                self.templates[k].add(page.get_destination())
             else:
-                self.elements[k] = set([page.get_destination()])
+                self.templates[k] = set([page.get_destination()])
 
-    def get_pages_from_dependency(self, template_name):
+    def get_pages_from_template(self, template_name):
         """
         Get page list depending from a template.
 
@@ -62,14 +55,14 @@ class PageRegistry(object):
         Returns:
             list: List of page instances depending from given template name.
         """
-        if template_name not in self.elements:
+        if template_name not in self.templates:
             msg = "Given template name is not registered: {}"
             self.logger.warning(msg.format(template_name))
             return []
 
-        destinations = self.elements[template_name]
+        destinations = self.templates[template_name]
 
-        return [self.map_dest_to_page[item] for item in destinations]
+        return [self.destinations_pages_index[item] for item in destinations]
 
     def get_all_destinations(self):
         """
@@ -78,7 +71,7 @@ class PageRegistry(object):
         Returns:
             list: List of all page destinations.
         """
-        return [dest for dest, page in self.map_dest_to_page.items()]
+        return [dest for dest, page in self.destinations_pages_index.items()]
 
     def get_all_pages(self):
         """
@@ -87,4 +80,4 @@ class PageRegistry(object):
         Returns:
             list: List of all page instances.
         """
-        return [page for dest, page in self.map_dest_to_page.items()]
+        return [page for dest, page in self.destinations_pages_index.items()]

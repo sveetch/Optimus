@@ -21,6 +21,11 @@ Version 2.1.0 - Unreleased
 * Changed template watcher so a Jinja exception for template error won't break the
   watcher. Instead the watcher display the full exception stacktrace, a notice about it
   and then still continue to watch for another changes;
+* Renamed some attributes and methods from ``PageRegistry``:
+
+  * ``elements`` has been renamed to ``templates``;
+  * ``get_pages_from_dependency`` has been renamed to ``get_pages_from_template``;
+  * ``map_dest_to_page`` has been renamed to ``destinations_pages_index``;
 
 
 Version 2.0.1 - 2023/08/18

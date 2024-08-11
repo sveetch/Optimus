@@ -6,7 +6,7 @@ from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
 
 from optimus.exceptions import ViewImproperlyConfigured
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 from optimus.i18n.lang import LangBase
 
 
@@ -20,17 +20,17 @@ class DummySettings:
 
 def test_empty():
     """
-    PageViewBase validate required attributes
+    PageTemplateView validate required attributes
     """
     with pytest.raises(ViewImproperlyConfigured):
-        PageViewBase()
+        PageTemplateView()
 
 
 def test_required_attrs_through_args():
     """
     Define required attributes through arguments
     """
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -44,7 +44,7 @@ def test_required_attrs_through_attrs():
     Define required attributes through attributes
     """
 
-    class DummyView(PageViewBase):
+    class DummyView(PageTemplateView):
         title = "Dummy"
         destination = "Foo"
         template_name = "Bar"
@@ -60,7 +60,7 @@ def test_required_attrs_through_mixed():
     arguments
     """
 
-    class DummyView(PageViewBase):
+    class DummyView(PageTemplateView):
         destination = "Foo"
         template_name = "Bar"
 
@@ -71,9 +71,9 @@ def test_required_attrs_through_mixed():
 
 def test_settings_missing():
     """
-    PageViewBase validate required settings object within getter
+    PageTemplateView validate required settings object within getter
     """
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -87,7 +87,7 @@ def test_settings_through_arg():
     """
     Given settings through argument
     """
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -101,7 +101,7 @@ def test_settings_through_setter():
     """
     Given settings through setter
     """
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -116,7 +116,7 @@ def test_settings_through_setter():
 
 
 def test_get_title():
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -132,7 +132,7 @@ def test_get_lang_default():
     """
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -148,7 +148,7 @@ def test_get_lang_code():
     """
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -167,7 +167,7 @@ def test_get_lang_object():
 
     locale = LangBase(code="fr")
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="Foo",
         template_name="Bar",
@@ -218,7 +218,7 @@ def test_get_destination(destination, path):
     """
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination=destination,
         template_name="bar.html",
@@ -261,7 +261,7 @@ def test_get_relative_position(destination, position):
     """
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination=destination,
         template_name="dummy.html",
@@ -295,7 +295,7 @@ def test_get_template_name(name, attempted):
     """
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="dummy.html",
         template_name=name,
@@ -314,7 +314,7 @@ def test_get_context_from_zero():
 
     locale = LangBase(code="fr")
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="{language_code}/hip/../hop.html",
         template_name="foo/bar.html",
@@ -339,7 +339,7 @@ def test_get_context_nonempty():
 
     locale = LangBase(code="fr")
 
-    class DummyView(PageViewBase):
+    class DummyView(PageTemplateView):
         context = {
             "myvar": True,
             "page_title": "Nope",
@@ -395,7 +395,7 @@ def test_render(temp_builds_dir):
     # Make a view to render
     settings = DummySettings()
 
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="{language_code}/sample.html",
         template_name="sample.html",
@@ -451,7 +451,7 @@ def test_introspect(temp_builds_dir):
     )
 
     # Make a view to render
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="{language_code}/sample.html",
         template_name="sample.html",
@@ -507,7 +507,7 @@ def test_introspect_inclusion(temp_builds_dir):
     )
 
     # Make a view to render
-    view = PageViewBase(
+    view = PageTemplateView(
         title="Dummy",
         destination="{language_code}/sample.html",
         template_name="sample.html",

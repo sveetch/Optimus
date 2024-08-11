@@ -3,7 +3,7 @@ import os
 from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
 
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 from optimus.pages.registry import PageRegistry
 
 
@@ -23,21 +23,21 @@ def test_add_page_basic(caplog):
 
     reg = PageRegistry()
 
-    index_view = PageViewBase(
+    index_view = PageTemplateView(
         title="Index",
         destination="index.html",
         template_name="index.html",
         settings=settings,
     )
 
-    foo_view = PageViewBase(
+    foo_view = PageTemplateView(
         title="Foo",
         destination="foo.html",
         template_name="foo.html",
         settings=settings,
     )
 
-    bar_view = PageViewBase(
+    bar_view = PageTemplateView(
         title="Bar",
         destination="bar.html",
         template_name="foo.html",
@@ -49,7 +49,7 @@ def test_add_page_basic(caplog):
     reg.add_page(foo_view, [foo_view.template_name])
     reg.add_page(bar_view, [bar_view.template_name])
 
-    assert reg.elements == {
+    assert reg.templates == {
         "index.html": set(
             [
                 "index.html",
@@ -63,13 +63,13 @@ def test_add_page_basic(caplog):
         ),
     }
 
-    assert reg.get_pages_from_dependency("index.html") == [
+    assert reg.get_pages_from_template("index.html") == [
         index_view,
     ]
 
     # Use set and sorted to deal with arbitrary order
     results = sorted(
-        reg.get_pages_from_dependency("foo.html"), key=lambda obj: obj.destination
+        reg.get_pages_from_template("foo.html"), key=lambda obj: obj.destination
     )
     attempted = sorted(
         [
@@ -151,35 +151,35 @@ def test_add_page_advanced(temp_builds_dir, caplog):
     )
 
     # Make some views using templates
-    index_view = PageViewBase(
+    index_view = PageTemplateView(
         title="Index",
         destination="index.html",
         template_name="index.html",
         settings=settings,
     )
 
-    foo_view = PageViewBase(
+    foo_view = PageTemplateView(
         title="Foo",
         destination="foo.html",
         template_name="dummy.html",
         settings=settings,
     )
 
-    bar_view = PageViewBase(
+    bar_view = PageTemplateView(
         title="Bar",
         destination="bar.html",
         template_name="dummy.html",
         settings=settings,
     )
 
-    french_view = PageViewBase(
+    french_view = PageTemplateView(
         title="French",
         destination="localized/{language_code}.html",
         template_name="hip/hop.html",
         settings=settings,
     )
 
-    english_view = PageViewBase(
+    english_view = PageTemplateView(
         title="English",
         destination="localized/{language_code}.html",
         template_name="hip/hop.html",
@@ -194,9 +194,7 @@ def test_add_page_advanced(temp_builds_dir, caplog):
     reg.add_page(french_view, french_view.introspect(jinja_env))
     reg.add_page(english_view, english_view.introspect(jinja_env))
 
-    print(reg.elements)
-
-    assert reg.elements == {
+    assert reg.templates == {
         "index.html": set(
             [
                 "index.html",
@@ -237,13 +235,13 @@ def test_add_page_advanced(temp_builds_dir, caplog):
         ),
     }
 
-    assert reg.get_pages_from_dependency("index.html") == [
+    assert reg.get_pages_from_template("index.html") == [
         index_view,
     ]
 
     # Checking skeleton usage from pages
     results = sorted(
-        reg.get_pages_from_dependency("skeleton.html"), key=lambda obj: obj.destination
+        reg.get_pages_from_template("skeleton.html"), key=lambda obj: obj.destination
     )
     attempted = sorted(
         [
@@ -260,7 +258,7 @@ def test_add_page_advanced(temp_builds_dir, caplog):
 
     # Checking hip base usage from pages
     results = sorted(
-        reg.get_pages_from_dependency("hip/base.html"), key=lambda obj: obj.destination
+        reg.get_pages_from_template("hip/base.html"), key=lambda obj: obj.destination
     )
     attempted = sorted(
         [
@@ -272,7 +270,7 @@ def test_add_page_advanced(temp_builds_dir, caplog):
 
     # Checking inclusion usage from pages
     results = sorted(
-        reg.get_pages_from_dependency("_inclusion.html"),
+        reg.get_pages_from_template("_inclusion.html"),
         key=lambda obj: obj.destination,
     )
     attempted = sorted(

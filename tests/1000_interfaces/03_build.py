@@ -4,10 +4,10 @@ import os
 from optimus.interfaces.build import builder_interface
 from optimus.interfaces.starter import starter_interface
 from optimus.logs import set_loggers_level
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 
 
-class DummyView(PageViewBase):
+class DummyView(PageTemplateView):
     """
     A dummy view similar to the one from "basic" starter.
     """

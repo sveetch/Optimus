@@ -9,9 +9,9 @@ def test_empty(caplog):
     """
     reg = PageRegistry()
 
-    assert reg.elements == {}
+    assert reg.templates == {}
 
-    assert reg.get_pages_from_dependency("nope") == []
+    assert reg.get_pages_from_template("nope") == []
 
     assert caplog.record_tuples == [
         ("optimus", logging.WARNING, "Given template name is not registered: nope"),

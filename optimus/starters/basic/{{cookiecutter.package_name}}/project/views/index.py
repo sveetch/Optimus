@@ -1,8 +1,8 @@
-from optimus.pages.views.base import PageViewBase
+from optimus.pages.views.base import PageTemplateView
 from optimus.conf.registry import settings  # noqa: F401
 
 
-class IndexView(PageViewBase):
+class IndexView(PageTemplateView):
     """
     Sample page for index
     """

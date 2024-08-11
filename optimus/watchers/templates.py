@@ -16,7 +16,7 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     Arguments:
         settings (optimus.conf.model.SettingsModel): Project settings.
         pages_builder (optimus.pages.builder.PageBuilder): Page builder object
-            that is triggered to perform page building.
+            that is used to perform page building.
         args: Additional arguments to be passed to handler, commonly for
             watchdog API.
 
@@ -55,11 +55,11 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         rel_path = self.get_relative_template_path(path)
         built = []
         # Search in the registry if the file is a knowed template dependancy
-        if rel_path in self.pages_builder.registry.elements:
+        if rel_path in self.pages_builder.registry.templates:
             msg = "--- Changes detected on: {} ---"
             self.logger.warning(msg.format(rel_path))
 
-            requires = self.pages_builder.registry.get_pages_from_dependency(
+            requires = self.pages_builder.registry.get_pages_from_template(
                 rel_path
             )  # noqa
 
