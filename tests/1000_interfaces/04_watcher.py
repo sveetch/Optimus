@@ -5,7 +5,7 @@ from optimus.interfaces.build import builder_interface
 from optimus.interfaces.starter import starter_interface
 from optimus.interfaces.watch import watcher_interface
 from optimus.logs import set_loggers_level
-from optimus.pages.views.base import PageTemplateView
+from optimus.pages.views import PageTemplateView
 
 
 class DummyView(PageTemplateView):

@@ -27,6 +27,19 @@ Version 2.1.0 - Unreleased
   * ``get_pages_from_dependency`` has been renamed to ``get_pages_from_template``;
   * ``map_dest_to_page`` has been renamed to ``destinations_pages_index``;
 
+* **Breaking change** Historical ``PageViewBase`` class does not implement anymore
+  the template logic to build page from a template:
+
+  * You can easily upgrade your views to use ``optimus.pages.views.PageTemplateView``
+    instead;
+  * ``PageViewBase`` class has been moved to ``optimus.pages.views.PageViewBase`` and
+    only implement basic stuff to render anything, it does not require anymore the
+    ``template_name`` attribute and its ``render()`` method return empty string. If
+    you plan to use it to render a page without a template like a JSON view you will
+    need to implement the proper ``render()`` yourself.
+  * For compatibility the ``PageViewBase`` still require the ``env`` argument on its
+    method ``render`` and ``introspect``;
+
 
 Version 2.0.1 - 2023/08/18
 --------------------------

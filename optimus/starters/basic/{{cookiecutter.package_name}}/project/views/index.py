@@ -1,4 +1,4 @@
-from optimus.pages.views.base import PageTemplateView
+from optimus.pages.views import PageTemplateView
 from optimus.conf.registry import settings  # noqa: F401
 
 

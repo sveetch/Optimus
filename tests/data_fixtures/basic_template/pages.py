@@ -2,7 +2,7 @@
 """
 The project pages map for basic
 """
-from optimus.pages.views.base import PageTemplateView
+from optimus.pages.views import PageTemplateView
 
 
 class Index(PageTemplateView):

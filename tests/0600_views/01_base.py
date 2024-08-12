@@ -6,7 +6,7 @@ from jinja2 import Environment as Jinja2Environment
 from jinja2 import FileSystemLoader
 
 from optimus.exceptions import ViewImproperlyConfigured
-from optimus.pages.views.base import PageTemplateView
+from optimus.pages.views import PageTemplateView
 from optimus.i18n.lang import LangBase
 
 

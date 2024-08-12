@@ -1,10 +1,8 @@
 import logging
 import os
 
-from jinja2 import meta as Jinja2Meta
-
-from ..exceptions import ViewImproperlyConfigured
-from ..i18n.lang import LangBase
+from ...exceptions import ViewImproperlyConfigured
+from ...i18n.lang import LangBase
 
 
 class PageViewBase:

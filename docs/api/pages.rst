@@ -7,6 +7,6 @@
 .. automodule:: optimus.pages.builder
     :members:
 
-.. automodule:: optimus.pages.views.base
+.. automodule:: optimus.pages.views
     :members:
 

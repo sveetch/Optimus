@@ -2,7 +2,7 @@
 """
 The project pages map for basic_i18n
 """
-from optimus.pages.views.base import PageTemplateView
+from optimus.pages.views import PageTemplateView
 
 # Dont import settings since it will break tests
 # from optimus.conf import settings
