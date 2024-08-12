@@ -41,6 +41,9 @@ Version 2.1.0 - Unreleased
     method ``render`` and ``introspect``;
 
 * Removed old useless Compass configuration file from test fixtures;
+* Upgrade the project ``__init__.py`` file to use modern package info loader with
+  ``importlib.metadata`` instead of deprecated ``pkg_resources``;
+
 
 Version 2.0.1 - 2023/08/18
 --------------------------

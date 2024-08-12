@@ -1,19 +1,19 @@
-# Frozen requirement versions from '2.1.0rc5' installation
-Babel==2.15.0
+# Frozen requirement versions from '2.1.0rc7' installation
+babel==2.16.0
 CherryPy==18.10.0
 click==8.1.7
 colorama==0.4.6
 colorlog==6.8.2
 cookiecutter==2.6.0
-flake8==7.1.0
+flake8==7.1.1
 Jinja2==3.1.4
 jsmin==3.0.1
 livereload==2.7.0
-pytest==8.2.2
+pytest==8.3.2
 rcssmin==1.1.2
-Sphinx==7.4.6
+Sphinx==7.4.7
 sphinx-rtd-theme==2.0.0
-tox==4.16.0
+tox==4.17.1
 twine==5.1.1
-watchdog==4.0.1
+watchdog==4.0.2
 webassets==2.0
