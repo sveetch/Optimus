@@ -40,6 +40,7 @@ Version 2.1.0 - Unreleased
   * For compatibility the ``PageViewBase`` still require the ``env`` argument on its
     method ``render`` and ``introspect``;
 
+* Removed old useless Compass configuration file from test fixtures;
 
 Version 2.0.1 - 2023/08/18
 --------------------------
