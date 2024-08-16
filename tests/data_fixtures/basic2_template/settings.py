@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings file for basic project
 """
@@ -13,6 +12,8 @@ PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 SITE_NAME = "basic"
 SITE_DOMAIN = "localhost"
 
+
+DATAS_DIR = os.path.join(PROJECT_DIR, "datas")
 
 SOURCES_DIR = os.path.join(PROJECT_DIR, "sources")
 

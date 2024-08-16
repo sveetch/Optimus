@@ -328,6 +328,7 @@ def test_get_context_from_zero():
         "page_relative_position": "../",
         "page_lang": locale,
         "page_destination": "fr/hop.html",
+        "page_datas": [],
     }
 
 
@@ -360,6 +361,7 @@ def test_get_context_nonempty():
         "page_relative_position": "../",
         "page_lang": locale,
         "page_destination": "fr/hop.html",
+        "page_datas": [],
     }
 
 

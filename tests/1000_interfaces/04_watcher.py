@@ -89,6 +89,7 @@ def test_watcher_interface(tmpdir, fixtures_settings, starter_basic_settings):
         observed[path.path] = [type(item).__name__ for item in handlers]
 
     assert observed == {
+        os.path.join(project_path, "datas"): ["DatasWatchEventHandler"],
         os.path.join(project_path, "sources"): ["AssetsWatchEventHandler"],
         os.path.join(project_path, "sources/templates"): ["TemplatesWatchEventHandler"],
     }

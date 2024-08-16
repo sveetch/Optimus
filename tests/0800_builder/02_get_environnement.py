@@ -11,12 +11,10 @@ def test_get_environnement(minimal_basic_settings, fixtures_settings, caplog):
     Start with default env then use 'get_environnement' to get another one
     with only one dummy extension
     """
-
     class DummyExtension(Extension):
         """
         Dummy extension
         """
-
         tags = set(["dummy"])
 
     def DummyFilter(content):

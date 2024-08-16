@@ -11,7 +11,6 @@ class DummySettings:
     """
     Dummy object with needed settings
     """
-
     LANGUAGE_CODE = "en"
 
 
@@ -50,36 +49,19 @@ def test_add_page_basic(caplog):
     reg.add_page(bar_view, [bar_view.template_name])
 
     assert reg.templates == {
-        "index.html": set(
-            [
-                "index.html",
-            ]
-        ),
-        "foo.html": set(
-            [
-                "bar.html",
-                "foo.html",
-            ]
-        ),
+        "index.html": set(["index.html"]),
+        "foo.html": set(["bar.html", "foo.html"]),
     }
 
-    assert reg.get_pages_from_template("index.html") == [
-        index_view,
-    ]
+    assert reg.get_pages_from_template("index.html") == [index_view]
 
     # Use set and sorted to deal with arbitrary order
     results = sorted(
         reg.get_pages_from_template("foo.html"), key=lambda obj: obj.destination
     )
-    attempted = sorted(
-        [
-            foo_view,
-            bar_view,
-        ],
-        key=lambda obj: obj.destination,
-    )
+    expected = sorted([foo_view, bar_view], key=lambda obj: obj.destination)
 
-    assert set(results) == set(attempted)
+    assert set(results) == set(expected)
 
 
 def test_add_page_advanced(temp_builds_dir, caplog):
@@ -102,53 +84,39 @@ def test_add_page_advanced(temp_builds_dir, caplog):
     hiphop_template = os.path.join(templates_dir, "hip/hop.html")
     inclusion_template = os.path.join(templates_dir, "_inclusion.html")
     with open(skeleton_template, "w") as fp:
-        fp.write(
-            (
-                """<html><body>"""
-                """{% block content %}Nope{% endblock %}"""
-                """</body></html>"""
-            )
-        )
+        fp.write((
+            """<html><body>"""
+            """{% block content %}Nope{% endblock %}"""
+            """</body></html>"""
+        ))
     with open(index_template, "w") as fp:
-        fp.write(
-            (
-                """{% extends "skeleton.html" %}"""
-                """{% block content %}Index{% endblock %}"""
-            )
-        )
+        fp.write((
+            """{% extends "skeleton.html" %}{% block content %}Index{% endblock %}"""
+        ))
     with open(dummy_template, "w") as fp:
-        fp.write(
-            (
-                """{% extends "skeleton.html" %}"""
-                """{% block content %}Hello World!{% endblock %}"""
-            )
-        )
+        fp.write((
+            """{% extends "skeleton.html" %}"""
+            """{% block content %}Hello World!{% endblock %}"""
+        ))
     with open(base_template, "w") as fp:
-        fp.write(
-            (
-                """{% extends "skeleton.html" %}"""
-                """{% block content %}Base{% endblock %}"""
-            )
-        )
+        fp.write((
+            """{% extends "skeleton.html" %}{% block content %}Base{% endblock %}"""
+        ))
     with open(hiphop_template, "w") as fp:
-        fp.write(
-            (
-                """{% extends "hip/base.html" %}"""
-                """{% block content %}Base {% include '_inclusion.html' %}"""
-                """{% endblock %}"""
-            )
-        )
+        fp.write((
+            """{% extends "hip/base.html" %}"""
+            """{% block content %}Base {% include '_inclusion.html' %}"""
+            """{% endblock %}"""
+        ))
     with open(inclusion_template, "w") as fp:
-        fp.write(("""I'm an inclusion"""))
+        fp.write(("I'm an inclusion"))
 
     # Dummy settings and registry
     settings = DummySettings()
     reg = PageRegistry()
 
     # Init Jinja environment
-    jinja_env = Jinja2Environment(
-        loader=FileSystemLoader(templates_dir),
-    )
+    jinja_env = Jinja2Environment(loader=FileSystemLoader(templates_dir))
 
     # Make some views using templates
     index_view = PageTemplateView(
@@ -195,90 +163,43 @@ def test_add_page_advanced(temp_builds_dir, caplog):
     reg.add_page(english_view, english_view.introspect(jinja_env))
 
     assert reg.templates == {
-        "index.html": set(
-            [
-                "index.html",
-            ]
-        ),
-        "dummy.html": set(
-            [
-                "bar.html",
-                "foo.html",
-            ]
-        ),
-        "hip/base.html": set(
-            [
-                "localized/fr.html",
-                "localized/en.html",
-            ]
-        ),
-        "_inclusion.html": set(
-            [
-                "localized/fr.html",
-                "localized/en.html",
-            ]
-        ),
-        "hip/hop.html": set(
-            [
-                "localized/fr.html",
-                "localized/en.html",
-            ]
-        ),
-        "skeleton.html": set(
-            [
-                "index.html",
-                "bar.html",
-                "foo.html",
-                "localized/fr.html",
-                "localized/en.html",
-            ]
-        ),
+        "index.html": set(["index.html"]),
+        "dummy.html": set(["bar.html", "foo.html"]),
+        "hip/base.html": set(["localized/fr.html", "localized/en.html"]),
+        "_inclusion.html": set(["localized/fr.html", "localized/en.html"]),
+        "hip/hop.html": set(["localized/fr.html", "localized/en.html"]),
+        "skeleton.html": set([
+            "index.html",
+            "bar.html",
+            "foo.html",
+            "localized/fr.html",
+            "localized/en.html",
+        ]),
     }
 
-    assert reg.get_pages_from_template("index.html") == [
-        index_view,
-    ]
+    assert reg.get_pages_from_template("index.html") == [index_view]
 
     # Checking skeleton usage from pages
     results = sorted(
         reg.get_pages_from_template("skeleton.html"), key=lambda obj: obj.destination
     )
-    attempted = sorted(
-        [
-            index_view,
-            foo_view,
-            bar_view,
-            english_view,
-            french_view,
-        ],
+    expected = sorted(
+        [index_view, foo_view, bar_view, english_view, french_view],
         key=lambda obj: obj.destination,
     )
-
-    assert set(results) == set(attempted)
+    assert set(results) == set(expected)
 
     # Checking hip base usage from pages
     results = sorted(
         reg.get_pages_from_template("hip/base.html"), key=lambda obj: obj.destination
     )
-    attempted = sorted(
-        [
-            english_view,
-            french_view,
-        ],
-        key=lambda obj: obj.destination,
-    )
+    expected = sorted([english_view, french_view], key=lambda obj: obj.destination)
+    assert set(results) == set(expected)
 
     # Checking inclusion usage from pages
     results = sorted(
         reg.get_pages_from_template("_inclusion.html"),
         key=lambda obj: obj.destination,
     )
-    attempted = sorted(
-        [
-            english_view,
-            french_view,
-        ],
-        key=lambda obj: obj.destination,
-    )
-
-    assert set(results) == set(attempted)
+    expected = sorted([english_view, french_view], key=lambda obj: obj.destination)
+    assert set(results) == set(expected)

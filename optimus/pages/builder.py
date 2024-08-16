@@ -38,13 +38,14 @@ class PageBuilder(object):
             ``None``.
         assets_env (webassets.Environment): Webasset environment. Default is
             ``None``.
-        internationalized (boolean): Indicate it internationalization is
+        internationalized (boolean): Indicate if internationalization is
             enabled. Will be automatically set to ``True`` if Jinja environment
             enable the i18n extension.
         translations (dict): Dictionnary of translation catalog indexed on
             language identifier.
         registry (optimus.pages.registry.PageRegistry): Registry of all knowed
-            page from scanning.
+            page from scanning. Registry will be automatically filled only if you use
+            the  ``PageBuilder.scan_bulk(..)`` method.
         dry_run (boolean): Dry run mode.
 
     """
@@ -83,7 +84,7 @@ class PageBuilder(object):
         """
         exts = []
         self.logger.debug(
-            ("No Jinja2 environment given, initializing a " "new environment")
+            ("No Jinja2 environment given, initializing a new environment")
         )
 
         # It the assets environment is given, active the Jinja extension to
@@ -220,31 +221,38 @@ class PageBuilder(object):
 
     def scan_bulk(self, page_list):
         """
-        Scan all given pages to set their dependancies
+        Scan all given pages to register their dependancy templates.
 
         TODO:
-            Implement a 'settings' kwarg to pass to scan_item to connect
+            Implement a 'settings' kwarg to pass to 'scan_item' to connect
             settings object to view.
 
         Arguments:
             page_list (list): List of page instances.
 
         Returns:
-            list: Every template name involved in scanned page instances.
+            set: Every template names involved in scanned page instances.
         """
         self.logger.info("Starting page builds")
 
         if not page_list:
-            self.logger.warning(
-                ("Page scanning skipped as there are no " "registered pages")
-            )
+            self.logger.warning((
+                "Page scanning skipped as there are no registered pages"
+            ))
             return None
 
         knowed = set([])
         for page in page_list:
+            # Scan possible view template to find templates inheritances to register
             found = self.scan_item(page)
-            self.registry.add_page(page, found)
-            knowed.update(found)
+            if found:
+                self.registry.add_page(page, found)
+                knowed.update(found)
+
+            # Scan possible view datas to register
+            self.registry.add_data(page, page.get_datas())
+            if getattr(page, "template_name", None):
+                knowed.add(page.template_name)
 
         return knowed
 
@@ -276,10 +284,10 @@ class PageBuilder(object):
         # Template render
         content = page_item.render(self.jinja_env)
 
+        # Creating destination path if needed
         destination_path = os.path.join(
             self.settings.PUBLISH_DIR, page_item.get_destination()
         )
-        # Creating destination path if needed
         destination_dir, destination_file = os.path.split(destination_path)
         if not os.path.exists(destination_dir):
             msg = " - Creating new directory : {}"
@@ -310,7 +318,7 @@ class PageBuilder(object):
 
         if not page_list:
             self.logger.warning(
-                ("Page management skipped as there are no " "registered pages")
+                "Page management is skipped because there are no registered pages"
             )
             return None
 

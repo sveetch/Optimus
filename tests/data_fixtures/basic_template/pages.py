@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
 """
-The project pages map for basic
+The project pages for basic
 """
+# WARNING: Dont import settings here since it will break tests
+# from optimus.conf import settings
+
 from optimus.pages.views import PageTemplateView
 
 

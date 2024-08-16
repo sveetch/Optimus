@@ -9,51 +9,73 @@ Changelog
 
 
 Version 2.1.0 - Unreleased
---------------------------
+**************************
+
+Python compatibility
+--------------------
 
 * Removed support for Python 3.6 and 3.7;
 * Added support for Python 3.10;
+
+What’s new
+----------
+
+* Upgraded package setup to split dev dependencies in additional extra requirements;
+* Upgraded package base dependencies to their latest versions;
 * Updated documentations configurations;
-* Updated Makefile to use colors;
-* Upgdaded package setup to split dev dependencies on extra requirements;
-* Upgraded package base dependancies to the latest versions;
-* Changed command ``init`` so the argument ``name`` is now a prompt option;
+* Updated Makefile to use colors in task outputs;
+* Updated Pytest configuration to adopt the right verbose level to get back the old
+  "short resume information" layout (single line with error resumed without traceback);
 * Changed template watcher so a Jinja exception for template error won't break the
-  watcher. Instead the watcher display the full exception stacktrace, a notice about it
+  watcher. Instead the watcher displays the full exception stacktrace, a notice about it
   and then still continue to watch for another changes;
+* Removed old useless Compass configuration file from test fixtures;
+* Upgrade the project ``__init__.py`` file to use modern package info loader with
+  ``importlib.metadata`` instead of deprecated ``pkg_resources``;
+
+* Page view classes now have a ``datas`` attributes to define data files to
+  watch for triggering a build if they are modified;
+* Page view datas can be defined from a method ``get_datas()`` instead of attribute
+  ``datas``;
+* View data is the only simple way for ``PageViewBase`` views to be watched (since
+  they don't naturally include templates or assets);
+* Introduced new required settings ``DATAS_DIR`` to define path for the directory that
+  holds the view data files;
+
+Backwards incompatible changes
+------------------------------
+
+* Changed command ``init`` so the argument ``name`` is now a prompt option;
 * Renamed some attributes and methods from ``PageRegistry``:
 
   * ``elements`` has been renamed to ``templates``;
   * ``get_pages_from_dependency`` has been renamed to ``get_pages_from_template``;
   * ``map_dest_to_page`` has been renamed to ``destinations_pages_index``;
 
-* **Breaking change** Historical ``PageViewBase`` class does not implement anymore
-  the template logic to build page from a template:
+* Historical ``PageViewBase`` class does not implement anymore the template logic to
+  build page from a template:
 
-  * You can easily upgrade your views to use ``optimus.pages.views.PageTemplateView``
-    instead;
+  * You can easily upgrade your existing page views to use
+    ``optimus.pages.views.PageTemplateView`` instead that is the equivalent of the old
+    ``PageViewBase``;
   * ``PageViewBase`` class has been moved to ``optimus.pages.views.PageViewBase`` and
     only implement basic stuff to render anything, it does not require anymore the
     ``template_name`` attribute and its ``render()`` method return empty string. If
     you plan to use it to render a page without a template like a JSON view you will
     need to implement the proper ``render()`` yourself.
-  * For compatibility the ``PageViewBase`` still require the ``env`` argument on its
+  * For compatibility the ``PageViewBase`` still requires the ``env`` argument on its
     method ``render`` and ``introspect``;
-
-* Removed old useless Compass configuration file from test fixtures;
-* Upgrade the project ``__init__.py`` file to use modern package info loader with
-  ``importlib.metadata`` instead of deprecated ``pkg_resources``;
 
 
 Version 2.0.1 - 2023/08/18
---------------------------
+**************************
 
 A minor version only to update ``.readthedocs.yml`` file to follow service deprecations
 changes.
 
 
 Version 2.0.0 - 2020/10/10
---------------------------
+**************************
 
 **A major update with big refactoring and modern stack**
 
@@ -108,19 +130,19 @@ version, also some part of core have changed.
 
 
 Version 1.1.2 - 2020/01/01
---------------------------
+**************************
 
 Add new setting ``JINJA_FILTERS`` to register additional template filters.
 
 
 Version 1.1.1 - 2019/07/01
---------------------------
+**************************
 
 Fix invalid package classifiers in ``setup.cfg`` which blocked package release on Pypi.
 
 
 Version 1.1.0 - 2019/07/01
---------------------------
+**************************
 
 * Moved package configuration to everything in ``setup.cfg``;
 * Updated Makefile;
@@ -132,14 +154,14 @@ Version 1.1.0 - 2019/07/01
 
 
 Version 1.0.1 - 2018/06/07
---------------------------
+**************************
 
 * Fixed documentation;
 * Fixed project templates Makefile;
 
 
 Version 1.0.0 - 2018/06/07
---------------------------
+**************************
 
 Rewriting everything to be Python >=2.7 and Python3 compatible with unittests coverage
 using pytest and tox.
@@ -153,7 +175,7 @@ using pytest and tox.
 
 
 Version 0.8.2 - 2017/01/15
---------------------------
+**************************
 
 * Relaxed ``webassets`` version requirement since the last one (0.12.1) has been
   validated;
@@ -165,7 +187,7 @@ Version 0.8.2 - 2017/01/15
 
 
 Version 0.8.1 - 2017/01/01
---------------------------
+**************************
 
 * Validated working with ``CherryPy==8.7.0``, so remove every occurences about 3.x.x
   version;
@@ -173,7 +195,7 @@ Version 0.8.1 - 2017/01/01
 
 
 Version 0.8.0 - 2016/12/31
---------------------------
+**************************
 
 * Include ``html5writer.py`` taken from ``rstview`` and so remove dependency to ``rstview``, close #19;
 * Move changelog to its own file, updated documentation Makefile, added dev requirements;
@@ -183,19 +205,19 @@ Version 0.8.0 - 2016/12/31
 
 
 Version 0.7.2 - 2016/05/05
---------------------------
+**************************
 
 Minor update that modify 'settings' and 'pages' modules import so exception is raised to ease debugging.
 
 
 Version 0.7.1 - 2015/06/14
---------------------------
+**************************
 
 Dummy release just to update documentation about forgotted changelog.
 
 
 Version 0.7.0 - 2015/06/14
---------------------------
+**************************
 
 * Upgraded dependancy to watchdog==0.8.3 to try to fix a problem with watch mode on OSX;
 * Fixed doc;
@@ -204,51 +226,51 @@ Version 0.7.0 - 2015/06/14
 
 
 Version 0.6.9
--------------
+*************
 
 * Fix a bug with bad signature for ``po`` command;
 * Moving script name from **optimus** to **optimus-cli** because this was causing issues with ``setup.entry_points`` usage and buildout;
 
 
 Version 0.6.8.1
----------------
+***************
 
 Update `Argh`_ dependancy to ``>= 0.24.1``.
 
 
 Version 0.6.8
--------------
+*************
 
 Re-use a fixed version for **argh** because the 0.24 version has incompatible backward issues.
 
 
 Version 0.6.7.1
----------------
+***************
 
 Fix dependancies syntax in setup.py that was causing issues during installation.
 
 
 Version 0.6.7
--------------
+*************
 
 * Remove CherryPy dependancy from setup.py, add an install note about this;
 * Update documentation;
 
 
 Version 0.6.6
--------------
+*************
 
 Upgrade to yuicompressor 2.4.8
 
 
 Version 0.6.5
--------------
+*************
 
 Updating doc, in setup.py use 'entry_points' instead of 'scripts'
 
 
 Version 0.6.4
--------------
+*************
 
 * Fixing update method in po command to update the POT file;
 * Add I18N_EXTRACT_SOURCES setting and use it in extraction method, bumping version;
@@ -256,7 +278,7 @@ Version 0.6.4
 
 
 Version 0.6.1
--------------
+*************
 
 * Setting name ``EXTRA_BUNDLES`` is deprecated and **will be removed in a futur release**. In project settings rename it to ``BUNDLES``;
 * Remove ``optimus.builder.assets.COMMON_BUNDLES``, this was containing default bundles that was not really useful. If your project used them, you will have errors on page building about missing bundles, you can recover them in your ``settings.BUNDLES`` from : ::
@@ -287,7 +309,7 @@ Version 0.6.1
 
 
 Version 0.6 - 2013/12/16
-------------------------
+************************
 
 * Add new command ``po`` to automatically manage translations files;
 * Add better error messages for some command line options;

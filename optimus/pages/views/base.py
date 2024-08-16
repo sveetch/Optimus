@@ -19,13 +19,15 @@ class PageViewBase:
     Template context will have the following variables :
 
     page_title
-        Page title
+        Page title.
     page_destination
-        Page destination
+        Page destination, the path is relative to the build directory.
     page_lang
-        Given langage if any
+        Defined view langage if any.
+    page_datas
+        Sources related to the page building.
 
-    But you can add new variable if needed. The default context variables can
+    You can add extra variable if needed. The default context variables can
     not be overriden from the ``context`` class attribute, only from the
     ``get_context`` class method.
 
@@ -38,6 +40,10 @@ class PageViewBase:
             directory.
         lang (string): Language identifier or an instance of
             ``optimus.i18n.LangBase``.
+        datas (list): Sources related to the page building. If the page use
+            these files to perform a rendering build, they should be defined here so
+            the watcher will be able to know them and trigger a new build when
+            these files are modified.
         context (dict): Initial page view context.
         logger (logging.Logger): Optimus logger.
         _used_templates (list): List of every used templates. Only filled when
@@ -54,6 +60,7 @@ class PageViewBase:
     destination = None
     lang = None
     context = {}
+    datas = []
     _required_page_attributes = ["title", "destination"]
 
     def __init__(self, **kwargs):
@@ -169,6 +176,17 @@ class PageViewBase:
             self.destination.format(language_code=self.get_lang().code)
         )
 
+    def get_datas(self):
+        """
+        Get related page data file paths.
+
+        Default behavior is to use page attribute ``datas``.
+
+        Returns:
+            list: Page datas.
+        """
+        return self.datas
+
     def get_relative_position(self):
         """
         Get relative path position from the destination file to the root.
@@ -191,6 +209,7 @@ class PageViewBase:
             {
                 "page_title": self.get_title(),
                 "page_destination": self.get_destination(),
+                "page_datas": self.get_datas(),
                 "page_relative_position": self.get_relative_position(),
                 "page_lang": self.get_lang(),
             }

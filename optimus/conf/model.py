@@ -98,10 +98,20 @@ class SettingsModel(object):
                 "ignore_directories": False,
                 "case_sensitive": False,
             }
+
         # Assets watcher settings
         if not hasattr(self, "WATCHER_ASSETS_PATTERNS"):
             self.WATCHER_ASSETS_PATTERNS = {
                 "patterns": ["*.css", "*.js", "*.json"],
+                "ignore_patterns": None,
+                "ignore_directories": False,
+                "case_sensitive": False,
+            }
+
+        # Datas watcher settings
+        if not hasattr(self, "WATCHER_DATAS_PATTERNS"):
+            self.WATCHER_DATAS_PATTERNS = {
+                "patterns": ["*.xml", "*.json"],
                 "ignore_patterns": None,
                 "ignore_directories": False,
                 "case_sensitive": False,

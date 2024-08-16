@@ -1,14 +1,10 @@
-# -*- coding: utf-8 -*-
 """
-The project pages map for basic_i18n
+The project pages for basic_i18n
 """
-from optimus.pages.views import PageTemplateView
-
-# Dont import settings since it will break tests
+# WARNING: Dont import settings here since it will break tests
 # from optimus.conf import settings
-"""
-Page objects
-"""
+
+from optimus.pages.views import PageTemplateView
 
 
 class Index(PageTemplateView):

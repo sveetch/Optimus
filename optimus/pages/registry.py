@@ -20,7 +20,9 @@ class PageRegistry(object):
 
     def __init__(self, templates={}):
         self.templates = {}
+        self.datas = {}
         self.destinations_pages_index = {}
+        self.destinations_datas_index = {}
         self.logger = logging.getLogger("optimus")
 
     def add_page(self, page, templates):
@@ -39,6 +41,23 @@ class PageRegistry(object):
                 self.templates[k].add(page.get_destination())
             else:
                 self.templates[k] = set([page.get_destination()])
+
+    def add_data(self, page, datas):
+        """
+        Index view datas into registry.
+
+        Arguments:
+            page (optimus.pages.views.PageViewBase): Page instance
+            datas (list): List of view datas to link to given page
+                instance.
+        """
+        self.destinations_datas_index[page.get_destination()] = page
+
+        for k in datas:
+            if k in self.datas:
+                self.datas[k].add(page.get_destination())
+            else:
+                self.datas[k] = set([page.get_destination()])
 
     def get_pages_from_template(self, template_name):
         """
@@ -60,9 +79,30 @@ class PageRegistry(object):
             self.logger.warning(msg.format(template_name))
             return []
 
-        destinations = self.templates[template_name]
+        return [
+            self.destinations_pages_index[item]
+            for item in self.templates[template_name]
+        ]
 
-        return [self.destinations_pages_index[item] for item in destinations]
+    def get_pages_from_data(self, data):
+        """
+        Get page list depending from a data.
+
+        Arguments:
+            data (string): Source to search for.
+
+        Returns:
+            list: List of page instances depending from given data path.
+        """
+        if data not in self.datas:
+            msg = "Given data is not registered: {}"
+            self.logger.warning(msg.format(data))
+            return []
+
+        return [
+            self.destinations_datas_index[item]
+            for item in self.datas[data]
+        ]
 
     def get_all_destinations(self):
         """

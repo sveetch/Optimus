@@ -140,7 +140,7 @@ test:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tests <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTEST) -vv tests/
+	$(PYTEST) tests/
 .PHONY: test
 
 tox:

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block meta_title %}{{ SITE.name }}{% endblock %}</title>
+</head>
+
+<body class="{% block body_classes %}{% endblock %}"{% block body_attrs %}{% endblock %}>
+    <div class="base-container">
+        <div class="center-container">
+            {{ data }}
+        </div>
+    </div>
+</body>
+</html>

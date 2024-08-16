@@ -2,11 +2,13 @@
 Settings registration
 *********************
 
-This is the entry point to reach settings from project page module.
+This is the entry point where project settings are loaded. You may avoid to use it
+directly and prefer to use the view instance attribute ``settings`` instead.
+
 """
 import os
 
-from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
+from .. import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from .loader import import_settings
 
 

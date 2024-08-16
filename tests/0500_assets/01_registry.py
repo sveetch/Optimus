@@ -25,7 +25,8 @@ def test_add_bundle():
     registry.add_bundle("modernizr_js", bundle_modernizr)
     registry.add_bundle("app_css", bundle_css)
 
-    assert len(registry.map_dest_to_bundle.keys()) == 3
-    assert registry.map_dest_to_bundle["css/app.css"] == "app_css"
-    assert registry.map_dest_to_bundle["css/dummy.css"] == "app_css"
-    assert registry.map_dest_to_bundle["js/modernizr.src.js"] == "modernizr_js"
+    assert registry.map_dest_to_bundle == {
+        "js/modernizr.src.js": "modernizr_js",
+        "css/app.css": "app_css",
+        "css/dummy.css": "app_css",
+    }

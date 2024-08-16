@@ -111,7 +111,7 @@ def fixtures_settings():
 @pytest.fixture(scope="function")
 def prepend_items():
     """
-    Return a function than prepend any item from "paths" list with "prefix"
+    Return a function that prefix items from "paths" list with "prefix"
     """
 
     def prepend_func(prefix, paths):
@@ -188,6 +188,7 @@ def minimal_basic_settings():
             PROJECT_DIR=basedir,
             SITE_NAME="basic",
             SITE_DOMAIN="localhost",
+            DATAS_DIR=os.path.join(basedir, "datas"),
             SOURCES_DIR=os.path.join(basedir, "sources"),
             TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
             PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
@@ -225,6 +226,7 @@ def minimal_i18n_settings():
             PROJECT_DIR=basedir,
             SITE_NAME="minimal_i18n",
             SITE_DOMAIN="localhost",
+            DATAS_DIR=os.path.join(basedir, "datas"),
             SOURCES_DIR=os.path.join(basedir, "sources"),
             TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
             PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
@@ -259,6 +261,7 @@ def i18n_template_settings():
             PROJECT_DIR=basedir,
             SITE_NAME="basic_i18n",
             SITE_DOMAIN="localhost",
+            DATAS_DIR=os.path.join(basedir, "datas"),
             SOURCES_DIR=os.path.join(basedir, "sources"),
             TEMPLATES_DIR=os.path.join(basedir, "sources", "templates"),
             PUBLISH_DIR=os.path.join(basedir, "_build/dev"),
@@ -299,6 +302,7 @@ def starter_basic_settings():
         from optimus.conf.model import SettingsModel
         from webassets import Bundle
 
+        datas_dir = os.path.join(basedir, "datas")
         sources_dir = os.path.join(basedir, "sources")
         templates_dir = os.path.join(sources_dir, "templates")
         publish_dir = os.path.join(basedir, "_build/dev")
@@ -312,6 +316,7 @@ def starter_basic_settings():
             PROJECT_DIR=basedir,
             SITE_NAME="try_i18n",
             SITE_DOMAIN="localhost",
+            DATAS_DIR=datas_dir,
             SOURCES_DIR=sources_dir,
             TEMPLATES_DIR=templates_dir,
             PUBLISH_DIR=publish_dir,

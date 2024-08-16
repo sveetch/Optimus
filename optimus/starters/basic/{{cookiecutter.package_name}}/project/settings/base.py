@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Base settings file for development.
 """
@@ -19,14 +18,21 @@ SITE_NAME = "{{ cookiecutter.project_name }}"
 SITE_DOMAIN = "localhost"
 
 # Sources directory where the assets will be searched
+DATAS_DIR = os.path.join(PROJECT_DIR, "datas")
+
+# Sources directory where the assets will be searched
 SOURCES_DIR = os.path.join(PROJECT_DIR, "sources")
+
 # Templates directory
 TEMPLATES_DIR = os.path.join(SOURCES_DIR, "templates")
+
 # Directory where all stuff will be builded
 PUBLISH_DIR = os.path.join(PROJECT_DIR, "_build", "dev")
+
 # Path where will be moved all the static files, usually this is a directory in
 # the ``PUBLISH_DIR``
 STATIC_DIR = os.path.join(PROJECT_DIR, PUBLISH_DIR, "static")
+
 # Path to the i18n messages catalog directory
 LOCALES_DIR = os.path.join(PROJECT_DIR, "locale")
 

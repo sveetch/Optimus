@@ -1,22 +1,23 @@
 import logging
-import traceback
 
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.utils.patterns import match_any_paths
 
-from jinja2.exceptions import TemplateSyntaxError
-
 from optimus.watchers import BaseHandler
+from optimus.exceptions import DataProcessError
 
 
-class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
+class DatasWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     """
-    Template events handler.
+    Datas events handler
+
+    Since assets filename change when they are rebuiled, this handler also
+    performs page rebuild to include the right assets urls.
 
     Arguments:
         settings (optimus.conf.model.SettingsModel): Project settings.
         builder (optimus.pages.builder.PageBuilder): Page builder object
-            that is used to perform page building.
+            that is triggered to perform page building.
         args: Additional arguments to be passed to handler, commonly for
             watchdog API.
 
@@ -41,11 +42,7 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
     def build_for_item(self, path):
         """
-        Build all pages using given template path.
-
-        If template is a snippet included in other templates they will be
-        flagged for build too. This is recursive so a snippet in a snippet in
-        a snippet will raises also to page templates.
+        Build all pages using given data file path.
 
         Arguments:
             path (string): Template path.
@@ -53,24 +50,24 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         Returns:
             list: List of builded pages.
         """
-        rel_path = self.get_relative_template_path(path)
+        rel_path = self.get_relative_data_path(path)
         built = []
-        # Search in the registry if the file is a knowed template dependancy
-        if rel_path in self.builder.registry.templates:
+        # Search in the registry if the file is a knowed dependancy
+        if rel_path in self.builder.registry.datas:
             msg = "--- Changes detected on: {} ---"
             self.logger.warning(msg.format(rel_path))
 
-            requires = self.builder.registry.get_pages_from_template(rel_path)
+            requires = self.builder.registry.get_pages_from_data(rel_path)
 
             self.logger.debug("Requires for rebuild: {}".format(requires))
 
             try:
                 builds = self.builder.build_bulk(requires)
-            except TemplateSyntaxError as e:
+            except DataProcessError as e:
                 self.logger.error(traceback.format_exc())
                 msg = (
-                    "Jinja encountered an error on template '{}', once fixed and "
-                    "saved the template will be able to build again."
+                    "Data parser encountered an error on file '{}', once fixed and "
+                    "saved the view will be able to build again."
                 )
                 self.logger.error(msg.format(e.name))
                 self.logger.warning(
@@ -86,13 +83,14 @@ class TemplatesWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         Called when a file or a directory is moved or renamed.
 
         Many editors don't directly change a file, instead they make a
-        transitional file like ``*.part`` then move it to the final filename.
+        transitional file like ``*.part`` then move it to the final filename, so they
+        will trigger this move event.
 
         Arguments:
             event: Watchdog event, either ``watchdog.events.DirMovedEvent`` or
                 ``watchdog.events.FileModifiedEvent``.
         """
-        # We are only interested for the destination
+        # We are only interested for destination
         if match_any_paths(
             [event.dest_path],
             included_patterns=self.patterns,

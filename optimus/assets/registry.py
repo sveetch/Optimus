@@ -64,7 +64,7 @@ def register_assets(settings):
     assets_env.cache = settings.WEBASSETS_CACHE
     assets_env.url_expire = settings.WEBASSETS_URLEXPIRE
 
-    #
+    # Attach internal Optimus asset registry to the webassets environment
     assets_env.optimus_registry = AssetRegistry()
 
     # Register enabled assets bundles

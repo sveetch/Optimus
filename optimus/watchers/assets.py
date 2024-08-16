@@ -8,15 +8,26 @@ from optimus.watchers import BaseHandler
 
 class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
     """
-    Assets events handler
+    Assets events handler.
 
     Since assets filename change when they are rebuiled, this handler also
     performs page rebuild to include the right assets urls.
 
+    .. Note::
+        The assets handler or registry are not aware of templates and so it can not
+        determine if an asset or a bundle is used in one or more specific templates.
+
+        It results in a rebuild of all page views when a single asset or bundle is
+        changed.
+
+        For example, a ``skeleton.html`` use a bundle ``main.css`` and
+        ``singlepage.html`` do not use any bundle or asset. If ``main.css`` is changed,
+        both ``skeleton.html`` and ``singlepage.html`` will be rebuild.
+
     Arguments:
         settings (optimus.conf.model.SettingsModel): Project settings.
         assets_env (webassets.Environment): Webasset environment.
-        pages_builder (optimus.pages.builder.PageBuilder): Page builder object
+        builder (optimus.pages.builder.PageBuilder): Page builder object
             that is triggered to perform page building.
         args: Additional arguments to be passed to handler, commonly for
             watchdog API.
@@ -26,20 +37,21 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
 
     Attributes:
         settings (optimus.conf.model.SettingsModel): As given from arguments.
-        assets_env (webassets.Environment): Webasset As given from arguments.
-        pages_builder (optimus.pages.builder.PageBuilder): As given from
+        assets_env (webassets.Environment): Environment As given from arguments.
+        builder (optimus.pages.builder.PageBuilder): As given from
             arguments.
         logger (logging.Logger): Optimus logger.
     """
 
-    def __init__(self, settings, assets_env, pages_builder, *args, **kwargs):
+    def __init__(self, settings, assets_env, builder, *args, **kwargs):
         self.settings = settings
         self.assets_env = assets_env
-        self.pages_builder = pages_builder
+        self.builder = builder
 
+        # TODO: Logger name should be the '__pkgname__'
         self.logger = logging.getLogger("optimus")
 
-        super(AssetsWatchEventHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def build_for_item(self, path):
         """
@@ -56,10 +68,8 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         self.logger.warning("--- Changes detected on: {} ---".format(rel_path))
 
         # Search in the registry if the file is a knowed asset from a bundle
-        if rel_path in self.assets_env.optimus_registry.map_dest_to_bundle:
-            bundle_name = self.assets_env.optimus_registry.map_dest_to_bundle[
-                rel_path
-            ]  # noqa
+        if (rel_path in self.assets_env.optimus_registry.map_dest_to_bundle):
+            bundle_name = self.assets_env.optimus_registry.map_dest_to_bundle[rel_path]
 
             msg = "Build required for bundle: {}"
             self.logger.debug(msg.format(bundle_name))
@@ -69,13 +79,12 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
             urls = self.assets_env[bundle_name].urls()
             self.logger.debug("Rebuilded urls: %s", urls)
 
-            # Launch all pages rebuild
-            builds = self.pages_builder.build_bulk(
-                self.pages_builder.registry.get_all_pages()
-            )
-            built.extend(builds)
+            # Always launch a rebuild of all pages
+            built.extend(self.builder.build_bulk(
+                self.builder.registry.get_all_pages()
+            ))
         else:
-            msg = "Path are not registered from any assets bundle: {}"
+            msg = "Path are not registered from any asset bundle: {}"
             self.logger.warning(msg.format(rel_path))
 
         return built
@@ -85,7 +94,8 @@ class AssetsWatchEventHandler(BaseHandler, PatternMatchingEventHandler):
         Called when a file or a directory is moved or renamed.
 
         Many editors don't directly change a file, instead they make a
-        transitional file like ``*.part`` then move it to the final filename.
+        transitional file like ``*.part`` then move it to the final filename, so they
+        will trigger this move event.
 
         Arguments:
             event: Watchdog event, either ``watchdog.events.DirMovedEvent`` or

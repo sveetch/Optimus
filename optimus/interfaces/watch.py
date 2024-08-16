@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 from watchdog.observers import Observer
 
-from optimus.watchers.templates import TemplatesWatchEventHandler
-from optimus.watchers.assets import AssetsWatchEventHandler
+from ..watchers.assets import AssetsWatchEventHandler
+from ..watchers.datas import DatasWatchEventHandler
+from ..watchers.templates import TemplatesWatchEventHandler
 
 
 def watcher_interface(settings, views, build_env):
@@ -37,30 +37,46 @@ def watcher_interface(settings, views, build_env):
         watchdog.observers.Observer: The initialized and configured observer for
         setted watchers.
     """
-    # Perform a first scanning of page templates
+    # Perform a first scanning of page views
     build_env["builder"].scan_bulk(views.PAGES)
 
-    # Init templates events watchers
+    # Bind watcher events for view templates
     templates_event_handler = TemplatesWatchEventHandler(
-        settings, build_env["builder"], **settings.WATCHER_TEMPLATES_PATTERNS
+        settings,
+        build_env["builder"],
+        **settings.WATCHER_TEMPLATES_PATTERNS
     )
 
-    # Init assets events watchers
+    # Bind watcher events for view datas
+    datas_event_handler = DatasWatchEventHandler(
+        settings,
+        build_env["builder"],
+        **settings.WATCHER_DATAS_PATTERNS
+    )
+
+    # Bind watcher events for asset bundles
     if build_env["assets_env"] is not None:
         assets_event_handler = AssetsWatchEventHandler(
             settings,
             build_env["assets_env"],
             build_env["builder"],
-            **settings.WATCHER_ASSETS_PATTERNS,
+            **settings.WATCHER_ASSETS_PATTERNS
         )
 
     # Initialize observer to use
     observer = Observer()
 
-    # Register views events watcher
+    # Register templates events watcher
     observer.schedule(
         templates_event_handler,
         settings.TEMPLATES_DIR,
+        recursive=True,
+    )
+
+    # Register datas events watcher
+    observer.schedule(
+        datas_event_handler,
+        settings.DATAS_DIR,
         recursive=True,
     )
     # Register assets events watcher

@@ -10,6 +10,7 @@ def test_empty(caplog):
     reg = PageRegistry()
 
     assert reg.templates == {}
+    assert reg.datas == {}
 
     assert reg.get_pages_from_template("nope") == []
 
