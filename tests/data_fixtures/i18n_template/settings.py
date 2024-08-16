@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings file for i18n project
 

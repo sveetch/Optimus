@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 The project pages map for basic_i18n
 """

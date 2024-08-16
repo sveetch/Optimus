@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from optimus.assets.registry import register_assets
 from optimus.pages.builder import PageBuilder
 from optimus.utils import initialize

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings module with only required value setted
 """

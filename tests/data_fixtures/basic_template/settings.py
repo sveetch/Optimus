@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Settings file for basic project
 """

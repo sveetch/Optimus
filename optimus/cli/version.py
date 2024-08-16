@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import click
 
 from optimus import __version__ as optimus_version

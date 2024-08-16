@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Production settings file for project 'basic_i18n'
 """

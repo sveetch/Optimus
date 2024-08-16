@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 I18n management
 ***************

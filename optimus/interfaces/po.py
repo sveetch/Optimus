@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from optimus.i18n.manager import I18NManager
 
 
