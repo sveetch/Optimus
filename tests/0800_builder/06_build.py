@@ -9,6 +9,7 @@ from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
+from optimus.utils.cleaning_system import ResetSyspath
 
 
 def DummyFilter(content):
@@ -32,7 +33,6 @@ def DummyFilter(content):
 def test_build_item(
     minimal_basic_settings,
     fixtures_settings,
-    reset_syspath,
     temp_builds_dir,
     sample_fixture_name,
     expected_destinations,
@@ -55,7 +55,7 @@ def test_build_item(
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
     shutil.copytree(templatedir, projectdir)
 
-    try:
+    with ResetSyspath(projectdir):
         # Setup project
         setup_project(projectdir, "dummy_value")
 
@@ -112,13 +112,6 @@ def test_build_item(
                 attempted = attemptfp.read()
 
             assert built == attempted
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
 
 
 @pytest.mark.parametrize("sample_fixture_name, expected_destinations", [
@@ -138,7 +131,6 @@ def test_build_item(
 def test_build_bulk(
     minimal_basic_settings,
     fixtures_settings,
-    reset_syspath,
     temp_builds_dir,
     sample_fixture_name,
     expected_destinations,
@@ -156,7 +148,7 @@ def test_build_bulk(
     templatedir = os.path.join(fixtures_settings.fixtures_path, sample_fixture_name)
     shutil.copytree(templatedir, projectdir)
 
-    try:
+    with ResetSyspath(projectdir):
         # Setup project
         setup_project(projectdir, "dummy_value")
 
@@ -187,11 +179,3 @@ def test_build_bulk(
         for dest in expected_destinations:
             absdest = os.path.join(settings.PUBLISH_DIR, dest)
             assert os.path.exists(absdest) is True
-
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)

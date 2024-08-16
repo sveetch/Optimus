@@ -23,7 +23,6 @@ def handler_ready_shortcut(
     minimal_basic_settings,
     fixtures_settings,
     temp_builds_dir,
-    reset_fixture,
 ):
     """
     Get everything ready to return a fully usable handler and settings
@@ -50,9 +49,4 @@ def handler_ready_shortcut(
     # Fill registry
     pages_builder.scan_bulk(pages_map.PAGES)
 
-    # Tricks to return the "reset function" which needs "projectdir" path that is only
-    # available from "handler_ready_shortcut" but not in the test itself
-    def resetter():
-        reset_fixture(projectdir)
-
-    return settings, assets_env, pages_builder, resetter
+    return settings, assets_env, pages_builder, projectdir

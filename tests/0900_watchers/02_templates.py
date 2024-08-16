@@ -2,26 +2,26 @@ import os
 from pathlib import Path
 
 from optimus.watchers.templates import TemplatesWatchEventHandler
+from optimus.utils.cleaning_system import ResetSyspath
 
 from handler_helper import DummyEvent, handler_ready_shortcut
 
 
 def test_build_for_item(
-    minimal_basic_settings, fixtures_settings, reset_syspath, temp_builds_dir
+    minimal_basic_settings, fixtures_settings, temp_builds_dir
 ):
     """
     Check 'build_for_item'
     """
-    settings, assets_env, builder, resetter = handler_ready_shortcut(
+    settings, assets_env, builder, projectdir = handler_ready_shortcut(
         "basic2_template",
         "watchers_templates_build_for_item",
         minimal_basic_settings,
         fixtures_settings,
         temp_builds_dir,
-        reset_syspath,
     )
 
-    try:
+    with ResetSyspath(projectdir):
         handler = TemplatesWatchEventHandler(
             settings, builder, **settings.WATCHER_TEMPLATES_PATTERNS
         )
@@ -38,35 +38,25 @@ def test_build_for_item(
             str(Path(settings.PUBLISH_DIR) / "sub" / "bar.html"),
         ])
 
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        resetter()
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        resetter()
-
 
 def test_events(
     minimal_basic_settings,
     fixtures_settings,
-    reset_syspath,
     temp_builds_dir,
     prepend_items,
 ):
     """
     Check events, 'on_created' first then every other since they works the same
     """
-    settings, assets_env, builder, resetter = handler_ready_shortcut(
+    settings, assets_env, builder, projectdir = handler_ready_shortcut(
         "basic2_template",
         "watchers_templates_events",
         minimal_basic_settings,
         fixtures_settings,
         temp_builds_dir,
-        reset_syspath,
     )
 
-    try:
+    with ResetSyspath(projectdir):
         handler = TemplatesWatchEventHandler(
             settings, builder, **settings.WATCHER_TEMPLATES_PATTERNS
         )
@@ -118,11 +108,3 @@ def test_events(
             str(Path(settings.PUBLISH_DIR) / "sub/bar.html"),
             str(Path(settings.PUBLISH_DIR) / "sub/foo.html"),
         ])
-
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        resetter()
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        resetter()

@@ -5,6 +5,7 @@ import pytest
 
 from optimus import PROJECT_DIR_ENVVAR, SETTINGS_NAME_ENVVAR
 from optimus.setup_project import setup_project
+from optimus.utils.cleaning_system import FlushSettings, ResetSyspath
 
 
 @pytest.mark.parametrize(
@@ -39,8 +40,6 @@ from optimus.setup_project import setup_project
 def test_setup_project_success(
     caplog,
     fixtures_settings,
-    reset_syspath,
-    flush_settings,
     fixture_dir,
     module_name,
     settings_name,
@@ -54,49 +53,39 @@ def test_setup_project_success(
     """
     basedir = os.path.join(fixtures_settings.fixtures_path, fixture_dir)
 
-    setup_project(basedir, settings_name, **kwargs)
+    with FlushSettings(), ResetSyspath(basedir):
+        setup_project(basedir, settings_name, **kwargs)
 
-    if kwargs.get("set_envvar") is True:
-        assert (PROJECT_DIR_ENVVAR in os.environ) is True
-        assert (SETTINGS_NAME_ENVVAR in os.environ) is True
-        assert os.environ[PROJECT_DIR_ENVVAR] == basedir
-        assert os.environ[SETTINGS_NAME_ENVVAR] == settings_name
+        if kwargs.get("set_envvar") is True:
+            assert (PROJECT_DIR_ENVVAR in os.environ) is True
+            assert (SETTINGS_NAME_ENVVAR in os.environ) is True
+            assert os.environ[PROJECT_DIR_ENVVAR] == basedir
+            assert os.environ[SETTINGS_NAME_ENVVAR] == settings_name
 
-    if kwargs.get("set_syspath") is True:
-        assert (basedir in sys.path) is True
-    else:
-        assert (basedir in sys.path) is False
-
-    # Cleanup sys.path for next tests
-    reset_syspath(basedir)
+        if kwargs.get("set_syspath") is True:
+            assert (basedir in sys.path) is True
+        else:
+            assert (basedir in sys.path) is False
 
 
-def test_setup_project_doesnt_exists(
-    caplog, fixtures_settings, reset_syspath, flush_settings
-):
+def test_setup_project_doesnt_exists(caplog, fixtures_settings):
     """
     Function should raise an ImportError when given base directory does not exists.
     """
     basedir = "foo/bar"
 
-    with pytest.raises(ImportError):
-        setup_project(basedir, "foo")
-
-    # Cleanup sys.path for next tests
-    reset_syspath(basedir)
+    with FlushSettings(), ResetSyspath(basedir):
+        with pytest.raises(ImportError):
+            setup_project(basedir, "foo")
 
 
-def test_setup_project_is_not_dir(
-    caplog, fixtures_settings, reset_syspath, flush_settings
-):
+def test_setup_project_is_not_dir(caplog, fixtures_settings):
     """
     Function should raise an ImportError when given base directory is not a valid
     directory.
     """
     basedir = os.path.join(fixtures_settings.fixtures_path, "dummy_package", "valid.py")
 
-    with pytest.raises(ImportError):
-        setup_project(basedir, "foo")
-
-    # Cleanup sys.path for next tests
-    reset_syspath(basedir)
+    with FlushSettings(), ResetSyspath(basedir):
+        with pytest.raises(ImportError):
+            setup_project(basedir, "foo")

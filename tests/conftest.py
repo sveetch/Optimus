@@ -1,8 +1,4 @@
-"""
-Some fixture methods
-"""
 import os
-import sys
 
 import pytest
 
@@ -30,9 +26,6 @@ class ApplicationTestSettings:
         # NOTE: Maybe not right anymore, maybe could change to the commented lines
         # after
         self.application_path = os.path.join(os.getcwd(), "optimus")
-        # self.application_path = os.path.abspath(
-        # os.path.dirname(optimus.__file__)
-        # )
 
         self.package_path = os.path.normpath(
             os.path.join(
@@ -118,50 +111,6 @@ def prepend_items():
         return [os.path.join(prefix, item) for item in paths]
 
     return prepend_func
-
-
-@pytest.fixture(scope="function")
-def reset_syspath():
-    """
-    Return a function to remove given path from sys.path.
-
-    This is to use at the end (after all assertions) of test which
-    use ``setup_project.setup_project`` to add base directory to sys.path
-    and avoid clash with next tests doing the same.
-    """
-
-    def reset_func(path):
-        if path in sys.path:
-            del sys.path[sys.path.index(path)]
-
-    return reset_func
-
-
-@pytest.fixture(scope="function")
-def flush_settings():
-    """
-    Flush everything about previous imported settings so each test can import
-    its own settings without inheriting from import cache.
-
-    However the way to clean sys.module is not smart and only clean common module names,
-    you may need to evolve this list or clean it yourself for uncommon modules.
-    """
-    # Common imported module from optimus and its tests
-    if "pages" in sys.modules:
-        del sys.modules["pages"]
-    if "settings" in sys.modules:
-        del sys.modules["settings"]
-    if "settings.base" in sys.modules:
-        del sys.modules["settings.base"]
-    if "settings.production" in sys.modules:
-        del sys.modules["settings.production"]
-    if "optimus.conf.registry" in sys.modules:
-        del sys.modules["optimus.conf.registry"]
-    # Environment variables
-    if optimus.PROJECT_DIR_ENVVAR in os.environ:
-        del os.environ[optimus.PROJECT_DIR_ENVVAR]
-    if optimus.SETTINGS_NAME_ENVVAR in os.environ:
-        del os.environ[optimus.SETTINGS_NAME_ENVVAR]
 
 
 @pytest.fixture(scope="function")

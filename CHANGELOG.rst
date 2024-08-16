@@ -41,6 +41,9 @@ What’s new
   they don't naturally include templates or assets);
 * Introduced new required settings ``DATAS_DIR`` to define path for the directory that
   holds the view data files;
+* Added context managers ``ResetSyspath`` and ``FlushSettings`` to replace test
+  fixtures ``reset_syspath`` and ``flush_settings`` in a better way;
+
 
 Backwards incompatible changes
 ------------------------------

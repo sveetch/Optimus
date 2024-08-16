@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.utils.patterns import match_any_paths

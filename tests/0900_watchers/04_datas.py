@@ -1,27 +1,26 @@
-import os
 from pathlib import Path
 
 from optimus.watchers.datas import DatasWatchEventHandler
+from optimus.utils.cleaning_system import ResetSyspath
 
 from handler_helper import DummyEvent, handler_ready_shortcut
 
 
 def test_build_for_item(
-    minimal_basic_settings, fixtures_settings, reset_syspath, temp_builds_dir,
+    minimal_basic_settings, fixtures_settings, temp_builds_dir,
 ):
     """
     Check 'build_for_item'
     """
-    settings, assets_env, builder, resetter = handler_ready_shortcut(
+    settings, assets_env, builder, projectdir = handler_ready_shortcut(
         "basic2_template",
         "watchers_datas_build_for_item",
         minimal_basic_settings,
         fixtures_settings,
         temp_builds_dir,
-        reset_syspath,
     )
 
-    try:
+    with ResetSyspath(projectdir):
         handler = DatasWatchEventHandler(
             settings, builder, **settings.WATCHER_DATAS_PATTERNS
         )
@@ -36,31 +35,22 @@ def test_build_for_item(
 
         assert sorted(handler.build_for_item("js/app.js")) == []
 
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        resetter()
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        resetter()
-
 
 def test_events(
-    minimal_basic_settings, fixtures_settings, reset_syspath, temp_builds_dir,
+    minimal_basic_settings, fixtures_settings, temp_builds_dir,
 ):
     """
     Check events, 'on_created' first then every other since they works the same
     """
-    settings, assets_env, builder, resetter = handler_ready_shortcut(
+    settings, assets_env, builder, projectdir = handler_ready_shortcut(
         "basic2_template",
         "watchers_datas_events",
         minimal_basic_settings,
         fixtures_settings,
         temp_builds_dir,
-        reset_syspath,
     )
 
-    try:
+    with ResetSyspath(projectdir):
         handler = DatasWatchEventHandler(
             settings, builder, **settings.WATCHER_DATAS_PATTERNS
         )
@@ -90,11 +80,3 @@ def test_events(
         assert sorted(handler.on_moved(DummyEvent("dummy", "data.json"))) == sorted([
             str(Path(settings.PUBLISH_DIR) / "pure-data.html"),
         ])
-
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        resetter()
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        resetter()

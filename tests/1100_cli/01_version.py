@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from click.testing import CliRunner
 
 from optimus.cli.console_script import cli_frontend

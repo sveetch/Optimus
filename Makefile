@@ -132,8 +132,7 @@ flake:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Flake <---$(FORMATRESET)\n"
 	@echo ""
-	$(FLAKE) --show-source $(APPLICATION_NAME)
-	$(FLAKE) --show-source tests
+	$(FLAKE) --statistics --show-source $(APPLICATION_NAME) tests
 .PHONY: flake
 
 test:

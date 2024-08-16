@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 
 from optimus.interfaces.build import builder_interface

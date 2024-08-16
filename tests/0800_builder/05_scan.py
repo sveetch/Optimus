@@ -8,6 +8,7 @@ from optimus.setup_project import setup_project
 from optimus.conf.loader import import_pages_module
 from optimus.pages.builder import PageBuilder
 from optimus.assets.registry import register_assets
+from optimus.utils.cleaning_system import ResetSyspath
 
 
 @pytest.mark.parametrize("name, knowed_templates", [
@@ -28,7 +29,6 @@ from optimus.assets.registry import register_assets
 def test_scan_item(
     minimal_basic_settings,
     fixtures_settings,
-    reset_syspath,
     temp_builds_dir,
     name,
     knowed_templates,
@@ -45,7 +45,7 @@ def test_scan_item(
     templatedir = os.path.join(fixtures_settings.fixtures_path, name)
     shutil.copytree(templatedir, projectdir)
 
-    try:
+    with ResetSyspath(projectdir):
         # Setup project
         setup_project(projectdir, "dummy_value")
 
@@ -68,14 +68,6 @@ def test_scan_item(
 
         # We dont really care about order, so apply default sorting
         assert sorted(list(knowed)) == knowed_templates
-
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
 
 
 @pytest.mark.parametrize("name, knowed_templates, templates, datas", [
@@ -125,7 +117,6 @@ def test_scan_item(
 def test_scan_bulk(
     minimal_basic_settings,
     fixtures_settings,
-    reset_syspath,
     temp_builds_dir,
     name,
     knowed_templates,
@@ -144,7 +135,7 @@ def test_scan_bulk(
     templatedir = os.path.join(fixtures_settings.fixtures_path, name)
     shutil.copytree(templatedir, projectdir)
 
-    try:
+    with ResetSyspath(projectdir):
         # Setup project
         setup_project(projectdir, "settings")
 
@@ -165,11 +156,3 @@ def test_scan_bulk(
         assert sorted(list(knowed)) == knowed_templates
         assert builder.registry.templates == templates
         assert builder.registry.datas == datas
-
-    except Exception as e:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)
-        raise e
-    else:
-        # Cleanup sys.path for next tests
-        reset_syspath(projectdir)

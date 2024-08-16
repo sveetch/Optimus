@@ -1,8 +1,3 @@
-import os
-
-from jinja2 import Environment as Jinja2Environment
-from jinja2 import FileSystemLoader
-
 from optimus.pages.views import PageTemplateView
 from optimus.pages.registry import PageRegistry
 
