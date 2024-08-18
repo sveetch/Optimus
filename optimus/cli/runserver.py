@@ -13,7 +13,7 @@ from optimus.interfaces.runserver import server_interface
 
 # TODO: Change settings-name to settings ?
 @click.command(
-    "runserver", short_help=("Launch a simple HTTP server on " "built project")
+    "runserver", short_help=("Launch a simple HTTP server on built project")
 )
 @click.argument("hostname", default="127.0.0.1:80")
 @click.option(
@@ -38,7 +38,7 @@ from optimus.interfaces.runserver import server_interface
 @click.option(
     "--index",
     metavar="FILENAME",
-    help=("Filename to use as directory index. " "Default value is 'index.html'."),
+    help=("Filename to use as directory index. Default value is 'index.html'."),
     default="index.html",
 )
 @click.pass_context

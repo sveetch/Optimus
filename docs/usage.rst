@@ -1,4 +1,3 @@
-.. _intro_usage:
 .. _Jinja2: http://jinja.pocoo.org/
 .. _Jinja2 documentation: http://jinja.pocoo.org/docs/
 .. _yui-compressor: http://developer.yahoo.com/yui/compressor/
@@ -7,13 +6,12 @@
 .. _virtualenv: http://www.virtualenv.org/
 .. _Babel: https://pypi.python.org/pypi/Babel
 .. _Optimus: https://github.com/sveetch/Optimus
-.. _Optimus-foundation: https://github.com/sveetch/Optimus-foundation
-.. _Optimus-foundation-5: https://github.com/sveetch/Optimus-foundation-5
-.. _Foundation: http://github.com/zurb/foundation
 
-*****
-Usage
-*****
+.. _intro_usage:
+
+=============
+Common usages
+=============
 
 You can use Optimus from the command line tool ``optimus-cli``. A global help is
 available with : ::
@@ -32,7 +30,7 @@ will get an error message.
 .. _usage-project-label:
 
 Create a project
-================
+****************
 
 At least you will give a name for the new project. Be aware that it must a valid Python
 module name, so only with alphanumeric characters and ``_``. No spaces, no dots,
@@ -50,7 +48,7 @@ installed by default and Assets settings use ``rcssmin`` and ``jsmin`` (Pure Pyt
 asset minifiers).
 
 Building
-========
+********
 
 Configure your settings if needed, then your Pages to build and finally launch Optimus
 to build them : ::
@@ -60,7 +58,7 @@ to build them : ::
 .. _usage-translations-label:
 
 Managing translations
-=====================
+*********************
 
 Optimus can manage your translations for the known languages of your project. This is
 done in the setting ``LANGUAGES`` where you define a list of locale names, each of
@@ -72,7 +70,7 @@ valid locale names.
 Assuming you want to add French translations, you will have to add this setting : ::
 
     # A list of locale name for all available languages to manage with PO files
-    LANGUAGES = (LANGUAGE_CODE, 'fr_FR')
+    LANGUAGES = (LANGUAGE_CODE, "fr_FR")
 
 Note the first item that also adds the locale name from the default language from the
 setting ``LANGUAGE_CODE``.
@@ -141,7 +139,7 @@ you will have to re-compile them.
 .. _usage-watcher-label:
 
 Watch mode
-==========
+**********
 
 Use the ``watch`` command action to automatically rebuild files at each change in your
 sources : ::
@@ -170,7 +168,7 @@ command or `Babel`_ tool (for translations only) then relaunch the watcher.
 .. _usage-webserver-label:
 
 Web server
-==========
+**********
 
 You can launch a simple web server to publish your builded content,
 **it's not intended to be used in production**, only for debugging your work. This
@@ -192,5 +190,5 @@ Or you could bind it on localhost on port 8080 with the production settings : ::
 The settings are used to know the publish directory to expose.
 
 Note that the server does not build anything, it only expose the publish directory to
-publish the builded page and static files it contains. You should launch the
-`Watch mode`_ in parallel.
+served static files (built pages and assets). You should launch the `Watch mode`_ in
+parallel when working on your view, templates, assets, etc..

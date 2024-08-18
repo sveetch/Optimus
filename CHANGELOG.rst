@@ -43,6 +43,9 @@ What’s new
   holds the view data files;
 * Added context managers ``ResetSyspath`` and ``FlushSettings`` to replace test
   fixtures ``reset_syspath`` and ``flush_settings`` in a better way;
+* Added a logo;
+* Upgraded documentation to Furo theme;
+* Restructured and edited documentation for improvements;
 
 
 Backwards incompatible changes
@@ -90,14 +93,14 @@ version, also some part of core have changed.
 * Fix a test for recent Babel version;
 * Upgrade dependancies to recent versions and pin some other ones:
 
-    * ``click`` to ``>=7.1,<8.0``;
-    * ``Jinja`` to ``>=3.0.1,<4.0.0``;
-    * ``webassets`` to ``==2.0``;
-    * ``rcssmin`` to ``==1.0.6``;
-    * ``jsmin`` to ``==3.0.0``;
-    * ``colorama`` to ``==0.4.4``;
-    * ``colorlog`` to ``==6.4.1``;
-    * ``cookiecutter`` to ``==1.7.3``;
+  * ``click`` to ``>=7.1,<8.0``;
+  * ``Jinja`` to ``>=3.0.1,<4.0.0``;
+  * ``webassets`` to ``==2.0``;
+  * ``rcssmin`` to ``==1.0.6``;
+  * ``jsmin`` to ``==3.0.0``;
+  * ``colorama`` to ``==0.4.4``;
+  * ``colorlog`` to ``==6.4.1``;
+  * ``cookiecutter`` to ``==1.7.3``;
 
 * Fix event watcher to use ported ``match_any_path`` instead of ``match_path`` from
   deprecated ``pathtools``;
@@ -115,11 +118,11 @@ version, also some part of core have changed.
 * Replaced usage of deprecated ``imp`` usage with a new system with ``importlib``;
 * Refactored project starter:
 
-    * Now stand on cookiecutter, actually pinned to the 1.7.3, until 2.x branch has
-      been released;
-    * Remove the dry run option which was only for debugging/testing;
-    * Ship only a basic cookiecutter template which is equivalent to the i18n previous
-      template;
+  * Now stand on cookiecutter, actually pinned to the 1.7.3, until 2.x branch has
+    been released;
+  * Remove the dry run option which was only for debugging/testing;
+  * Ship only a basic cookiecutter template which is equivalent to the i18n previous
+    template;
 
 * Added interfaces which are functional implementations of what CLI did but without
   making importation and project settings so they can be used programmaticaly and

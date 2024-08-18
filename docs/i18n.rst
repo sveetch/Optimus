@@ -1,0 +1,82 @@
+.. _Babel: https://pypi.python.org/pypi/Babel
+
+.. _i18n_intro:
+
+.. _basics-translations-label:
+
+Translations
+============
+
+Marked strings with the ``{% trans %}`` template tag in your templates (see
+`Jinja2 template documentation <http://jinja.pocoo.org/docs/templates/#i18n-in-templates>`_)
+will be translated from the page locale name and its associated translation catalog.
+They will be extracted and stored in catalog files where you will have to fill the
+translations. Then compile your catalog files and then, the page building will replace
+strings with the translation accordingly to the page language.
+
+Also note than translation in Python code is different, you will need to mark them with
+gettext function like this: ::
+
+    from gettext import gettext as _
+    foo = _("Cheese")
+
+And a custom templatetag for Jinja so it can interpret and compile translation from a
+variable.
+
+Finally, the recommended way to manage your catalogs is to use the Optimus command
+``po`` see this in :ref:`usage-translations-label`, even you can use the *raw way*.
+
+.. _basics-translations-locale-label:
+
+Pages language
+**************
+
+By default, Pages use a default locale language that is *en_US*, for each language you
+will need to make a page view with the wanted language. You can specify it in the
+**lang** page attribute, or in a ``lang`` argument when you instanciate your
+``PageViewBase``.
+
+Managing translation catalog with the raw way
+*********************************************
+
+The *raw* way is to directly use `Babel`_ command line tool, you will have many more
+option to manage your catalogs but you will have to use many different commands and
+paths.
+
+Before building your internationalized Pages, you will have to create a messages
+catalog for each needed language. Put all your ``{% trans %}`` tags in your templates,
+then make a catalog from the extracted string.
+
+To correctly extract all your strings to translate, `Babel`_ will need some rules to
+know what and where it should search. This is done in a
+`Babel mapping file <http://babel.pocoo.org/wiki/Documentation/0.9/messages.html#extraction-method-mapping-and-configuration>`_,
+generally as a ``babel.cfg`` in the root directory of your project.
+
+At least, you will need the Jinja2 integration rule : ::
+
+    [jinja2: sources/templates/**.html]
+    encoding = utf-8
+    extensions = webassets.ext.jinja2.AssetsExtension
+
+The last line is needed if you use webassets tags ``{% assets %}...{% endassets %}``
+in your templates, otherwise the extraction will fail. See the
+`Jinja2 integration documentation <http://jinja.pocoo.org/docs/integration/#babel-integration>`_
+for more details.
+
+Extracting first the reference POT file : ::
+
+    pybabel extract -F babel.cfg -o locale/messages.pot .
+
+Initialize the language files (repeat this for each needed language with his correct
+locale key) : ::
+
+    pybabel init -l en_US -d locale -i locale/messages.pot
+
+Compile all your language files : ::
+
+    pybabel compile -f -d locale
+
+Update them when you make changes in your template strings (after this, you'll need
+to re-compile them) : ::
+
+    pybabel update -l en_US -d locale -i locale/messages.pot

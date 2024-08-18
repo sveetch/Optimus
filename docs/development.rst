@@ -1,70 +1,107 @@
-.. _virtualenv: http://www.virtualenv.org
+.. _virtualenv: https://virtualenv.pypa.io
 .. _pip: https://pip.pypa.io
 .. _Pytest: http://pytest.org
 .. _Napoleon: https://sphinxcontrib-napoleon.readthedocs.org
 .. _Flake8: http://flake8.readthedocs.org
 .. _Sphinx: http://www.sphinx-doc.org
 .. _tox: http://tox.readthedocs.io
-.. _sphinx-autobuild: https://github.com/GaretJax/sphinx-autobuild
+.. _livereload: https://livereload.readthedocs.io
+.. _twine: https://twine.readthedocs.io
+
+.. _development_intro:
 
 ===========
 Development
 ===========
 
-Development requirement
-***********************
+Development requirements
+************************
 
 Optimus is developed with:
 
 * *Test Development Driven* (TDD) using `Pytest`_;
 * Respecting flake and pip8 rules using `Flake8`_;
-* `Sphinx`_ for documentation with enabled `Napoleon`_ extension (using only the *Google style*);
+* `Sphinx`_ for documentation with enabled `Napoleon`_ extension (using
+  *Google style*);
+* `tox`_ to run tests on various environments;
 
-Every requirement is available in file ``requirements/dev.txt``.
+Every requirements are available in package extra requirements in section
+``dev``.
+
+.. _development_install:
 
 Install for development
 ***********************
 
-First ensure you have `pip`_ and ``python-venv`` package installed then type: ::
+First ensure you have `pip`_ and `virtualenv`_ packages installed then
+type: ::
 
     git clone https://github.com/sveetch/Optimus.git
-    cd optimus
-    make install-dev
+    cd Optimus
+    make install
 
-Optimus will be installed in editable mode from the last commit on master branch.
-
-When it's done, you will be able to check for optimus version, just type: ::
-
-    venv/bin/optimus version
+Optimus will be installed in editable mode from the
+latest commit on master branch with some development tools.
 
 Unittests
 ---------
 
-Unittests are made to works on `Pytest`_, a shortcut in Makefile is available to start them on your current development install: ::
+Unittests are made to work on `Pytest`_, a shortcut in Makefile is available
+to start them on your current development install: ::
 
     make tests
-
 
 Tox
 ---
 
-To ease development against multiple Python versions a tox configuration has been added. You are strongly encouraged to use it to test your pull requests.
+To ease development against multiple Python versions a tox configuration has
+been added. You are strongly encouraged to use it to test your pull requests.
 
-Before using it you will need to install tox, it is recommended to install it at your system level (tox dependancy is not in tests requirements file): ::
+Just execute Tox: ::
 
-    sudo pip install tox
+    make tox
 
-Then go in the ``optimus`` module directory, where ``the setup.py`` and ``tox.ini`` live and execute tox: ::
-
-    tox
+This will run tests for all configured Tox environments, it may takes some time so you
+may use it only before releasing as a final check.
 
 Documentation
 -------------
 
-`sphinx-autobuild`_ is installed for a watcher which automatically rebuild HTML documentation when you change sources.
+You can easily build the documentation from one Makefile action: ::
 
-When environnement is activated, you can use following command from ``docs/`` directory: ::
+    make docs
 
-    make livehtml
+There is Makefile action ``livedocs`` to serve documentation and automatically
+rebuild it when you change documentation files: ::
 
-And go on ``http://127.0.0.1:8002/``.
+    make livedocs
+
+Then go on ``http://localhost:8002/`` or your server machine IP with port 8002.
+
+Note that you need to build the documentation at least once before using
+``livedocs``.
+
+Releasing
+---------
+
+Before releasing, you must ensure about quality, use the command below to run every
+quality check tasks: ::
+
+    make quality
+
+If quality is correct and after you have correctly push all your commits
+you can proceed to release: ::
+
+    make release
+
+This will build the package release and send it to Pypi with `twine`_.
+You will have to
+`configure your Pypi account <https://twine.readthedocs.io/en/latest/#configuration>`_
+on your machine to avoid to input it each time.
+
+Contribution
+------------
+
+* Every new feature or changed behavior must pass tests, Flake8 code quality
+  and must be documented.
+* Every feature or behavior must be compatible for all supported environment.

@@ -69,6 +69,8 @@ class PageViewBase:
         self.__settings = kwargs.pop("settings", None)
 
         # Store every passed keyword argument as object attribute
+        # TODO: We should forbid to override some reserved names like 'settings' or
+        # 'context'
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -244,7 +246,7 @@ class PageViewBase:
         that may use it.
 
         This does not implement any introspection since there is not template logic
-        here.
+        here and this method is mostly used from the template watcher.
 
         Arguments:
             env (jinja2.Jinja2Environment): Jinja environment.

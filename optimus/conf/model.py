@@ -173,7 +173,7 @@ class SettingsModel(object):
 
     def apply_defaults(self):
         """
-        Apply default attributes for needed but not required settings.
+        Apply default attributes for needed settings but not mandatory.
         """
         # Python path to the file that contains pages map, this is relative to
         # project directory

@@ -8,9 +8,14 @@ Contents
    :maxdepth: 2
 
    install.rst
+   settings.rst
    basics.rst
+   pages.rst
+   templates.rst
+   assets.rst
+   i18n.rst
    usage.rst
-   api/index.rst
+   references/index.rst
 
 
 About the project

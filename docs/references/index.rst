@@ -1,9 +1,9 @@
-========
-Core API
-========
+==========
+References
+==========
 
 Optimus is mainly a commandeline tool but it relies on a core API that may be
-used from another application.
+used programatically from another application.
 
 Modules
 *******

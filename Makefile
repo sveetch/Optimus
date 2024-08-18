@@ -6,7 +6,7 @@ TWINE=$(VENV_PATH)/bin/twine
 FLAKE=$(VENV_PATH)/bin/flake8
 PYTEST=$(VENV_PATH)/bin/pytest
 TOX=$(VENV_PATH)/bin/tox
-SPHINX_RELOAD=$(VENV_PATH)/bin/python sphinx_reload.py
+SPHINX_RELOAD=$(VENV_PATH)/bin/python docs/sphinx_reload.py
 
 PACKAGE_NAME=Optimus
 PACKAGE_SLUG=`echo $(PACKAGE_NAME) | tr '-' '_'`
