@@ -1,4 +1,4 @@
-# Frozen requirement versions from '2.1.0rc11' installation
+# Frozen requirement versions from '2.1.0' installation
 babel==2.16.0
 CherryPy==18.10.0
 click==8.1.7

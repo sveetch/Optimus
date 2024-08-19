@@ -8,7 +8,7 @@ Changelog
 =========
 
 
-Version 2.1.0 - Unreleased
+Version 2.1.0 - 2024/08/19
 **************************
 
 Python compatibility

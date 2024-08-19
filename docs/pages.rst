@@ -48,6 +48,9 @@ There are three required arguments to initialize a ``PageViewBase`` object:
     List of data file paths related to the page building. It is mostly used from the
     watcher to know what data files to watch for and possibly trigger a build.
 
+    Data files are only for build side. If you got something like a simple JSON file
+    only used by your frontend it is not a view data file.
+
 The short way is like so : ::
 
     from optimus.pages.views import PageViewBase
