@@ -58,16 +58,15 @@ class LangBase:
 
         if self.code is None:
             msg = (
-                """Missing language identifier : You must supply it by """
-                """the way of 'code' argument or as the 'code' class """
-                """attribute."""
+                "Missing language identifier : You must supply it by the way of "
+                "'code' argument or as the 'code' class attribute."
             )
             raise InvalidLangageIdentifier(msg)
 
         if len(self.code.split("-")) > 1:
             msg = (
-                """Invalid language identifier : Langage name and """
-                """region name must be joined by a '_' not a '-'"""
+                "Invalid language identifier : Langage name and region name must be "
+                "joined by a '_' not a '-'"
             )
             raise InvalidLangageIdentifier(msg)
 
@@ -89,7 +88,8 @@ class LangBase:
             string: Representation with name and code
         """
         return "<{name} code:{code}>".format(
-            name=self.__class__.__name__, code=self.code
+            name=self.__class__.__name__,
+            code=self.code
         )
 
     def split_code(self, code):

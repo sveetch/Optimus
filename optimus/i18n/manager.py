@@ -49,7 +49,7 @@ class I18NManager:
     catalog_name = "messages.{0}"
     catalog_path = "{0}/LC_MESSAGES"
     header_comment = (
-        "# Translations template for PROJECT project\n# Created " "by Optimus"
+        "# Translations template for PROJECT project\n# Created by Optimus"
     )
 
     def __init__(self, settings):
@@ -159,7 +159,7 @@ class I18NManager:
         if it does not allready exists.
         """
         if not self.check_locales_dir():
-            self.logger.warning(("Locale directory does not exists, " "creating it"))
+            self.logger.warning(("Locale directory does not exists, creating it"))
             os.makedirs(self.settings.LOCALES_DIR)
 
     def build_pot(self, force=False):
@@ -180,14 +180,14 @@ class I18NManager:
         """
         if force or not self.check_template_path():
             self.logger.info(
-                ("Proceeding to extraction to update the " "template catalog (POT)")
+                ("Proceeding to extraction to update the template catalog (POT)")
             )
             self._pot = Catalog(
                 project=self.settings.SITE_NAME, header_comment=self.header_comment
             )
             # Follow all paths to search for pattern to extract
             for extract_path in self.settings.I18N_EXTRACT_SOURCES:
-                msg = "Searching for pattern to extract in : {0}"
+                msg = "Searching for pattern to extract in : {}"
                 self.logger.debug(msg.format(extract_path))
                 extracted = extract_from_dir(
                     dirname=extract_path,
@@ -227,10 +227,12 @@ class I18NManager:
         """
         if self._pot is not None:
             return self._pot
+
         if self.check_template_path():
             with io.open(self.get_template_path(), "rb") as fp:
                 self._pot = read_po(fp)
             return self._pot
+
         return self.build_pot()
 
     @pot.setter
@@ -403,12 +405,10 @@ class I18NManager:
                     )
             # Don't overwrite previous MO file if there have been error
             if errs:
-                self.logger.critical(
-                    (
-                        "There has been errors within the "
-                        "catalog, compilation has been aborted"
-                    )
-                )
+                self.logger.critical((
+                    "There has been errors within the catalog, compilation has been "
+                    "aborted"
+                ))
                 break
 
             with io.open(self.get_mo_filepath(locale), "wb") as fp:
